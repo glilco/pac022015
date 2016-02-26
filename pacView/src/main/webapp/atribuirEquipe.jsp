@@ -42,7 +42,7 @@
                             <div class="container-membros-usuarios"> ${usuario.nome} </div>  
                             <div class="container-membros-papeis"> ${usuario.papeis} </div>
                             <div class="container-membros-acoes"> 
-                                <button class="submit btn-alterar-membro icon" type="submit" value="Alterar">
+                                <button class="submit btn-alterar-membro" type="submit" value="Alterar">
                                     <span>Alterar</span>
                                 </button> 
                             </div>                            
@@ -76,43 +76,80 @@
             <div id="container-nao-membros">
                 <fieldset>
                     <legend style="font-weight: bold" >Não Membros</legend>
-                    <label>Pesquisar por usuários:</label>                        
-                    <form method="post" action="atribuirEquipe.jsp">
-                        <input type="text" size="20" name="usuarioPesquisado" 
-                               placeholder="Informe usuário para pesquisa"
-                               value="${beanAtribuir.usuarioPesquisado}"/>
-                        <!--                    <input type="submit" value="Pesquisar"/>                    -->
+                    <div><label>Pesquisar por usuários:</label></div>
+                    <div>                        
+                        <form method="post" action="atribuirEquipe.jsp">                            
+                            <div style="display: inline-block; width: 100%">
+                                <div style="display: inline-block; width: 80%">
+                                    <input style="width: 90%"
+                                           type="text" size="20" name="usuarioPesquisado" 
+                                           placeholder="Informe usuário para pesquisa"
+                                           value="${beanAtribuir.usuarioPesquisado}"/>
+                                </div>
 
-                        <input class="btn-pesquisar-nao-membro" type="submit" title="Pesquisar" value="" />                    
-                    </form>
+                                <!--                    <input type="submit" value="Pesquisar"/>                    -->
+                                    
+                                <div style="display: inline-block; width: 15%">                                
+                                    <button class="submit btn-pesquisar-nao-membro2" type="submit" title="Pesquisar" value="Pesquisar" >
+                                        <span>&nbsp;</span>
+                                    </button>
+                                </div>                                
+                            </div>
+                        </form>
+                    </div>
                     <c:if test="${!beanAtribuir.usuarioPesquisado.isEmpty()}">
                         <form method="post" action="adicionarMembro">
-                            <c:forEach var="naoMembro" items="${beanAtribuir.naoMembros}">
-                                <label for="nomeNaoMembro">${naoMembro.nome}</label>
-                                <input type="checkbox" value="${naoMembro.id}" 
-                                       id="nomeNaoMembro" name="nomeNaoMembro"/>
-                                <br/>
+                            <c:forEach var="naoMembro" items="${beanAtribuir.naoMembros}">                                
+                                <div>
+                                    <div class="item-lista-nao-membros">
+                                        <div class="checkbox-nome-nao-membro" >                                    
+                                            <input type="checkbox" value="${naoMembro.id}" 
+                                                   id="nomeNaoMembro" name="nomeNaoMembro"/>                                
+                                        </div>
+                                        <div class="label-nome-nao-membro"  >
+                                            <label for="nomeNaoMembro">${naoMembro.nome}</label>
+                                        </div>                                        
+                                    </div>
+                                </div>
                             </c:forEach>
 
                             <div>
-                                <h6 style="font-weight: bold" >Papéis:</h6>
-                                <label for="papelGPR">GPR</label>
-                                <input type="checkbox" value="GPR" name="papeis"
-                                       id="papelGPR"/>
-                                <br>
-                                <label for="papelMGG">MEG</label>
-                                <input type="checkbox" value="MEG" name="papeis"
+                                <div>
+                                    <h6 style="font-weight: bold; margin-bottom: 0px" >Papéis:</h6>
+                                </div>
+                                <div class="item-lista-nao-membro">
+                                    <div class="checkbox-nome-nao-membro">
+                                        <input type="checkbox" value="GPR" name="papeis"
+                                            id="papelGPR"/>
+                                    </div>
+                                    <div class="label-nome-nao-membro">
+                                        <label for="papelGPR">GPR</label>
+                                    </div>
+                                </div>
+
+                                <div class="item-lista-nao-membro">
+                                    <div class="checkbox-nome-nao-membro">
+                                        <input type="checkbox" value="MEG" name="papeis"
                                        id="papelMGG"/>
-                                <br>
-                                <label for="papelGPR">GPR</label>
-                                <input type="checkbox" value="MEM" name="papeis"
-                                       id="papelMEM"/>
+                                    </div>
+                                    <div class="label-nome-nao-membro">
+                                        <label for="papelMGG">MEG</label>
+                                    </div>
+                                </div>
+
+                                <div class="item-lista-nao-membro">
+                                    <div class="checkbox-nome-nao-membro">
+                                       <input type="checkbox" value="MEM" name="papeis"
+                                        id="papelMEM"/>
+                                    </div>
+                                    <div class="label-nome-nao-membro">
+                                        <label for="papelGPR">GPR</label>                                        
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div>                                
+                                <button style="margin-top: 2%; width: 20%;" class="button" type="submit" value="Adicionar" title="Adicionar">Adicionar</button> 
                             </div>
-
-
-                            <!-- <input type="submit" value="Cadastrar"/>-->
-                            <button class="button" type="submit" value="Adicionar" title="Adicionar">Adicionar</button> 
-
                         </form>
                     </c:if>
                 </fieldset>

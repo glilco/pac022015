@@ -375,12 +375,13 @@ input.date{
 #container-membros {   
     display: inline-block;
 /*    padding: 2.5%; */
+    padding-left: 0.5%;
     float: left;   
-    width: 50%;     
+    width: 55%;     
 } 
 
-#container-nao-membros {           
-    margin-left: 55%;        
+#container-nao-membros {               
+    margin-left: 60%;        
 } 
 
 .container-membros-titulo {   
@@ -404,25 +405,26 @@ input.date{
     display: inline-block;
     width: 10%;   
 } 
-
-/*button.btn-alterar-membro {
-    background: url("../imagens/ic_mode_edit_black_24dp_1x.png");
-    background-repeat: no-repeat;
-    border: 0;
-    width: 48px;
-    height: 48px;    
-    text-indent: -999px;
-}*/
-
-/*button.btn-alterar-membro.icon  {
-    padding: 8px;    
+.item-lista-nao-membros {               
+    display: inline-block;      
+    width: 100%;
 }
-button.btn-alterar-membro span {
-    width: 200px;
-    padding-left: 36px;    
-    background: url("../imagens/ic_mode_edit_black_24dp_1x.png") no-repeat 0 -4px;    
-}*/
 
+.label-nome-nao-membro {
+    display: inline-block;
+    float: none;    
+    width: 80%;
+}
+
+.label-nome-nao-membro label {
+    text-align: left;
+    width: initial;
+}
+
+.checkbox-nome-nao-membro {
+    display: inline-block;
+    width: 10%;
+}
 
 button.submit.btn-alterar-membro{
     width: 200px;
@@ -435,10 +437,25 @@ button.submit.btn-alterar-membro span{
     background: url("../imagens/ic_mode_edit_black_24dp_1x.png") no-repeat 0 -4px;    
 }
 
-.btn-pesquisar-nao-membro{
-    width: 48px;
-    height: 48px; 
-    background: url("../imagens/ic_search_black_24dp_2x.png") no-repeat center;    
+
+
+button.submit.btn-pesquisar-nao-membro2 {
+    width: 40px;
+    height: 30px;
+/*    padding-left: 11px;     */
 }
+
+button.submit.btn-pesquisar-nao-membro2 span {
+/*    width: 20%;*/
+height: 50px;
+width: 50px;
+/*    padding-left: 36px;    */
+/*    background: url("../imagens/ic_search_black_24dp_1x.png") no-repeat 0 -4px;    */
+    background: url("../imagens/ic_search_black_24dp_1x.png");
+    background-repeat: no-repeat;    
+    background-position: center;
+    padding: inherit;
+}
+
 
 /*=========================================================*/
