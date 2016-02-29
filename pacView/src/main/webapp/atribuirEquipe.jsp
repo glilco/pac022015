@@ -37,16 +37,19 @@
 
                 <c:forEach var="usuario" items="${beanAtribuir.usuariosMembros}">
                     <c:if test="${beanAtribuir.usuarioEmAlteracao!=usuario.id}">
-                        <form method="post" action="atribuirEquipe.jsp">
-                            <input type="hidden" name="usuarioEmAlteracao" value="${usuario.id}"/>
-                            <div class="container-membros-usuarios"> ${usuario.nome} </div>  
-                            <div class="container-membros-papeis"> ${usuario.papeis} </div>
-                            <div class="container-membros-acoes"> 
-                                <button class="submit btn-alterar-membro" type="submit" value="Alterar">
-                                    <span>Alterar</span>
-                                </button> 
-                            </div>                            
-                        </form>
+                        <div id="form-membros">
+                            <form method="post" action="atribuirEquipe.jsp">
+                                <input type="hidden" name="usuarioEmAlteracao" value="${usuario.id}"/>
+                                <div class="container-membros-usuarios"> ${usuario.nome} </div>  
+                                <div class="container-membros-papeis"> ${usuario.papeis} </div>
+                                <div class="container-membros-acoes"> 
+                                    <button class="btn-alterar-membro" type="submit" value="Alterar">
+                                        <img src="imagens/ic_mode_edit_1x.png" alt="Alterar"/>
+                                        Alterar
+                                    </button>                                                                                                 
+                                </div>                            
+                            </form>
+                        </div>
                     </c:if>
                     <c:if test="${beanAtribuir.usuarioEmAlteracao==usuario.id}">
                         <form method="post" action="atualizarPermissoesMembro">
@@ -87,13 +90,12 @@
                                            value="${beanAtribuir.usuarioPesquisado}"/>
                                 </div>
 
-                                <!--                    <input type="submit" value="Pesquisar"/>                    -->
-                                    
-                                <div style="display: inline-block; width: 15%">                                
-                                    <button class="submit btn-pesquisar-nao-membro2" type="submit" title="Pesquisar" value="Pesquisar" >
+                                <!--                    <input type="submit" value="Pesquisar"/>                    -->                                    
+                                <div style="display: inline-block; width: 15%; vertical-align: middle">                                
+                                    <button class="submit btn-pesquisar-nao-membro" type="submit" title="Pesquisar" value="Pesquisar" >
                                         <span>&nbsp;</span>
                                     </button>
-                                </div>                                
+                                </div>                                                                
                             </div>
                         </form>
                     </div>
@@ -120,7 +122,7 @@
                                 <div class="item-lista-nao-membro">
                                     <div class="checkbox-nome-nao-membro">
                                         <input type="checkbox" value="GPR" name="papeis"
-                                            id="papelGPR"/>
+                                               id="papelGPR"/>
                                     </div>
                                     <div class="label-nome-nao-membro">
                                         <label for="papelGPR">GPR</label>
@@ -130,7 +132,7 @@
                                 <div class="item-lista-nao-membro">
                                     <div class="checkbox-nome-nao-membro">
                                         <input type="checkbox" value="MEG" name="papeis"
-                                       id="papelMGG"/>
+                                               id="papelMGG"/>
                                     </div>
                                     <div class="label-nome-nao-membro">
                                         <label for="papelMGG">MEG</label>
@@ -139,8 +141,8 @@
 
                                 <div class="item-lista-nao-membro">
                                     <div class="checkbox-nome-nao-membro">
-                                       <input type="checkbox" value="MEM" name="papeis"
-                                        id="papelMEM"/>
+                                        <input type="checkbox" value="MEM" name="papeis"
+                                               id="papelMEM"/>
                                     </div>
                                     <div class="label-nome-nao-membro">
                                         <label for="papelGPR">GPR</label>                                        

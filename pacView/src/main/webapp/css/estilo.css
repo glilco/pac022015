@@ -378,6 +378,8 @@ input.date{
     padding-left: 0.5%;
     float: left;   
     width: 55%;     
+    border-style: solid;
+    border-width: 1px;
 } 
 
 #container-nao-membros {               
@@ -387,7 +389,7 @@ input.date{
 .container-membros-titulo {   
     display: inline-block;    
     width: 100%; 
-    background-color: #F5F5F5;
+    background-color: #d9d9d9;
     font-weight: bold;
 } 
 
@@ -403,7 +405,7 @@ input.date{
 
 .container-membros-acoes {    
     display: inline-block;
-    width: 10%;   
+    width: 20%;   
 } 
 .item-lista-nao-membros {               
     display: inline-block;      
@@ -426,36 +428,28 @@ input.date{
     width: 10%;
 }
 
-button.submit.btn-alterar-membro{
-    width: 200px;
-    padding-left: 11px;     
+
+.btn-alterar-membro {
+    text-indent: 10px;    
+    border: 0;
+    background: transparent none repeat scroll 0 0;    
+    cursor: pointer;
 }
 
-button.submit.btn-alterar-membro span{
-    width: 20%;
-    padding-left: 36px;    
-    background: url("../imagens/ic_mode_edit_black_24dp_1x.png") no-repeat 0 -4px;    
+.btn-alterar-membro img {
+    vertical-align: middle;    
 }
 
-
-
-button.submit.btn-pesquisar-nao-membro2 {
-    width: 40px;
-    height: 30px;
-/*    padding-left: 11px;     */
+.btn-alterar-membro:hover, .btn-alterar-membro:active {
+    opacity: 0.85;
+    cursor: pointer;
+    color: #c61a1a;
+    text-decoration: underline;
+    font-weight: bold;
 }
 
-button.submit.btn-pesquisar-nao-membro2 span {
-/*    width: 20%;*/
-height: 50px;
-width: 50px;
-/*    padding-left: 36px;    */
-/*    background: url("../imagens/ic_search_black_24dp_1x.png") no-repeat 0 -4px;    */
-    background: url("../imagens/ic_search_black_24dp_1x.png");
-    background-repeat: no-repeat;    
-    background-position: center;
-    padding: inherit;
+#form-membros:hover, #form-membros:active {
+    background-color: #e6e6e6;
 }
-
 
 /*=========================================================*/
