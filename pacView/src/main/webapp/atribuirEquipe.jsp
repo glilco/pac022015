@@ -22,7 +22,7 @@
     </head>
     <body>
         <h3>Atribuição de Equipe ao Projeto</h3>
-        <div class="container">
+        <div class="container-atribuicao-equipe">
             <div id="container-membros">   
                 <div class="container-membros-titulo">
                     <div class="container-membros-usuarios">
@@ -82,19 +82,25 @@
                     <div><label>Pesquisar por usuários:</label></div>
                     <div>                        
                         <form method="post" action="atribuirEquipe.jsp">                            
-                            <div style="display: inline-block; width: 100%">
-                                <div style="display: inline-block; width: 80%">
-                                    <input style="width: 90%"
-                                           type="text" size="20" name="usuarioPesquisado" 
-                                           placeholder="Informe usuário para pesquisa"
-                                           value="${beanAtribuir.usuarioPesquisado}"/>
+                            <div>
+<!--                            <div style="display: inline-block; width: 100%">-->
+                                <div style="display: inline-block; width: 60%">
+
+                                    <input style="display: inline-block; width: 90%"
+                                        type="text" size="20" name="usuarioPesquisado" 
+                                        placeholder="Informe usuário para pesquisa"
+                                        value="${beanAtribuir.usuarioPesquisado}"/>
                                 </div>
 
                                 <!--                    <input type="submit" value="Pesquisar"/>                    -->                                    
-                                <div style="display: inline-block; width: 15%; vertical-align: middle">                                
+                                <div style="display: inline-block; width: 25%; vertical-align: middle; margin-left: 10px">                                                                
                                     <button class="submit btn-pesquisar-nao-membro" type="submit" title="Pesquisar" value="Pesquisar" >
                                         <span>&nbsp;</span>
                                     </button>
+                                    <button class="btn-alterar-membro" type="submit" value="Alterar">
+                                        <img src="imagens/ic_mode_edit_1x.png" alt="Alterar"/>
+                                        Alterar
+                                    </button>                                                                                                 
                                 </div>                                                                
                             </div>
                         </form>

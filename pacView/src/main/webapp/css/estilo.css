@@ -372,18 +372,29 @@ input.date{
 /*  
  * Classe container da tela Atribuir Equipe.
 */
+
+.container-atribuicao-equipe {
+    display: table; 
+    padding: 0.5%; 
+    width:100%; 
+    position: relative;
+}
+
 #container-membros {   
     display: inline-block;
-/*    padding: 2.5%; */
+    width: 50%;
+    vertical-align: top;
     padding-left: 0.5%;
-    float: left;   
-    width: 55%;     
     border-style: solid;
     border-width: 1px;
 } 
 
 #container-nao-membros {               
-    margin-left: 60%;        
+    display: inline-block;
+    width: 40%;
+    vertical-align: top;    
+    padding-left: 20px;
+    padding-right: 0.5%;
 } 
 
 .container-membros-titulo {   
