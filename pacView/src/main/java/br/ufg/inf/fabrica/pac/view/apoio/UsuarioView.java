@@ -1,8 +1,8 @@
 package br.ufg.inf.fabrica.pac.view.apoio;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import java.util.List;
 
 /**

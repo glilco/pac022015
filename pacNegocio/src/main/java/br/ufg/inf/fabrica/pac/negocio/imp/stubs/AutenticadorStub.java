@@ -4,7 +4,7 @@ package br.ufg.inf.fabrica.pac.negocio.imp.stubs;
 
 import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.stub.DaoUsuarioStub;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;

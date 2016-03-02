@@ -1,19 +1,19 @@
-package br.ufg.inf.fabrica.pac.negocio.dominio;
+package br.ufg.inf.fabrica.pac.dominio;
 
 /**
  *
  * @author Danillo
  */
 public class MembroProjeto {
+
     private long idUsuario;
     private long idProjeto;
     private String papel;
-    private String nome;
-    
+
     //Transient
     private Usuario usuario;
     private Projeto projeto;
-    
+    private PapelProjeto papel_entity;
 
     public long getIdUsuario() {
         return idUsuario;
@@ -55,13 +55,12 @@ public class MembroProjeto {
         this.papel = papel;
     }
 
-    public String getNome() {
-        return nome;
+    public PapelProjeto getPapel_entity() {
+        return papel_entity;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setPapel_entity(PapelProjeto papel_entity) {
+        this.papel_entity = papel_entity;
     }
-    
-    
+
 }

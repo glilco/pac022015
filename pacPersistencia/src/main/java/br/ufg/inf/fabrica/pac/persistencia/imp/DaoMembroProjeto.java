@@ -1,8 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
 import br.ufg.inf.fabrica.pac.persistencia.util.Util;
 import java.sql.Connection;
@@ -14,12 +20,110 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
+/**
+ *
+ * @author auf
+ */
+public class DaoMembroProjeto implements IDaoMembroProjeto {
 
+    @Override
+    public MembroProjeto salvar(MembroProjeto entity) {
+        return null;
+    }
+
+    @Override
+    public MembroProjeto excluir(MembroProjeto entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public MembroProjeto buscar(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<MembroProjeto> buscar(Projeto projeto, String papel) {
+        String sql = "select * from MEMBROPROJETO where idProjeto=?, papel=?";
+        try {
+            PreparedStatement pst;
+            pst = Conexao.getConnection().prepareStatement(sql);
+            pst.setLong(1, projeto.getId());
+            pst.setString(2, papel);
+            ResultSet rs = pst.executeQuery();
+            List<MembroProjeto> membroProjeto = new ArrayList<>();
+            MembroProjeto mP = null;
+
+            while (rs.next()) {
+                mP = new MembroProjeto();
+                mP.setIdProjeto(rs.getLong("idProjeto"));
+                mP.setIdUsuario(rs.getLong("idUsuario"));
+                mP.setPapel(rs.getString("papel"));
+                membroProjeto.add(mP);
+            }
+            return membroProjeto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public List<MembroProjeto> buscar(Projeto projeto, Usuario usuario) {
+        String sql = "select * from MEMBROPROJETO where idProjeto=? and idUsuario=?";
+        try {
+            PreparedStatement pst;
+            pst = Conexao.getConnection().prepareStatement(sql);
+            pst.setLong(1, projeto.getId());
+            pst.setLong(2, usuario.getId());
+            ResultSet rs = pst.executeQuery();
+            List<MembroProjeto> membroProjeto = new ArrayList<>();
+            MembroProjeto mP = null;
+
+            while (rs.next()) {
+                mP = new MembroProjeto();
+                mP.setIdProjeto(rs.getLong("idProjeto"));
+                mP.setIdUsuario(rs.getLong("idUsuario"));
+                mP.setPapel(rs.getString("papel"));
+                membroProjeto.add(mP);
+            }
+            return membroProjeto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public List<MembroProjeto> buscar(String papel, Usuario usuario) {
+        String sql = "select * from MEMBROPROJETO where papel=?, idUsuario=?";
+        try {
+            PreparedStatement pst;
+            pst = Conexao.getConnection().prepareStatement(sql);
+            pst.setString(1, papel);
+            pst.setLong(2, usuario.getId());
+            ResultSet rs = pst.executeQuery();
+            List<MembroProjeto> membroProjeto = new ArrayList<>();
+            MembroProjeto mP = null;
+
+            while (rs.next()) {
+                mP = new MembroProjeto();
+                mP.setIdProjeto(rs.getLong("idProjeto"));
+                mP.setIdUsuario(rs.getLong("idUsuario"));
+                mP.setPapel(rs.getString("papel"));
+                membroProjeto.add(mP);
+            }
+            return membroProjeto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
     public Resposta<List<Usuario>> buscarUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("select U.*, M.* from USUARIO U ").
-                append("left join MEMBRO_PROJETO M on U.ID = M.IDUSUARIO ").
+                append("left join MEMBROPROJETO M on U.ID = M.IDUSUARIO ").
                 append("order by U.ID");
         Resposta resposta = new Resposta();
         try {
@@ -36,19 +140,14 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
                 }
                 usuarios.add(usuario);
             }
-            resposta.setValue(usuarios);
+            resposta.setChave(usuarios);
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
                     ex);
-            resposta.setValue(null);
+            resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
         }
         return resposta;
-    }
-
-    public static void main(String[] args) {
-        DaoMembroProjetoImpl dao = new DaoMembroProjetoImpl();
-        dao.buscarUsuarios();
     }
 
     @Override
@@ -57,7 +156,7 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
         StringBuilder sql = new StringBuilder();
         sql.append("select u.* from Usuario u ").
                 append("where u.nome like ? and u.id not in ").
-                append("(select m.idUsuario from Membro_Projeto m ").
+                append("(select m.idUsuario from MembroProjeto m ").
                 append("where m.idProjeto = ?)");
         Resposta resposta = new Resposta();
         try {
@@ -71,11 +170,11 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
                 usuarios.add(usuario);
             }
-            resposta.setValue(usuarios);
+            resposta.setChave(usuarios);
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
                     ex);
-            resposta.setValue(null);
+            resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
         }
         return resposta;
@@ -84,7 +183,7 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
     @Override
     public Resposta<List<MembroProjeto>> buscarMembrosPorProjeto(long idProjeto) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select m.*, u.* from MEMBRO_PROJETO m ").
+        sql.append("select m.*, u.* from MEMBROPROJETO m ").
                 append("inner join USUARIO u ").
                 append("on m.IDUSUARIO=u.ID ").
                 append("where m.IDPROJETO = ? ORDER by m.IDUSUARIO");
@@ -103,11 +202,11 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
                 membro.setUsuario(usuario);
                 membros.add(membro);
             }
-            resposta.setValue(membros);
+            resposta.setChave(membros);
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
                     ex);
-            resposta.setValue(null);
+            resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
         }
         return resposta;
@@ -119,7 +218,7 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
         Connection con = null;
         try {
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into MEMBRO_PROJETO ").
+            sql.append("insert into MEMBROPROJETO ").
                     append("(IDUSUARIO, IDPROJETO, PAPEL) ").
                     append("values (?, ?, ?)");
 
@@ -147,10 +246,10 @@ public class DaoMembroProjetoImpl implements IDaoMembroProjeto {
             List<MembroProjeto> papeisAdicionados) throws SQLException {
         StringBuilder sqlInsercao = new StringBuilder();
         StringBuilder sqlDelecao = new StringBuilder();
-        sqlInsercao.append("insert into MEMBRO_PROJETO").
+        sqlInsercao.append("insert into MEMBROPROJETO").
                 append(" (IDUSUARIO, IDPROJETO, PAPEL) ").
                 append(" VALUES (?,?,?)");
-        sqlDelecao.append("delete from MEMBRO_PROJETO ").
+        sqlDelecao.append("delete from MEMBROPROJETO ").
                 append("where IDUSUARIO = ? and ").
                 append("IDPROJETO = ? and ").
                 append("PAPEL like ? ");

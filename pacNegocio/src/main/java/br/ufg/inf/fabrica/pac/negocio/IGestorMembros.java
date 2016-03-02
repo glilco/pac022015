@@ -1,9 +1,9 @@
 package br.ufg.inf.fabrica.pac.negocio;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import java.util.List;
 
 /**
@@ -16,6 +16,7 @@ public interface IGestorMembros {
      *
      * @param autor
      * @param projeto
+     * @param usuarioPesquisado
      * @return
      */
     public Resposta<List<Usuario>> buscarUsuariosNaoMembros(Usuario autor, Projeto projeto, String usuarioPesquisado);

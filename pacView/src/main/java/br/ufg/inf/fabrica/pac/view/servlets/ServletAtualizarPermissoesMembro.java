@@ -2,12 +2,12 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorMembrosImpl;
 import br.ufg.inf.fabrica.pac.view.apoio.UsuarioView;
-import br.ufg.inf.fabrica.pac.view.servlets.beans.BeanAtribuirEquipe;
+import br.ufg.inf.fabrica.pac.view.beans.BeanAtribuirEquipe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

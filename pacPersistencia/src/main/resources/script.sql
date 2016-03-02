@@ -1,13 +1,3 @@
-
-drop table MEMBRO_PROJETO;
-drop table ANDAMENTO;
-drop table PACOTE;
-drop table ESTADO;
-drop table PROJETO;
-drop table USUARIO;
-
-
-
 create table ESTADO(
     id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     nome VARCHAR(50) NOT NULL,
@@ -70,8 +60,8 @@ create table MEMBRO_PROJETO(
     idUsuario INTEGER NOT NULL,
     idProjeto INTEGER NOT NULL,
     papel VARCHAR(100) NOT NULL,
-    PRIMARY KEY (idUsuario, idProjeto, papel),
-    FOREIGN KEY (idUsuario) REFERENCES USUARIO(id),
-    FOREIGN KEY (idProjeto) REFERENCES PROJETO(id)
+    PRIMARY KEY (id_usuario, id_projeto, papel),
+    FOREIGN KEY (id_usuario) REFERENCES USUARIO(id),
+    FOREIGN KEY (id_projeto) REFERENCES PROJETO(id)
 );
 

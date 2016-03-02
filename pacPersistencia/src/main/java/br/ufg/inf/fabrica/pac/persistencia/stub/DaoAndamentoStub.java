@@ -1,7 +1,7 @@
 package br.ufg.inf.fabrica.pac.persistencia.stub;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.Andamento;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Pacote;
+import br.ufg.inf.fabrica.pac.dominio.Andamento;
+import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
 import java.util.List;
 

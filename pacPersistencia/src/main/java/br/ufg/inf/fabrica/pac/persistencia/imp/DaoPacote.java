@@ -1,7 +1,7 @@
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.Pacote;
-import br.ufg.inf.fabrica.pac.negocio.utils.Utils;
+import br.ufg.inf.fabrica.pac.dominio.Pacote;
+import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -76,7 +76,7 @@ public class DaoPacote implements IDaoPacote{
 
     @Override
     public Pacote buscar(long id) {
-        String sql = "select e.* from PACOTE where id=?";
+        String sql = "select P.* from PACOTE as P where id=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);

@@ -1,6 +1,6 @@
 package br.ufg.inf.fabrica.pac.seguranca.imp;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -59,7 +59,7 @@ public class LdapAutenticador implements ILdapAutenticador {
     private Usuario buscaDadosDoUsuario(String login, DirContext ctx) {
         Usuario usuario = null;
         ConexoesLdap.lerParametros();
-        String[] atributosRetorno = new String[]{"uid", "mail", "cn", "shadowExpire"};
+        String[] atributosRetorno = new String[]{"uidNumber", "mail", "cn", "shadowExpire"};
         SearchControls searchCtls = new SearchControls();
         searchCtls.setReturningAttributes(atributosRetorno);
 
@@ -89,16 +89,13 @@ public class LdapAutenticador implements ILdapAutenticador {
     }
 
     private Usuario constroiUsuario(Attributes atributos) throws NamingException {
-        return new Usuario(getValorAtributo(atributos, "uid"),
+        return new Usuario( Long.parseLong( getValorAtributo(atributos, "uidNumber")),
                 getValorAtributo(atributos, "cn"),
                 getValorAtributo(atributos, "mail")
         );
     }
 
     private String getValorAtributo(Attributes atributos, String nomeAtributo) throws NamingException {
-//        if (nomeAtributo.equalsIgnoreCase("registeredAddress")) {
-//            return atributos.get(nomeAtributo) == null ? "" : atributos.get(nomeAtributo).get().toString();
-//        }
         return atributos.get(nomeAtributo) == null ? null : atributos.get(nomeAtributo).get().toString();
     }
 }

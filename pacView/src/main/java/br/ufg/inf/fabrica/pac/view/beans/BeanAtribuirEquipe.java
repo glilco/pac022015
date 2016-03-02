@@ -1,11 +1,11 @@
-package br.ufg.inf.fabrica.pac.view.servlets.beans;
+package br.ufg.inf.fabrica.pac.view.beans;
 
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorMembrosImpl;
 import br.ufg.inf.fabrica.pac.view.apoio.UsuarioView;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class BeanAtribuirEquipe {
         Resposta resposta;
         resposta = gestor.buscarMembros(usuarioLogado, projetoSelecionado);
         if(resposta.isSucesso()){
-            membros = (List<MembroProjeto>) resposta.getValue();
+            membros = (List<MembroProjeto>) resposta.getChave();
         }
         
         
@@ -110,7 +110,7 @@ public class BeanAtribuirEquipe {
         resposta = gestor.buscarUsuariosNaoMembros(usuarioLogado, projetoSelecionado, usuarioPesquisado);
         setUsuarioPesquisado("");
         if(resposta.isSucesso()){
-            naoMembros = (List<Usuario>) resposta.getValue();
+            naoMembros = (List<Usuario>) resposta.getChave();
         }
         return naoMembros;
     } 

@@ -1,8 +1,8 @@
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.Andamento;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Pacote;
-import br.ufg.inf.fabrica.pac.negocio.utils.Utils;
+import br.ufg.inf.fabrica.pac.dominio.Andamento;
+import br.ufg.inf.fabrica.pac.dominio.Pacote;
+import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,10 +26,10 @@ public class DaoAndamento implements IDaoAndamento{
     @Override
     public Andamento salvar(Andamento entity) {
         String sqlUpdate = "update ANDAMENTO set DataModificacao=?, DataPrevistaConclusao=?," +
-                                " Descricao=?, IdEstado=?, IdPacote=?, idUsuario=? " +
+                                " Descricao=?, IdEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?" +
                                 " where id=?";
         String sqlInsert = "insert into ANDAMENTO (DataModificacao, DataPrevistaConclusao, Descricao," +
-                               "IdEstado, IdPacote, idUsuario) values (?, ?, ?, ?, ?, ?)";
+                               "IdEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pst;
             if(entity.getId()==0){
@@ -44,7 +44,8 @@ public class DaoAndamento implements IDaoAndamento{
             pst.setString(3, entity.getDescricao());
             pst.setLong(4, entity.getIdEstado());
             pst.setLong(5, entity.getIdPacote());
-            pst.setLong(6, entity.getIdUsuario());
+            pst.setLong(6, entity.getIdUsuarioRemetente());
+            pst.setLong(7, entity.getIdUsuarioDestinatario());
             pst.execute();
             if(entity.getId()==0){
                 ResultSet keys = pst.getGeneratedKeys();
@@ -94,7 +95,8 @@ public class DaoAndamento implements IDaoAndamento{
                 andamento.setId(id);
                 andamento.setIdEstado(rs.getLong("idEstado"));
                 andamento.setIdPacote(rs.getLong("idPacote"));
-                andamento.setIdUsuario(rs.getLong("idUsuario"));
+                andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
+                andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
             }
             return andamento;
         } catch (SQLException ex) {

@@ -1,4 +1,4 @@
-package br.ufg.inf.fabrica.pac.negocio.dominio;
+package br.ufg.inf.fabrica.pac.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +8,16 @@ import java.util.List;
  * @param <Chave>
  */
 public class Resposta <Chave> {
-    private Chave value;
+    private Chave chave;
     private final List<String> laudo = new ArrayList<>();
     private boolean sucesso = true;
     
-    public Chave getValue() {
-        return value;
+    public Chave getChave() {
+        return chave;
     }
 
-    public void setValue(Chave value) {
-        this.value = value;
+    public void setChave(Chave chave) {
+        this.chave = chave;
     }
 
     public List<String> getLaudo() {

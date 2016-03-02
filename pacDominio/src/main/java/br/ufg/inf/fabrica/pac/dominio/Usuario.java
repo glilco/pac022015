@@ -1,4 +1,6 @@
-package br.ufg.inf.fabrica.pac.negocio.dominio;
+package br.ufg.inf.fabrica.pac.dominio;
+
+import java.util.List;
 
 /**
  *
@@ -20,10 +22,18 @@ public class Usuario {
 
     }
 
-    public Usuario(String login, String nome, String email) {
-        this.login = login;
+    public Usuario(long id, String nome, String email) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -66,11 +76,11 @@ public class Usuario {
         this.ativo = value;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public boolean isGPP() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public long getId() {
-        return this.id;
+    public boolean isGPR() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,12 +1,12 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
  
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.negocio.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.negocio.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
+import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
-import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembroProjetoImpl;
+import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembroProjeto;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,10 +35,10 @@ public class GestorMembrosImpl implements IGestorMembros {
             resposta.addItemLaudo("Projeto não informado");
         if(usuarioPesquisado==null)
             usuarioPesquisado="";
-        IDaoMembroProjeto dao = new DaoMembroProjetoImpl();
+        IDaoMembroProjeto dao = new DaoMembroProjeto();
         List<Usuario> usuarios;
-        usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), usuarioPesquisado).getValue();
-        resposta.setValue(usuarios);
+        usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), usuarioPesquisado).getChave();
+        resposta.setChave(usuarios);
         return resposta;
     }
 
@@ -48,9 +48,9 @@ public class GestorMembrosImpl implements IGestorMembros {
         Resposta<List<MembroProjeto>> resposta = new Resposta();
         if(projeto==null)
             resposta.addItemLaudo("Projeto não informado");
-        IDaoMembroProjeto dao = new DaoMembroProjetoImpl();
-        List<MembroProjeto> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getValue();
-        resposta.setValue(membros);
+        IDaoMembroProjeto dao = new DaoMembroProjeto();
+        List<MembroProjeto> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        resposta.setChave(membros);
         return resposta;
     }
 
@@ -66,9 +66,9 @@ public class GestorMembrosImpl implements IGestorMembros {
             if(membro.getPapel()==null || membro.getPapel().isEmpty())
                 resposta.addItemLaudo("Informe o papel do membro");
         }
-        IDaoMembroProjeto dao = new DaoMembroProjetoImpl();
+        IDaoMembroProjeto dao = new DaoMembroProjeto();
         try {
-            resposta.setValue(dao.adicionarMembrosProjeto(membros));
+            resposta.setChave(dao.adicionarMembrosProjeto(membros));
         } catch (SQLException ex) {
             Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,7 +106,7 @@ public class GestorMembrosImpl implements IGestorMembros {
                 resposta.addItemLaudo("A atualização deve conter papéis de somente um usuário em somente um projeto");
         }
         if(resposta.isSucesso()){
-            IDaoMembroProjeto dao = new DaoMembroProjetoImpl();
+            IDaoMembroProjeto dao = new DaoMembroProjeto();
             try {
                 dao.atualizarPapeisDeUsuarioEmUmProjeto(papeisRemovidos, papeisAdicionados);
             } catch (SQLException ex) {

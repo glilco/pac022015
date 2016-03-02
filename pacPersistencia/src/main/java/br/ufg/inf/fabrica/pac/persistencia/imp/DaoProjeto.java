@@ -1,9 +1,8 @@
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
-import br.ufg.inf.fabrica.pac.negocio.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.negocio.utils.Utils;
+import br.ufg.inf.fabrica.pac.dominio.Projeto;
+import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoProjeto;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,7 +68,7 @@ public class DaoProjeto implements IDaoProjeto{
 
     @Override
     public Projeto buscar(long id) {
-        String sql = "select e.* from PROJETO where id=?";
+        String sql = "select P.* from PROJETO as P where id=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
