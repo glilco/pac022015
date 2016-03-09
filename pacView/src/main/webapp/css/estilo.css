@@ -439,7 +439,6 @@ input.date{
     width: 10%;
 }
 
-
 .btn-alterar-membro {
     text-indent: 10px;    
     border: 0;
@@ -459,8 +458,33 @@ input.date{
     font-weight: bold;
 }
 
+.btn-pesquisar-nao-membro {
+    border: 0;
+    background: transparent none repeat scroll 0 0;    
+    cursor: pointer;
+    display: inline-block; 
+}
+
+.btn-pesquisar-nao-membro img {
+    vertical-align: middle;    
+}
+
+.btn-pesquisar-nao-membro:hover {    
+    opacity: 0.85;
+    cursor: pointer;   
+}
+
+.btn-pesquisar-nao-membro:active, .btn-pesquisar-nao-membro:focus {
+    background-color: #d9d9d9;
+    cursor: pointer;       
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+
 #form-membros:hover, #form-membros:active {
     background-color: #e6e6e6;
 }
-
 /*=========================================================*/
