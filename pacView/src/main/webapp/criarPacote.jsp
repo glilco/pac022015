@@ -20,7 +20,6 @@
         </c:forEach>            
 
         <hr>
-        fas
         <form action="manterPacote" method="post" style="width: 1000px" 
               enctype="multipart/form-data">
             Nome: <br/> 
