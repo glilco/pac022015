@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>
-            <c:out value="${sessionScope.errorMessage}"/>
+            <c:out value="${sessionScope.errorMessages}"/>
         </h1>
     </body>
 </html>
