@@ -13,14 +13,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Criação de pacote</title>
     </head>
+    
     <body>
-
         <c:forEach var="item" items=" ${resposta.laudo}">
             ${item} <br/>
         </c:forEach>            
 
         <hr>
-        <form action="manterPacote" method="post" style="width: 1000px">
+        <form action="criarPacote" method="post" style="width: 1000px">
             Nome: <br/> 
             <input style="width:500px " id="nomePacote" 
                    title="Nome:" type="text" name="nomePacote" 

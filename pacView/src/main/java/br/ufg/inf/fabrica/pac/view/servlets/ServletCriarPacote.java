@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author auf
  */
-@WebServlet(name = "CriarPacoteServlet", urlPatterns = {"/manterPacote"})
+@WebServlet(name = "ServletCriarPacote", urlPatterns = {"/criarPacote"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024, // 1MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 10,// 10MB
         location = "C://"
 )
-public class ServletManterPacote extends HttpServlet {
+public class ServletCriarPacote extends HttpServlet {
 
     
     private static final String BASE_DIR = "Users\\auf\\Desktop\\UploadsPAC";
@@ -79,7 +79,7 @@ public class ServletManterPacote extends HttpServlet {
             try{
                 pacote.setDataPrevistaRealizacao(sdf.parse(request.getParameter("dataPrevistaRealizacao")));
             }catch(ParseException pe){
-                Logger.getLogger(ServletManterPacote.class.getName()).log(Level.SEVERE, null, pe);
+                Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, pe);
                 resposta.addItemLaudo("Data de Previsão de Realização Inválida!");
                 request.setAttribute("resposta", resposta);
                 request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
@@ -110,7 +110,7 @@ public class ServletManterPacote extends HttpServlet {
                 }
             }
         } catch (IOException | ServletException ex) {
-            Logger.getLogger(ServletManterPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
             resposta.setChave(null);
             resposta.addItemLaudo("Falha na criação do pacote");
             request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
@@ -133,7 +133,7 @@ public class ServletManterPacote extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ParseException ex) {
-            Logger.getLogger(ServletManterPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -151,7 +151,7 @@ public class ServletManterPacote extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ParseException ex) {
-            Logger.getLogger(ServletManterPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
