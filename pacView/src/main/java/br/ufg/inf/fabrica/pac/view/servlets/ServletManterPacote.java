@@ -34,6 +34,11 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class ServletManterPacote extends HttpServlet {
 
+    
+    private static final String BASE_DIR = "Users\\auf\\Desktop\\UploadsPAC";
+    private static final String DRIVE = "C:\\";
+    Resposta<Pacote> resposta = new Resposta<>();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,11 +47,8 @@ public class ServletManterPacote extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws java.text.ParseException
      */
-    private static final String BASE_DIR = "Users\\auf\\Desktop\\UploadsPAC";
-    private static final String DRIVE = "C:\\";
-    Resposta<Pacote> resposta = new Resposta<Pacote>();
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
 
@@ -88,7 +90,7 @@ public class ServletManterPacote extends HttpServlet {
 
             pacote.setDocumento(request.getAttribute("documento").toString());
 
-            Usuario usuarioLogado = null;
+            Usuario usuarioLogado;
 
             usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 
