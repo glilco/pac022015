@@ -4,7 +4,6 @@ import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.Autenticador;
-import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
