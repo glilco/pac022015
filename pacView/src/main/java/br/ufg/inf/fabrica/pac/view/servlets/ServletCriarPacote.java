@@ -7,11 +7,16 @@ import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.CriarPacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.FileService;
+import br.ufg.inf.fabrica.pac.persistencia.util.Util;
+import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
+import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -20,6 +25,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -34,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class ServletCriarPacote extends HttpServlet {
 
-    
     private static final String BASE_DIR = "Users\\auf\\Desktop\\UploadsPAC";
     private static final String DRIVE = "C:\\";
     Resposta<Pacote> resposta = new Resposta<>();
@@ -49,42 +54,32 @@ public class ServletCriarPacote extends HttpServlet {
      * @throws IOException if an I/O error occurs
      * @throws java.text.ParseException
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
 
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
-
-//      %Indica resposta tanto para sucesso quanto para erros
-        resposta.setChave(null);
 
         try {
-            boolean ehNovoPacote = false;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
+            HttpSession session = request.getSession();
+            Usuario autor = (Usuario) session.getAttribute(AtributosSessao.USUARIO_LOGADO);
+            Projeto projeto = (Projeto) session.getAttribute(AtributosSessao.PROJETO_SELECIONADO);
             Pacote pacote = new Pacote();
+            DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             pacote.setNome(request.getParameter("nomePacote"));
             pacote.setDescricao(request.getParameter("descricaoPacote"));
-            if (request.getParameter("abandonado") != null && request.getParameter("abandonado").equalsIgnoreCase("on")) {
-                pacote.setAbandonado(true);
-            } else {
-                pacote.setAbandonado(false);
+            pacote.setAbandonado(false);
+            String dataPrevista = request.getParameter("dataPrevistaRealizacao");
+            Date dataPrevistaRealizacao = null;
+            try {
+                dataPrevistaRealizacao = sdf.parse(dataPrevista);
+            } catch (ParseException ex) {
+                session.setAttribute(AtributosSessao.MENSAGENS_DE_ERRO, 
+                        "Data de previsão de realização inválida");
+                UtilVisao.direcionar(request, response, "erro.jsp");
             }
-            if (request.getParameter("dataCriacao") == null) {
-                ehNovoPacote = true;
-            } else {
-                pacote.setDataCriacao(sdf.parse(request.getParameter("dataCriacao")));
-            }
-            try{
-                pacote.setDataPrevistaRealizacao(sdf.parse(request.getParameter("dataPrevistaRealizacao")));
-            }catch(ParseException pe){
-                Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, pe);
-                resposta.addItemLaudo("Data de Previsão de Realização Inválida!");
-                request.setAttribute("resposta", resposta);
-                request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
-            }
-            
+            pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
+
+            boolean ehNovoPacote = false;
 
             request = salvarDocumento(request, response);
 
@@ -113,7 +108,7 @@ public class ServletCriarPacote extends HttpServlet {
             Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
             resposta.setChave(null);
             resposta.addItemLaudo("Falha na criação do pacote");
-            request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
+//            request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
         }
 
     }
@@ -130,11 +125,8 @@ public class ServletCriarPacote extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ParseException ex) {
-            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        processRequest(request, response);
     }
 
     /**
@@ -148,11 +140,7 @@ public class ServletCriarPacote extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ParseException ex) {
-            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -169,9 +157,8 @@ public class ServletCriarPacote extends HttpServlet {
 
         FileService service = new FileService();
         String nomeCompletoDocumento;
-        
-        
-        Path destination = service.createFolder( DRIVE + BASE_DIR);
+
+        Path destination = service.createFolder(DRIVE + BASE_DIR);
         String destinationString = destination.toString().replace(DRIVE, "");
 
         if (request.getPart("documento") != null && Files.exists(destination)) {
@@ -180,7 +167,7 @@ public class ServletCriarPacote extends HttpServlet {
                 request.setAttribute("documento", nomeCompletoDocumento);
             }
         }
-        
+
         if (request.getAttribute("documento") == null) {
             resposta.addItemLaudo("Documento não pode ser enviado!");
             request.setAttribute("resposta", resposta);
