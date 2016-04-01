@@ -5,7 +5,7 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.negocio.imp.CriarPacote;
+import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.dominio.utils.FileService;
 import br.ufg.inf.fabrica.pac.persistencia.util.Util;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;

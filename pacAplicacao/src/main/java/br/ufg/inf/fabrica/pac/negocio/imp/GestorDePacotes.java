@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author auf
  */
-public class CriarPacote implements ICriarPacote {
+public class GestorDePacotes implements ICriarPacote {
 
     @Override
     public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
@@ -56,7 +56,7 @@ public class CriarPacote implements ICriarPacote {
         try {
             hoje = new SimpleDateFormat("dd/MM/yyyy").parse(hojeString);
         } catch (ParseException ex) {
-            Logger.getLogger(CriarPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (pacoteTemCampoVazio(pacote)) {
