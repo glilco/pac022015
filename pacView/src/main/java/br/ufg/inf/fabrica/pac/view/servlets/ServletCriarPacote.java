@@ -67,48 +67,24 @@ public class ServletCriarPacote extends HttpServlet {
             DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             pacote.setNome(request.getParameter("nomePacote"));
             pacote.setDescricao(request.getParameter("descricaoPacote"));
-            pacote.setAbandonado(false);
             String dataPrevista = request.getParameter("dataPrevistaRealizacao");
-            Date dataPrevistaRealizacao = null;
-            try {
-                dataPrevistaRealizacao = sdf.parse(dataPrevista);
-            } catch (ParseException ex) {
-                session.setAttribute(AtributosSessao.MENSAGENS_DE_ERRO, 
-                        "Data de previsão de realização inválida");
-                UtilVisao.direcionar(request, response, "erro.jsp");
-            }
-            pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
-
-            boolean ehNovoPacote = false;
-
-            request = salvarDocumento(request, response);
-
-            pacote.setDocumento(request.getAttribute("documento").toString());
-
-            Usuario usuarioLogado;
-
-            usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
-
-            Projeto projetoSelecionado = new Projeto();
-            projetoSelecionado.setId(1);
-//            projetoSelecionado = (Projeto) request.getSession().getAttribute("projetoSelecionado");
-            ICriarPacote cp = new CriarPacote();
-
-            if (ehNovoPacote) {
-                resposta = cp.criarPacote(usuarioLogado, pacote, projetoSelecionado);
-                if (resposta.getChave() != null) {
-                    request.setAttribute("resposta", resposta);
-                    request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("resposta", resposta);
-                    request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
+            if (dataPrevista != null) {
+                Date dataPrevistaRealizacao = null;
+                try {
+                    dataPrevistaRealizacao = sdf.parse(dataPrevista);
+                } catch (ParseException ex) {
+                    session.setAttribute(AtributosSessao.MENSAGENS_DE_ERRO,
+                            "Data de previsão de realização inválida");
+                    UtilVisao.direcionar(request, response, "erro.jsp");
                 }
+                pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
             }
+            pacote.setDocumento(request.getParameter("documento"));
+            
         } catch (IOException | ServletException ex) {
             Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
-            resposta.setChave(null);
-            resposta.addItemLaudo("Falha na criação do pacote");
-//            request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
+            
+            UtilVisao.direcionarPaginaErro(request, response, ex.getMessage());
         }
 
     }
