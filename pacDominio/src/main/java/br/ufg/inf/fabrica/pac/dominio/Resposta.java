@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Resposta <Chave> {
     private Chave chave;
-    private final List<String> laudo = new ArrayList<>();
+    private final List<String> laudo;
     private boolean sucesso = true;
     
     public Chave getChave() {
@@ -31,5 +31,10 @@ public class Resposta <Chave> {
     
     public boolean isSucesso(){
         return this.sucesso;
+    }
+    
+    public Resposta(){
+        this.chave = null;
+        this.laudo = new ArrayList<>();
     }
 }

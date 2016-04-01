@@ -5,8 +5,8 @@ import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
-import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembroProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
+import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,7 +35,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             resposta.addItemLaudo("Projeto não informado");
         if(usuarioPesquisado==null)
             usuarioPesquisado="";
-        IDaoMembroProjeto dao = new DaoMembroProjeto();
+        IDaoMembro dao = new DaoMembro();
         List<Usuario> usuarios;
         usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), usuarioPesquisado).getChave();
         resposta.setChave(usuarios);
@@ -48,7 +48,7 @@ public class GestorMembrosImpl implements IGestorMembros {
         Resposta<List<MembroProjeto>> resposta = new Resposta();
         if(projeto==null)
             resposta.addItemLaudo("Projeto não informado");
-        IDaoMembroProjeto dao = new DaoMembroProjeto();
+        IDaoMembro dao = new DaoMembro();
         List<MembroProjeto> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
         resposta.setChave(membros);
         return resposta;
@@ -66,7 +66,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             if(membro.getPapel()==null || membro.getPapel().isEmpty())
                 resposta.addItemLaudo("Informe o papel do membro");
         }
-        IDaoMembroProjeto dao = new DaoMembroProjeto();
+        IDaoMembro dao = new DaoMembro();
         try {
             resposta.setChave(dao.adicionarMembrosProjeto(membros));
         } catch (SQLException ex) {
@@ -106,7 +106,7 @@ public class GestorMembrosImpl implements IGestorMembros {
                 resposta.addItemLaudo("A atualização deve conter papéis de somente um usuário em somente um projeto");
         }
         if(resposta.isSucesso()){
-            IDaoMembroProjeto dao = new DaoMembroProjeto();
+            IDaoMembro dao = new DaoMembro();
             try {
                 dao.atualizarPapeisDeUsuarioEmUmProjeto(papeisRemovidos, papeisAdicionados);
             } catch (SQLException ex) {

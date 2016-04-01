@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author auf
  */
-public interface IDaoMembroProjeto extends IDao<MembroProjeto> {
+public interface IDaoMembro extends IDao<MembroProjeto> {
 
     /**
      *
@@ -76,11 +76,17 @@ public interface IDaoMembroProjeto extends IDao<MembroProjeto> {
      * @return
      */
     public List<MembroProjeto> buscar(String papel, Usuario usuario);
-
+    
     /**
      *
      * @return
      */
     public Resposta<List<Usuario>> buscarUsuarios();
 
+    /**
+     * 
+     * @param idUsuario
+     * @return 
+     */
+    public List<MembroProjeto> buscarPapeis(long idUsuario) throws SQLException;
 }

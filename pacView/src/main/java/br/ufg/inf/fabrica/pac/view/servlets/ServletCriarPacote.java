@@ -1,13 +1,11 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
-import br.ufg.inf.fabrica.pac.negocio.ICriarPacote;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.dominio.utils.FileService;
-import br.ufg.inf.fabrica.pac.persistencia.util.Util;
+import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
 import java.io.IOException;
@@ -80,6 +78,11 @@ public class ServletCriarPacote extends HttpServlet {
                 pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
             }
             pacote.setDocumento(request.getParameter("documento"));
+            GestorDePacotes gestor = GestorDePacotes.getInstance();
+            Resposta<Pacote> resposta = gestor.criarPacote(autor, pacote, projeto);
+            if(!resposta.isSucesso()){
+                UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
+            }
             
         } catch (IOException | ServletException ex) {
             Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);

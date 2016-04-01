@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
 import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.util.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author auf
  */
-public class DaoMembroProjeto implements IDaoMembroProjeto {
+public class DaoMembro implements IDaoMembro {
 
     @Override
     public MembroProjeto salvar(MembroProjeto entity) {
@@ -280,6 +275,28 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
                 con.close();
             }
         }
+    }
+
+    @Override
+    public List<MembroProjeto> buscarPapeis(long idUsuario) throws SQLException {
+        String sql = "select * from MEMBROPROJETO where idUsuario=?";
+
+        PreparedStatement pst;
+        pst = Conexao.getConnection().prepareStatement(sql);
+        pst.setLong(1, idUsuario);
+        ResultSet rs = pst.executeQuery();
+        List<MembroProjeto> membroProjeto = new ArrayList<>();
+        MembroProjeto mP = null;
+
+        while (rs.next()) {
+            mP = new MembroProjeto();
+            mP.setIdProjeto(rs.getLong("idProjeto"));
+            mP.setIdUsuario(rs.getLong("idUsuario"));
+            mP.setPapel(rs.getString("papel"));
+            membroProjeto.add(mP);
+        }
+        return membroProjeto;
+
     }
 
 }

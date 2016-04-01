@@ -10,10 +10,11 @@ import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoEstado;
-import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembroProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoPacote;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,14 +27,39 @@ import java.util.logging.Logger;
  * @author auf
  */
 public class GestorDePacotes implements ICriarPacote {
+    
+    private static GestorDePacotes gestor;
+    
+    private GestorDePacotes(){
+        
+    }
+    
+    public static GestorDePacotes getInstance(){
+        if(gestor==null){
+            gestor = new GestorDePacotes();
+        }
+        return gestor;
+    }
 
     @Override
     public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
+        IDaoMembro daoMembro = new DaoMembro();
+        try {
+            List<MembroProjeto> papeis = daoMembro.buscarPapeis(autor.getId());
+            System.out.println(papeis);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
+            Resposta resposta = new Resposta();
+            resposta.addItemLaudo("Falha no sistema");
+            return resposta;
+        }
+        
+        
         Resposta<Pacote> resp = new Resposta<Pacote>();
         //Verificar se o usuario pertence ao projeto e neste tem o perfil GPR .
         List<MembroProjeto> membroProjeto;
 
-        IDaoMembroProjeto dao = new DaoMembroProjeto();
+        IDaoMembro dao = new DaoMembro();
 
         membroProjeto = dao.buscar(projetoSelecionado, autor);
 
