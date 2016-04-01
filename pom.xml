@@ -8,9 +8,9 @@
     <modules>
         <module>pacPersistencia</module>
         <module>pacSeguranca</module>
-        <module>pacNegocio</module>
         <module>pacDominio</module>
         <module>pacView</module>
+        <module>pacAplicacao</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
