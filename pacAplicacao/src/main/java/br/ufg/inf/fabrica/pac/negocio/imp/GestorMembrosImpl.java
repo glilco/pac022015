@@ -1,7 +1,7 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
  
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 public class GestorMembrosImpl implements IGestorMembros {
 
     @Override
-    public Resposta<MembroProjeto> adicionarMembroProjeto(Usuario autor, 
-            MembroProjeto membro) {
+    public Resposta<Membro> adicionarMembroProjeto(Usuario autor, 
+            Membro membro) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Resposta<MembroProjeto> removerMembroProjeto(Usuario autor, 
-            MembroProjeto membro) {
+    public Resposta<Membro> removerMembroProjeto(Usuario autor, 
+            Membro membro) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -43,22 +43,22 @@ public class GestorMembrosImpl implements IGestorMembros {
     }
 
     @Override
-    public Resposta<List<MembroProjeto>> buscarMembros(Usuario autor, 
+    public Resposta<List<Membro>> buscarMembros(Usuario autor, 
             Projeto projeto) {
-        Resposta<List<MembroProjeto>> resposta = new Resposta();
+        Resposta<List<Membro>> resposta = new Resposta();
         if(projeto==null)
             resposta.addItemLaudo("Projeto não informado");
         IDaoMembro dao = new DaoMembro();
-        List<MembroProjeto> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        List<Membro> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
         resposta.setChave(membros);
         return resposta;
     }
 
     @Override
-    public Resposta<List<MembroProjeto>> adicionarMembrosProjeto(
-            Usuario autor, List<MembroProjeto> membros){
-        Resposta<List<MembroProjeto>> resposta = new Resposta<>();
-        for (MembroProjeto membro : membros) {
+    public Resposta<List<Membro>> adicionarMembrosProjeto(
+            Usuario autor, List<Membro> membros){
+        Resposta<List<Membro>> resposta = new Resposta<>();
+        for (Membro membro : membros) {
             if(membro.getIdProjeto()<=0)
                 resposta.addItemLaudo("Informe o projeto do membro");
             if(membro.getIdUsuario()<=0)
@@ -77,7 +77,7 @@ public class GestorMembrosImpl implements IGestorMembros {
 
     @Override
     public Resposta<String> atualizarPapeisDeUsuarioEmUmProjeto(Usuario autor, 
-            List<MembroProjeto> papeisRemovidos, List<MembroProjeto> papeisAdicionados){
+            List<Membro> papeisRemovidos, List<Membro> papeisAdicionados){
         Resposta<String> resposta = new Resposta<>();
         if( autor==null || autor.getId()==0)
             resposta.addItemLaudo("Informe autor da solicitação"); 
@@ -89,7 +89,7 @@ public class GestorMembrosImpl implements IGestorMembros {
         }
         long idUsuario = 0;
         long idProjeto = 0;
-        for (MembroProjeto papelRemovido : papeisRemovidos) {
+        for (Membro papelRemovido : papeisRemovidos) {
             if(idUsuario==0)
                 idUsuario = papelRemovido.getIdUsuario();
             if(idProjeto==0)
@@ -97,7 +97,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             if(idUsuario!=papelRemovido.getIdUsuario())
                 resposta.addItemLaudo("A atualização deve conter papéis de somente um usuário em somente um projeto");
         }
-        for (MembroProjeto papelAdicionado : papeisAdicionados) {
+        for (Membro papelAdicionado : papeisAdicionados) {
             if(idUsuario==0)
                 idUsuario = papelAdicionado.getIdUsuario();
             if(idProjeto==0)

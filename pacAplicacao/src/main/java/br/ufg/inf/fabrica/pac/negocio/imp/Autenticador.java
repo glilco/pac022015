@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.negocio.imp;
 
 import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
@@ -11,9 +6,12 @@ import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoUsuario;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
-import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticador;
 import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticadorStub;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -47,8 +45,14 @@ public class Autenticador implements IAutenticador {
         }
 
         if (usuarioBanco == null) {
-            daoUsuario.salvar(u);
-            u.setAtivo(true);
+            try {
+                Transacao transacao = Transacao.getInstance();
+                daoUsuario.salvar(u, transacao);
+                transacao.confirmar();
+                u.setAtivo(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(Autenticador.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         if (!u.isAtivo()) {
             return null;
