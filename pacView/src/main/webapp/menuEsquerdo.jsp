@@ -10,14 +10,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Criação de Projetos</title>
-<%@include file="/cabecalho.jsp" %>
-<%@include file="/menuEsquerdo.jsp" %>
 </head>
 <body>
-	<h3>Controle de pacotes</h3>
-	<div class="container">
-		Controle de pacotes
-	</div>
+	<h3>Menu esquerdo</h3>
 </body>
-<%@include file="/rodape.jsp" %>
 </html>

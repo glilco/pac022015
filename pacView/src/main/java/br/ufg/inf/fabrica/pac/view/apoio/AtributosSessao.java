@@ -1,7 +1,5 @@
 package br.ufg.inf.fabrica.pac.view.apoio;
 
-import java.util.List;
-
 /**
  *
  * @author Danillo

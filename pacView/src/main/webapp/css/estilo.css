@@ -67,6 +67,16 @@ header{
     height:10%;
     width:100%; /*largura do topo*/
 }
+
+.frmLogin{
+    display: inline;
+    width: 100px;
+}
+
+.linkSair {
+    content: url("../imagens/ic_sair_1x.png");
+    margin-right:0px;
+}
 /*
 =========================
 logotipo
@@ -130,7 +140,6 @@ nav li a[href$="usuario"]:before {
 nav li a[href$="sair"]:before {
     content: url("../imagens/ic_sair_1x.png");
     margin-right:0px;
-
 }
 nav ul li:nth-child(3) a{
     margin-right:0px; /*indica que o 3º elemento da lista (contato) terá a margem direita zerada*/

@@ -27,7 +27,7 @@ public class ServletDeslogar extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute(AtributosSessao.USUARIO_LOGADO, null);
+        request.getSession().setAttribute(AtributosSessao.USUARIO_LOGADO, null);
         response.sendRedirect("index.jsp");
     }
 

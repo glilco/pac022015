@@ -37,7 +37,7 @@ public class AutenticacaoServlet extends HttpServlet {
         
         if(retornado!=null){
             request.getSession().setAttribute("usuarioLogado", retornado);            
-            response.sendRedirect("pacotesAtribuidos.jsp");
+            response.sendRedirect("index.jsp");
         } else {
             request.getSession().setAttribute("errorMessage", "Falha da autenticacao");
             response.sendRedirect("erro.jsp");
