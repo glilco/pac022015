@@ -1,5 +1,6 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Andamento implements Validavel {
     private String descricao;
 
     private long idPacote;
-    private long idEstado;
+    private String nomeEstado;
     private long idUsuarioRemetente;    // Usuario responsável pela ação que criou o andamento
     private long idUsuarioDestinatario; // Usuário que ficará responsável pelo pacote após a ação 
 
@@ -30,22 +31,12 @@ public class Andamento implements Validavel {
 
     }
 
-    public Andamento(Date dataModificacao, Date dataPrevistaConclusao, String descricao, long idPacote, long idEstado, long idUsuarioRemetente, long idUsuarioDestinatario) {
-        this.dataModificacao = dataModificacao;
-        this.dataPrevistaConclusao = dataPrevistaConclusao;
-        this.descricao = descricao;
-        this.idPacote = idPacote;
-        this.idEstado = idEstado;
-        this.idUsuarioRemetente = idUsuarioRemetente;
-        this.idUsuarioDestinatario = idUsuarioDestinatario;
+    public String getNomeEstado() {
+        return nomeEstado;
     }
 
-    public Pacote getPacote() {
-        return pacote;
-    }
-
-    public void setPacote(Pacote pacote) {
-        this.pacote = pacote;
+    public void setNomeEstado(String nomeEstado) {
+        this.nomeEstado = nomeEstado;
     }
 
     public Estado getEstado() {
@@ -56,20 +47,20 @@ public class Andamento implements Validavel {
         this.estado = estado;
     }
 
+    public Pacote getPacote() {
+        return pacote;
+    }
+
+    public void setPacote(Pacote pacote) {
+        this.pacote = pacote;
+    }
+
     public long getIdPacote() {
         return idPacote;
     }
 
     public void setIdPacote(long idPacote) {
         this.idPacote = idPacote;
-    }
-
-    public long getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(long idEstado) {
-        this.idEstado = idEstado;
     }
 
     public Date getDataModificacao() {
@@ -139,12 +130,15 @@ public class Andamento implements Validavel {
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
-        if(estado==null)
+        if (nomeEstado == null) {
             inconsistencias.add("Estado não informado");
-        if(pacote==null)
+        }
+        if (pacote == null) {
             inconsistencias.add("Pacote não informado");
-        if(usuarioRemetente==null)
+        }
+        if (usuarioRemetente == null) {
             inconsistencias.add("Autor não informado");
+        }
         return inconsistencias;
     }
 
