@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author danilloguimaraes
  */
-public class Pacote {
+public class Pacote implements Validavel{
 
     private long id;
     private String nome;
@@ -149,6 +149,22 @@ public class Pacote {
 
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
+    }
+
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if(nome==null || nome.isEmpty())
+            inconsistencias.add("Nome não informado");
+        if(estado==null)
+            inconsistencias.add("Estado não informado");
+        if(projeto==null)
+            inconsistencias.add("Projeto não informado");
+        if(dataCriacao.after(dataPrevistaRealizacao)){
+            inconsistencias.add("Data de criação maior que previsão de "
+                    + "realização do pacote");
+        }
+        return inconsistencias;
     }
 
 }
