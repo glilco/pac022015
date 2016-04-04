@@ -16,7 +16,7 @@
 <body>
 	<h3>Controle de pacotes</h3>
 	<div class="container">
-		Controle de pacotes
+		
 	</div>
 </body>
 <%@include file="/rodape.jsp" %>

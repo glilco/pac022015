@@ -12,6 +12,14 @@
 <title>Criação de Projetos</title>
 </head>
 <body>
-	<h3>Menu esquerdo</h3>
+    <span>Projetos</span>
+    <ul>
+        <li>Listar projetos</li>
+        <li>Cadastrar projeto</li>
+    </ul>
+    <span>Pacotes</span>
+    <ul>
+        <li>Cadastrar pacote</li>
+    </ul>    
 </body>
 </html>
