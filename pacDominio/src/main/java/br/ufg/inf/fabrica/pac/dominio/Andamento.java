@@ -1,17 +1,20 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author danilloguimaraes
  */
-public class Andamento {
+public class Andamento implements Validavel {
+
     private long id;
     private Date dataModificacao;
     private Date dataPrevistaConclusao;
     private String descricao;
-    
+
     private long idPacote;
     private long idEstado;
     private long idUsuarioRemetente;    // Usuario responsável pela ação que criou o andamento
@@ -23,10 +26,10 @@ public class Andamento {
     private Usuario usuarioRemetente;
     private Usuario usuarioDestinatario;
 
-    public Andamento(){
-        
+    public Andamento() {
+
     }
-    
+
     public Andamento(Date dataModificacao, Date dataPrevistaConclusao, String descricao, long idPacote, long idEstado, long idUsuarioRemetente, long idUsuarioDestinatario) {
         this.dataModificacao = dataModificacao;
         this.dataPrevistaConclusao = dataPrevistaConclusao;
@@ -35,9 +38,7 @@ public class Andamento {
         this.idEstado = idEstado;
         this.idUsuarioRemetente = idUsuarioRemetente;
         this.idUsuarioDestinatario = idUsuarioDestinatario;
-     }
-    
-    
+    }
 
     public Pacote getPacote() {
         return pacote;
@@ -55,7 +56,6 @@ public class Andamento {
         this.estado = estado;
     }
 
-        
     public long getIdPacote() {
         return idPacote;
     }
@@ -95,12 +95,12 @@ public class Andamento {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
-    public void setId(long id){
+
+    public void setId(long id) {
         this.id = id;
     }
-    
-    public long getId(){
+
+    public long getId() {
         return this.id;
     }
 
@@ -136,10 +136,16 @@ public class Andamento {
         this.usuarioDestinatario = usuarioDestinatario;
     }
 
-        public static void main(String[] args) {
-        
-        System.out.println(PapelProjeto.GPR.name());
-        
-        }
-    
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if(estado==null)
+            inconsistencias.add("Estado não informado");
+        if(pacote==null)
+            inconsistencias.add("Pacote não informado");
+        if(usuarioRemetente==null)
+            inconsistencias.add("Autor não informado");
+        return inconsistencias;
+    }
+
 }
