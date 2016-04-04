@@ -15,6 +15,9 @@
 
         Usuario <b> '${usuarioLogado.nome}' </b>  - 
         Email: <b> ${usuarioLogado.email} </b> logado com sucesso
+        <form action="deslogar" method="post">
+            <input type="submit" value="Sair [X]">
+        </form>
 
         <h1>Pacotes atribuidos</h1>
         <form action="ManipuladorDePacote" method="post">
