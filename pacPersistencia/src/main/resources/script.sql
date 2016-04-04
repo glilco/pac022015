@@ -1,11 +1,3 @@
-create table ESTADO(
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    nome VARCHAR(50) NOT NULL,
-    estadoFinal BOOLEAN NOT NULL,
-    descricao VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 create table PROJETO(
     id INTEGER NOT NULL AUTO_INCREMENT,
     nome VARCHAR(50) NOT NULL,
@@ -48,15 +40,14 @@ create table ANDAMENTO(
     dataPrevistaConclusao Date NOT NULL,
     descricao VARCHAR(100) NOT NULL,
     idPacote  INTEGER NOT NULL,
-    idEstado  INTEGER NOT NULL,
+    nomeEstado  VARCHAR(30) NOT NULL,
     idUsuario INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (idPacote) REFERENCES PACOTE(id),
-    FOREIGN KEY (idEstado) REFERENCES ESTADO(id),
     FOREIGN KEY (idUsuario) REFERENCES USUARIO(id)
 );
 
-create table MEMBROPROJETO(
+create table MEMBRO(
     idUsuario INTEGER NOT NULL,
     idProjeto INTEGER,
     papel VARCHAR(100) NOT NULL,

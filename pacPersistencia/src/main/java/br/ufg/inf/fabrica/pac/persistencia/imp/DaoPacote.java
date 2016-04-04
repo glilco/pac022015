@@ -3,6 +3,7 @@ package br.ufg.inf.fabrica.pac.persistencia.imp;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,14 +18,14 @@ import java.util.logging.Logger;
 public class DaoPacote implements IDaoPacote{
 
     @Override
-    public Pacote salvar(Pacote entity) {
+    public Pacote salvar(Pacote entity, Transacao transacao) {
 
         
         String sqlUpdate = "update PACOTE set Abandonado=?, DataCriacao=?, DataPrevistaRealizacao=?" +
-            ", Descricao=?, Documento=?, IdEstado=?, IdProjeto=?, IdUsuario=?" +
+            ", Descricao=?, Documento=?, nomeEstado=?, IdProjeto=?, IdUsuario=?" +
             ", Nome=? where id = ?";
         String sqlInsert = "insert into PACOTE (Abandonado, DataCriacao, "
-                + "DataPrevistaRealizacao, Descricao, Documento, IdEstado, "
+                + "DataPrevistaRealizacao, Descricao, Documento, nomeEstado, "
                 + "IdProjeto, IdUsuario, Nome) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pst;
@@ -40,7 +41,7 @@ public class DaoPacote implements IDaoPacote{
             pst.setDate(3, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaRealizacao()));
             pst.setString(4, entity.getDescricao());
             pst.setString(5, entity.getDocumento());
-            pst.setLong(6, entity.getIdEstado());
+            pst.setString(6, entity.getNomeEstado());
             pst.setLong(7, entity.getIdProjeto());
             pst.setLong(8, entity.getIdUsuario());
             pst.setString(9, entity.getNome());
@@ -60,7 +61,7 @@ public class DaoPacote implements IDaoPacote{
     }
 
     @Override
-    public Pacote excluir(Pacote entity) {
+    public Pacote excluir(Pacote entity, Transacao transacao) {
         String sql = "delete from PACOTE where id=?";
         try {
             PreparedStatement pst;
@@ -92,7 +93,7 @@ public class DaoPacote implements IDaoPacote{
                 pacote.setDescricao(rs.getString("descricao"));
                 pacote.setDocumento(rs.getString("documento"));
                 pacote.setId(rs.getLong("id"));
-                pacote.setIdEstado(rs.getLong("idEstado"));
+                pacote.setNomeEstado(rs.getString("nomeEstado"));
                 pacote.setIdProjeto(rs.getLong("idProjeto"));
                 pacote.setIdUsuario(rs.getLong("idUsuario"));
                 pacote.setNome(rs.getString("nome"));

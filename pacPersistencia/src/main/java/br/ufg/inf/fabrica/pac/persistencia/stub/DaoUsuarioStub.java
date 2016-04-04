@@ -2,6 +2,7 @@ package br.ufg.inf.fabrica.pac.persistencia.stub;
 
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 
 /**
  *
@@ -18,13 +19,13 @@ public class DaoUsuarioStub implements IDaoUsuario{
     }
 
     @Override
-    public Usuario salvar(Usuario usuario) {
+    public Usuario salvar(Usuario usuario, Transacao transacao) {
         usuario.setAtivo(true);
         return usuario;
     }
 
     @Override
-    public Usuario excluir(Usuario entity) {
+    public Usuario excluir(Usuario entity, Transacao transacao) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

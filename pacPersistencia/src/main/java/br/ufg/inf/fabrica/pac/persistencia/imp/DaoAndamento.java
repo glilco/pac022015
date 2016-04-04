@@ -4,6 +4,7 @@ import br.ufg.inf.fabrica.pac.dominio.Andamento;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,12 +25,12 @@ public class DaoAndamento implements IDaoAndamento{
     }
 
     @Override
-    public Andamento salvar(Andamento entity) {
+    public Andamento salvar(Andamento entity, Transacao transacao) {
         String sqlUpdate = "update ANDAMENTO set DataModificacao=?, DataPrevistaConclusao=?," +
-                                " Descricao=?, IdEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?" +
+                                " Descricao=?, nomeEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?" +
                                 " where id=?";
         String sqlInsert = "insert into ANDAMENTO (DataModificacao, DataPrevistaConclusao, Descricao," +
-                               "IdEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
+                               "nomeEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pst;
             if(entity.getId()==0){
@@ -42,7 +43,7 @@ public class DaoAndamento implements IDaoAndamento{
             pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
             pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
             pst.setString(3, entity.getDescricao());
-            pst.setLong(4, entity.getIdEstado());
+            pst.setString(4, entity.getNomeEstado());
             pst.setLong(5, entity.getIdPacote());
             pst.setLong(6, entity.getIdUsuarioRemetente());
             pst.setLong(7, entity.getIdUsuarioDestinatario());
@@ -61,7 +62,7 @@ public class DaoAndamento implements IDaoAndamento{
     }
 
     @Override
-    public Andamento excluir(Andamento entity) {
+    public Andamento excluir(Andamento entity, Transacao transacao) {
         String sql = "delete from ANDAMENTO where id=?";
         try {
             PreparedStatement pst;
@@ -93,7 +94,7 @@ public class DaoAndamento implements IDaoAndamento{
                         rs.getDate("dataPrevistaConclusao")));
                 andamento.setDescricao(rs.getString("descricao"));
                 andamento.setId(id);
-                andamento.setIdEstado(rs.getLong("idEstado"));
+                andamento.setNomeEstado(rs.getString("nomeEstado"));
                 andamento.setIdPacote(rs.getLong("idPacote"));
                 andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
                 andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));

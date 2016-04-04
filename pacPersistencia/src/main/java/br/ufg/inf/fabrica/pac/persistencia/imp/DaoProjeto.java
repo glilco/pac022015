@@ -3,6 +3,7 @@ package br.ufg.inf.fabrica.pac.persistencia.imp;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public class DaoProjeto implements IDaoProjeto{
 
     @Override
-    public Projeto salvar(Projeto entity) {
+    public Projeto salvar(Projeto entity, Transacao transacao) {
         
         String sqlUpdate = "update PROJETO set DATAINICIO=?, DATATERMINO=?, DESCRICAO=?, NOME=?, PATROCINADOR=?, STAKEHOLDERS=? where ID=?";
         String sqlInsert = "insert into PROJETO (DATAINICIO, DATATERMINO, DESCRICAO, NOME, PATROCINADOR, STAKEHOLDERS) values (?, ?, ?, ?, ?, ?)";
@@ -52,7 +53,7 @@ public class DaoProjeto implements IDaoProjeto{
     }
 
     @Override
-    public Projeto excluir(Projeto entity) {
+    public Projeto excluir(Projeto entity, Transacao transacao) {
         String sql = "delete from PROJETO where id=?";
         try {
             PreparedStatement pst;

@@ -1,5 +1,7 @@
 package br.ufg.inf.fabrica.pac.persistencia;
 
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
+
 /**
  *
  * @author Danillo
@@ -7,9 +9,9 @@ package br.ufg.inf.fabrica.pac.persistencia;
  */
 public interface IDao<T> {
     
-    public T salvar(T entity);
+    public T salvar(T entity, Transacao transacao);
     
-    public T excluir(T entity);
+    public T excluir(T entity, Transacao transacao);
     
     public T buscar(long id);
 }
