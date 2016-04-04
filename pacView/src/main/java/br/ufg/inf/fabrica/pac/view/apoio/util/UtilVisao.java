@@ -2,6 +2,9 @@ package br.ufg.inf.fabrica.pac.view.apoio.util;
 
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -30,5 +33,14 @@ public class UtilVisao {
         } catch (ServletException | IOException ex) {
             Logger.getLogger(UtilVisao.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static Date converterStringParaDate(String dateValue) 
+            throws ParseException{
+        return new SimpleDateFormat("yyyy-MM-dd").parse(dateValue);
+    }
+    
+    public static String converterDataParaString(Date date){
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 }

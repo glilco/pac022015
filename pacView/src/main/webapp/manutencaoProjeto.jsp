@@ -27,14 +27,15 @@
                     <label>Data de início:*</label> 
                 </div>
                 <div>
-                    <input type="date" class="date" name="dataInicio">
+                    <input type="date" class="date" name="dataInicio" 
+                           pattern="dd/MM/yyyy">
                 </div>
                 <div>
                     <label>Data de termino:*</label> 
                 </div>
                 <div>
                     <input type="date" class="date" maxlength="10"
-                           name="dataTermino">
+                           name="dataTermino" pattern="dd/MM/yyyy">
                 </div>
                 <div>
                     <label>Patrocinador:*</label> 
@@ -47,23 +48,6 @@
                     <label>stakeholders:*</label> <input type="text" size="100"
                                                          name="stakeholders">
                 </div>
-                <div>
-                    <label>Projetos ativos</label>
-                </div>
-                <div>
-                    <input list="projetosAtivos" name="projetos">
-                    <datalist id="projetosAtivos">
-                        <option value="Projeto 1">
-                        <option value="Projeto 2">
-                        <option value="Projeto 3">
-                        <option value="Projeto 4">
-                        <option value="Projeto 5">
-                    </datalist>
-                </div>
-                <div>
-                    <label> </label>
-                </div>
-
                 <div>
                     <button class="submit" type="submit">Criar</button> 
                     <button class="reset" type="reset">Limpar</button>

@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,6 +89,33 @@ public class DaoProjeto implements IDaoProjeto{
                 projeto.setStakeholders(rs.getString("stakeholders"));
             }
             return projeto;
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoProjeto.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Projeto> buscarTodos() {
+        String sql = "select P.* from PROJETO as P";
+        try {
+            PreparedStatement pst;
+            pst = Conexao.getConnection().prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            Projeto projeto = null;
+            List<Projeto> projetos = new ArrayList<>();
+            while(rs.next()){
+                projeto = new Projeto();
+                projeto.setId(rs.getLong("id"));
+                projeto.setDataInicio( Utils.convertSqlDateToUtilDate(rs.getDate("dataInicio")));
+                projeto.setDataTermino(Utils.convertSqlDateToUtilDate(rs.getDate("dataTermino")));
+                projeto.setDescricao(rs.getString("descricao"));
+                projeto.setNome(rs.getString("nome"));
+                projeto.setPatrocinador(rs.getString("patrocinador"));
+                projeto.setStakeholders(rs.getString("stakeholders"));
+                projetos.add(projeto);
+            }
+            return projetos;
         } catch (SQLException ex) {
             Logger.getLogger(DaoProjeto.class.getName()).log(Level.SEVERE, null, ex);
             return null;

@@ -14,7 +14,7 @@
 <body>
     <span>Projetos</span>
     <ul>
-        <li><a href="listarProjeto.jsp">Listar</a></li>
+        <li><a href="listarProjetos">Listar</a></li>
         <li><a href="manutencaoProjeto.jsp">Cadastrar</a></li>
     </ul>
     <span>Pacotes</span>
