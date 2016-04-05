@@ -36,17 +36,16 @@ public class GestorDeProjetos implements IGestorDeProjeto {
 
     @Override
     public Resposta<Projeto> criar(Usuario autor, Projeto projeto) {
-        String recursoId = "recursoId";
-        IDaoMembro daoMembro = new DaoMembro();
-        List<Membro> papeis;
-        List<String> nomesPapeis = new ArrayList<>();
+        if(autor==null){
+            return UtilsNegocio.criarRespostaComErro("Recurso exige autenticação");
+        }
+        String recursoId = "recursoIdCriarProjeto";
+        List<String> nomesPapeis;
         try {
-            papeis = daoMembro.buscarPapeis(autor.getId());
-            for (Membro papel : papeis) {
-                nomesPapeis.add(papel.getPapel());
-            }
+            nomesPapeis = buscarListaPapeis(autor);
         } catch (SQLException ex) {
-            Logger.getLogger(GestorDeProjetos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorDeProjetos.class.getName()).
+                    log(Level.SEVERE, null, ex);
             return UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
 
@@ -73,19 +72,50 @@ public class GestorDeProjetos implements IGestorDeProjeto {
             UtilsNegocio.criarRespostaComErro("Falha na transação");
         }
         return UtilsNegocio.criarRespostaValida(projeto);
-
     }
 
     @Override
-    public Resposta<List<Projeto>> buscarTodos() {
+    public Resposta<List<Projeto>> buscarTodos(Usuario autor) {
+        if(autor==null){
+            return UtilsNegocio.criarRespostaComErro("Recurso exige autenticação");
+        }
+        String recursoId = "recursoId";
+        List<String> nomesPapeis;
+        try {
+            nomesPapeis = buscarListaPapeis(autor);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDeProjetos.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
+
+        Seguranca seguranca = SegurancaStub.getInstance();
+        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
+            String menssagemErro = "Usuário não possui permissão para acessar recurso";
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.criarRespostaComErro(menssagemErro);
+        }
+
         IDaoProjeto daoProjeto = new DaoProjeto();
         List<Projeto> todos;
-        try{
+        try {
             todos = daoProjeto.buscarTodos();
             return UtilsNegocio.criarRespostaValida(todos);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
     }
 
+    private List<String> buscarListaPapeis(Usuario autor) throws SQLException {
+        if(autor==null)
+            return null;
+        IDaoMembro daoMembro = new DaoMembro();
+        List<Membro> papeis;
+        List<String> nomesPapeis = new ArrayList<>();
+        papeis = daoMembro.buscarPapeis(autor.getId());
+        for (Membro papel : papeis) {
+            nomesPapeis.add(papel.getPapel());
+        }
+        return nomesPapeis;
+    }
 }

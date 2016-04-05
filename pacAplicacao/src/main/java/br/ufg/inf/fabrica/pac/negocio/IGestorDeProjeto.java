@@ -10,7 +10,9 @@ import java.util.List;
  * @author Danillo
  */
 public interface IGestorDeProjeto {
+    
     public Resposta<Projeto> criar(Usuario autor, Projeto projeto);
     
-    public Resposta<List<Projeto>> buscarTodos();
+    public Resposta<List<Projeto>> buscarTodos(Usuario autor);
+    
 }
