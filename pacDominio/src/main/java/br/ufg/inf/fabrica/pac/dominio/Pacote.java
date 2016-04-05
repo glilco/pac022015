@@ -159,6 +159,12 @@ public class Pacote implements Validavel{
         List<String> inconsistencias = new ArrayList<>();
         if(nome==null || nome.isEmpty())
             inconsistencias.add("Nome não informado");
+        if(descricao==null || descricao.isEmpty())
+            inconsistencias.add("Descrição não informada");
+        if(dataCriacao==null)
+            inconsistencias.add("Data de criação não informada");
+        if(documento==null || documento.isEmpty())
+            inconsistencias.add("Documento não informado");
         if(estado==null)
             inconsistencias.add("Estado não informado");
         if(projeto==null)
