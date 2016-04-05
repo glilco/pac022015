@@ -20,4 +20,9 @@ public class AtributosSessao {
      * Atributo salvo na sessão que representa as mensagens de erro
      */
     public final static String MENSAGENS_DE_ERRO = "errorMessages";
+    
+    /**
+     * Bean que contém informações sobre listagem e seleção de projeto de trabalho
+     */
+    public final static String BEAN_LISTAGEM_PROJETOS = "beanListagemProjetos";
 }

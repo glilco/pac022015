@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=divice-width, initial-scale=1.0">
         <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+        <jsp:useBean id="projetoSelecionado" scope="session" class="br.ufg.inf.fabrica.pac.dominio.Projeto"/>
     </head>
     <body>
         <div id="containerHeader">
@@ -53,6 +54,13 @@
             </div>
         </div>
         <div class="container">
+            <c:if test="${projetoSelecionado!=null}">
+                <div>
+                    <span>
+                        Projeto de trabalho: ${projetoSelecionado.nome}
+                    </span>
+                </div>
+            </c:if>
             <hr class="hrDivisoria">
         </div>
     </body>

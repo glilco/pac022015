@@ -1,15 +1,11 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
-import br.ufg.inf.fabrica.pac.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.negocio.IGestorDeProjeto;
-import br.ufg.inf.fabrica.pac.negocio.imp.GestorDeProjetos;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
 import br.ufg.inf.fabrica.pac.view.beans.BeanListagemProjetos;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,8 +17,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Danillo
  */
-@WebServlet(name = "ServletListarProjetos", urlPatterns = {"/listarProjetos"})
-public class ServletListarProjetos extends HttpServlet {
+@WebServlet(name = "ServletSelecionarProjetoDeTrabalho", urlPatterns = {"/selecionarProjeto"})
+public class ServletSelecionarProjetoDeTrabalho extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,26 +32,18 @@ public class ServletListarProjetos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        Usuario usuario
-                = (Usuario) session.getAttribute(AtributosSessao.USUARIO_LOGADO);
-        IGestorDeProjeto gestor = GestorDeProjetos.getInstance();
-        Resposta<List<Projeto>> resposta
-                = gestor.buscarTodos(usuario);
-        if(resposta.isSucesso()){
-            BeanListagemProjetos bean = (BeanListagemProjetos) 
-                    session.getAttribute(AtributosSessao.BEAN_LISTAGEM_PROJETOS);
-            if(bean==null){
-                bean = new BeanListagemProjetos();
-                session.setAttribute(AtributosSessao.BEAN_LISTAGEM_PROJETOS, bean);
-            }
-            bean.setProjetos(resposta.getChave());
-            UtilVisao.direcionar(request, response, "listagemProjetos.jsp");
-        } else {
-            UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
+        String strIdProjeto = request.getParameter("idProjeto");
+        if(strIdProjeto==null||strIdProjeto.isEmpty()){
+            UtilVisao.direcionarPaginaErro(request, response, "Nenhum projeto foi informado");
         }
-        
+        long idProjeto = Long.valueOf(strIdProjeto);
+        HttpSession session = request.getSession();
+        BeanListagemProjetos bean = 
+                (BeanListagemProjetos) session.
+                        getAttribute(AtributosSessao.BEAN_LISTAGEM_PROJETOS);
+        Projeto projetoSelecionado = bean.getProjetoSelecionado(idProjeto);
+        session.setAttribute(AtributosSessao.PROJETO_SELECIONADO, projetoSelecionado);
+        UtilVisao.direcionar(request, response, "index.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

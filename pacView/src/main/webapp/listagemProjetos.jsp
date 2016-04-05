@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 26/11/2015, 12:46:44
-    Author     : Danillo
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,11 +12,12 @@
 <body>
 	<h3>Listagem de projetos</h3>
 	<div class="container">
-            <c:forEach items="${requestScope.todosProjetos}" var="projeto">
+            <c:forEach items="${beanListagemProjetos.projetos}" var="projeto">
                 ${projeto.nome} - 
                 ${beanListagemProjetos.dateToStr(projeto.dataInicio)} - 
                 ${beanListagemProjetos.dateToStr(projeto.dataTermino)}
-                <form action="" class="frmLinha">
+                <form action="selecionarProjeto" class="frmLinha">
+                    <input type="hidden" value="${projeto.id}" name="idProjeto"/>
                     <input type="submit" value="Selecionar" class="buttonSubmit"/>
                 </form>
             </c:forEach>

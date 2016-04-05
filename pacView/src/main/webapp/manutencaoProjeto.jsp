@@ -51,7 +51,6 @@
                 <div>
                     <button class="submit" type="submit">Criar</button> 
                     <button class="reset" type="reset">Limpar</button>
-                    <button class="button" onclick="teste">Teste</button>
                 </div>
             </form>
         </div>
