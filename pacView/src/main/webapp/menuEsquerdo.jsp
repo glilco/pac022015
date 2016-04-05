@@ -19,7 +19,7 @@
     </ul>
     <span>Pacotes</span>
     <ul>
-        <li>Cadastrar pacote</li>
+        <li><a href="criarPacote.jsp">Cadastrar</a></li>
     </ul>    
 </body>
 </html>
