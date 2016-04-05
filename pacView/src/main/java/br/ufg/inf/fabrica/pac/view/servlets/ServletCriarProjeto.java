@@ -71,7 +71,7 @@ public class ServletCriarProjeto extends HttpServlet {
         IGestorDeProjeto gestor = GestorDeProjetos.getInstance();
         Resposta<Projeto> resposta = gestor.criar(usuario, projeto);
         if(resposta.isSucesso()){
-            Resposta<List<Projeto>> respListagem = gestor.buscarTodos();
+            Resposta<List<Projeto>> respListagem = gestor.buscarTodos(usuario);
             if(respListagem.isSucesso()){
                 UtilVisao.direcionar(request, response, "listagemProjetos.jsp");
             } else {

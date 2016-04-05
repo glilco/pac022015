@@ -12,14 +12,18 @@
 <title>Criação de Projetos</title>
 <%@include file="/cabecalho.jsp" %>
 <%@include file="/menuEsquerdo.jsp" %>
+<jsp:useBean id="beanListagemProjetos" scope="session" 
+             class="br.ufg.inf.fabrica.pac.view.beans.BeanListagemProjetos"/>
 </head>
 <body>
 	<h3>Listagem de projetos</h3>
 	<div class="container">
             <c:forEach items="${requestScope.todosProjetos}" var="projeto">
-                ${projeto.nome} - ${projeto.dataInicio} - ${projeto.dataTermino}
-                <form action="">
-                    <input type="submit" value="Selecionar"/>
+                ${projeto.nome} - 
+                ${beanListagemProjetos.dateToStr(projeto.dataInicio)} - 
+                ${beanListagemProjetos.dateToStr(projeto.dataTermino)}
+                <form action="" class="frmLinha">
+                    <input type="submit" value="Selecionar" class="buttonSubmit"/>
                 </form>
             </c:forEach>
 	</div>

@@ -41,12 +41,12 @@ public class ServletListarProjetos extends HttpServlet {
                 = (Usuario) session.getAttribute(AtributosSessao.USUARIO_LOGADO);
         IGestorDeProjeto gestor = GestorDeProjetos.getInstance();
         Resposta<List<Projeto>> resposta
-                = gestor.buscarTodos();
+                = gestor.buscarTodos(usuario);
         if(resposta.isSucesso()){
             request.setAttribute("todosProjetos", resposta.getChave());
             UtilVisao.direcionar(request, response, "listagemProjetos.jsp");
         } else {
-            UtilVisao.direcionarPaginaErro(request, response, "Erro na listagem de projetos");
+            UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
         }
         
     }
