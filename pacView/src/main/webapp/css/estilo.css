@@ -497,3 +497,19 @@ input.date{
     background-color: #e6e6e6;
 }
 /*=========================================================*/
+
+/*novos estilos*/
+.errorMessage{
+    color: red;
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+.frmLinha{
+    display: inline;
+}
+.buttonSubmit{
+    display: inline;
+    width: 100px;
+}
