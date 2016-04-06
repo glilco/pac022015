@@ -45,6 +45,8 @@ public class Andamento implements Validavel {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+        if(estado!=null)
+            this.nomeEstado = estado.getNome();
     }
 
     public Pacote getPacote() {

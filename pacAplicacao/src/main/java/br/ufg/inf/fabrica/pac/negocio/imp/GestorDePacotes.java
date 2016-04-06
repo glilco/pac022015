@@ -103,6 +103,7 @@ public class GestorDePacotes implements ICriarPacote {
             Transacao transacao;
             transacao = Transacao.getInstance();
             daoPacote.salvar(pacote, transacao);
+            andamento.setIdPacote(pacote.getId());
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {

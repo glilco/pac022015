@@ -39,14 +39,14 @@ public class DaoMembro implements IDaoMembro {
 
     @Override
     public List<Membro> buscar(Projeto projeto, String papel) {
-        String sql = "select * from MEMBROPROJETO where idProjeto=?, papel=?";
+        String sql = "select * from MEMBRO where idProjeto=?, papel=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setString(2, papel);
             ResultSet rs = pst.executeQuery();
-            List<Membro> membroProjeto = new ArrayList<>();
+            List<Membro> membro = new ArrayList<>();
             Membro mP = null;
 
             while (rs.next()) {
@@ -54,9 +54,9 @@ public class DaoMembro implements IDaoMembro {
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -65,14 +65,14 @@ public class DaoMembro implements IDaoMembro {
 
     @Override
     public List<Membro> buscar(Projeto projeto, Usuario usuario) {
-        String sql = "select * from MEMBROPROJETO where idProjeto=? and idUsuario=?";
+        String sql = "select * from MEMBRO where idProjeto=? and idUsuario=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setLong(2, usuario.getId());
             ResultSet rs = pst.executeQuery();
-            List<Membro> membroProjeto = new ArrayList<>();
+            List<Membro> membro = new ArrayList<>();
             Membro mP = null;
 
             while (rs.next()) {
@@ -80,9 +80,9 @@ public class DaoMembro implements IDaoMembro {
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -91,14 +91,14 @@ public class DaoMembro implements IDaoMembro {
 
     @Override
     public List<Membro> buscar(String papel, Usuario usuario) {
-        String sql = "select * from MEMBROPROJETO where papel=?, idUsuario=?";
+        String sql = "select * from MEMBRO where papel=?, idUsuario=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setString(1, papel);
             pst.setLong(2, usuario.getId());
             ResultSet rs = pst.executeQuery();
-            List<Membro> membroProjeto = new ArrayList<>();
+            List<Membro> membro = new ArrayList<>();
             Membro mP = null;
 
             while (rs.next()) {
@@ -106,9 +106,9 @@ public class DaoMembro implements IDaoMembro {
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -119,7 +119,7 @@ public class DaoMembro implements IDaoMembro {
     public Resposta<List<Usuario>> buscarUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("select U.*, M.* from USUARIO U ").
-                append("left join MEMBROPROJETO M on U.ID = M.IDUSUARIO ").
+                append("left join MEMBRO M on U.ID = M.IDUSUARIO ").
                 append("order by U.ID");
         Resposta resposta = new Resposta();
         try {
@@ -152,7 +152,7 @@ public class DaoMembro implements IDaoMembro {
         StringBuilder sql = new StringBuilder();
         sql.append("select u.* from Usuario u ").
                 append("where u.nome like ? and u.id not in ").
-                append("(select m.idUsuario from MembroProjeto m ").
+                append("(select m.idUsuario from Membro m ").
                 append("where m.idProjeto = ?)");
         Resposta resposta = new Resposta();
         try {
@@ -179,7 +179,7 @@ public class DaoMembro implements IDaoMembro {
     @Override
     public Resposta<List<Membro>> buscarMembrosPorProjeto(long idProjeto) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select m.*, u.* from MEMBROPROJETO m ").
+        sql.append("select m.*, u.* from MEMBRO m ").
                 append("inner join USUARIO u ").
                 append("on m.IDUSUARIO=u.ID ").
                 append("where m.IDPROJETO = ? ORDER by m.IDUSUARIO");
@@ -214,7 +214,7 @@ public class DaoMembro implements IDaoMembro {
         Connection con = null;
         try {
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into MEMBROPROJETO ").
+            sql.append("insert into MEMBRO ").
                     append("(IDUSUARIO, IDPROJETO, PAPEL) ").
                     append("values (?, ?, ?)");
 
@@ -242,10 +242,10 @@ public class DaoMembro implements IDaoMembro {
             List<Membro> papeisAdicionados) throws SQLException {
         StringBuilder sqlInsercao = new StringBuilder();
         StringBuilder sqlDelecao = new StringBuilder();
-        sqlInsercao.append("insert into MEMBROPROJETO").
+        sqlInsercao.append("insert into MEMBRO").
                 append(" (IDUSUARIO, IDPROJETO, PAPEL) ").
                 append(" VALUES (?,?,?)");
-        sqlDelecao.append("delete from MEMBROPROJETO ").
+        sqlDelecao.append("delete from MEMBRO ").
                 append("where IDUSUARIO = ? and ").
                 append("IDPROJETO = ? and ").
                 append("PAPEL like ? ");
@@ -280,13 +280,13 @@ public class DaoMembro implements IDaoMembro {
 
     @Override
     public List<Membro> buscarPapeis(long idUsuario) throws SQLException {
-        String sql = "select * from MEMBROPROJETO where idUsuario=?";
+        String sql = "select * from MEMBRO where idUsuario=?";
 
         PreparedStatement pst;
         pst = Conexao.getConnection().prepareStatement(sql);
         pst.setLong(1, idUsuario);
         ResultSet rs = pst.executeQuery();
-        List<Membro> membroProjeto = new ArrayList<>();
+        List<Membro> membro = new ArrayList<>();
         Membro mP = null;
 
         while (rs.next()) {
@@ -294,9 +294,9 @@ public class DaoMembro implements IDaoMembro {
             mP.setIdProjeto(rs.getLong("idProjeto"));
             mP.setIdUsuario(rs.getLong("idUsuario"));
             mP.setPapel(rs.getString("papel"));
-            membroProjeto.add(mP);
+            membro.add(mP);
         }
-        return membroProjeto;
+        return membro;
 
     }
 
