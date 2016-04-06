@@ -25,11 +25,10 @@ create table PACOTE(
     dataPrevistaRealizacao Date NOT NULL,
     abandonado BOOLEAN NOT NULL,
     documento VARCHAR(100) NOT NULL,
-    idEstado INTEGER NOT NULL,    
+    nomeEstado VARCHAR(50) NOT NULL,
     idUsuario INTEGER NOT NULL,    
     idProjeto INTEGER NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (idEstado) REFERENCES ESTADO(id),
     FOREIGN KEY (idUsuario) REFERENCES USUARIO(id),
     FOREIGN KEY (idProjeto) REFERENCES PROJETO(id)
 );
@@ -41,11 +40,14 @@ create table ANDAMENTO(
     descricao VARCHAR(100) NOT NULL,
     idPacote  INTEGER NOT NULL,
     nomeEstado  VARCHAR(30) NOT NULL,
-    idUsuario INTEGER NOT NULL,
+    idUsuarioRemetente INTEGER NOT NULL,
+    idUsuarioDestinatario INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (idPacote) REFERENCES PACOTE(id),
-    FOREIGN KEY (idUsuario) REFERENCES USUARIO(id)
+    FOREIGN KEY (idUsuarioRemetente) REFERENCES USUARIO(id),
+    FOREIGN KEY (idUsuarioDestinatario) REFERENCES USUARIO(id)
 );
+
 
 create table MEMBRO(
     idUsuario INTEGER NOT NULL,
