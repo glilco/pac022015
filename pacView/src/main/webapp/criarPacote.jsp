@@ -10,23 +10,16 @@
     <body>
         <h3>Controle de pacotes</h3>
         <div class="container">
-            <form action="criarPacote" 
-                  method="post" enctype="multipart/form-data"
-                  style="width: 1000px" >
+
+            <form action="criarPacote" method="post" 
+                  enctype="multipart/form-data">
                 <div>
                     <label for="documento">Documentos</label>
                 </div>
                 <div>
                     <input id="documento" type="file" name="documento" tabindex="6" 
                            required="true" >
-                    <input 
                 </div>
-            </form>
-        </div>
-
-        <div class="container">
-
-            <form action="criarPacote" method="post" style="width: 1000px" >
                 <div><label for="nomePacote">Nome</label></div>
                 <div>
                     <input style="width:500px " id="nomePacote" 

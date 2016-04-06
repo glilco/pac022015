@@ -4,17 +4,27 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import br.ufg.inf.fabrica.pac.dominio.utils.FileService;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
+import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
+import br.ufg.inf.fabrica.pac.view.apoio.AtributosConfiguracao;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -24,6 +34,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -33,14 +44,9 @@ import javax.servlet.http.HttpSession;
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024, // 1MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
-        maxRequestSize = 1024 * 1024 * 10,// 10MB
-        location = "C://"
+        maxRequestSize = 1024 * 1024 * 10// 10MB
 )
 public class ServletCriarPacote extends HttpServlet {
-
-    private static final String BASE_DIR = "Users\\auf\\Desktop\\UploadsPAC";
-    private static final String DRIVE = "C:\\";
-    Resposta<Pacote> resposta = new Resposta<>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -61,11 +67,27 @@ public class ServletCriarPacote extends HttpServlet {
             HttpSession session = request.getSession();
             Usuario autor = (Usuario) session.getAttribute(AtributosSessao.USUARIO_LOGADO);
             Projeto projeto = (Projeto) session.getAttribute(AtributosSessao.PROJETO_SELECIONADO);
+
             Pacote pacote = new Pacote();
+
+            String newFileName = null;
+            try {
+                newFileName = salvarArquivo(request, response);
+            } catch (Exception ex) {
+                UtilVisao.direcionarPaginaErro(request, response,
+                        "Falha ao criar arquivo");
+            }
+            pacote.setDocumento(newFileName);
             DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             pacote.setNome(request.getParameter("nomePacote"));
             pacote.setDescricao(request.getParameter("descricaoPacote"));
             String dataPrevista = request.getParameter("dataPrevistaRealizacao");
+            pacote.setEstado(Estado.NOVO);
+            pacote.setDataCriacao(UtilsNegocio.buscarDataAtual());
+            pacote.setIdProjeto(projeto.getId());
+            pacote.setProjeto(projeto);
+            pacote.setIdUsuario(autor.getId());
+            pacote.setUsuario(autor);
             if (dataPrevista != null) {
                 Date dataPrevistaRealizacao = null;
                 try {
@@ -77,82 +99,79 @@ public class ServletCriarPacote extends HttpServlet {
                 }
                 pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
             }
-            pacote.setDocumento(request.getParameter("documento"));
+
             GestorDePacotes gestor = GestorDePacotes.getInstance();
             Resposta<Pacote> resposta = gestor.criarPacote(autor, pacote, projeto);
-            if(!resposta.isSucesso()){
+            if (!resposta.isSucesso()) {
                 UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
             }
-            
+
         } catch (IOException | ServletException ex) {
             Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             UtilVisao.direcionarPaginaErro(request, response, ex.getMessage());
         }
 
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        processRequest(request, response);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
-    private HttpServletRequest salvarDocumento(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        FileService service = new FileService();
-        String nomeCompletoDocumento;
-
-        Path destination = service.createFolder(DRIVE + BASE_DIR);
-        String destinationString = destination.toString().replace(DRIVE, "");
-
-        if (request.getPart("documento") != null && Files.exists(destination)) {
-            nomeCompletoDocumento = DRIVE + service.saveFile(destinationString, request.getPart("documento"));
-            if (nomeCompletoDocumento != null) {
-                request.setAttribute("documento", nomeCompletoDocumento);
+    
+    
+    private String salvarArquivo(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Properties prop = (Properties) getServletContext().
+                getAttribute(AtributosConfiguracao.VARIAVEL_PROPRIEDADES);
+        String pathFolder = prop.getProperty(
+                AtributosConfiguracao.FILE_FOLDERS);
+        Part partFile = request.getPart("documento");
+        String origalName = getOriginalName(partFile);
+        String extension = origalName.substring(origalName.length() - 4);
+        DateFormat df = new SimpleDateFormat("yyyyMMddkkmmssSSS");
+        Date dateFile = UtilsNegocio.buscarDataAtual();
+        String newFileName = df.format(dateFile) + extension;
+        OutputStream out = null;
+        InputStream fileContent = null;
+        final PrintWriter writer = response.getWriter();
+        File newFile = new File(pathFolder + File.separator + newFileName);
+        try {
+            out = new FileOutputStream(newFile);
+            fileContent = partFile.getInputStream();
+            int read;
+            final byte[] bytes = new byte[1024];
+            while ((read = fileContent.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+            if (fileContent != null) {
+                fileContent.close();
+            }
+            if (writer != null) {
+                writer.close();
             }
         }
+        return newFileName;
+    }
 
-        if (request.getAttribute("documento") == null) {
-            resposta.addItemLaudo("Documento não pode ser enviado!");
-            request.setAttribute("resposta", resposta);
-            request.getRequestDispatcher("criarPacote.jsp").forward(request, response);
+    private String getOriginalName(final Part part) {
+        final String partHeader = part.getHeader("content-disposition");
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(
+                        content.indexOf('=') + 1).trim().replace("\"", "");
+            }
         }
-
-        return request;
+        return null;
     }
 }
