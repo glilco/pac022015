@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="container">
-            <c:if test="${projetoSelecionado!=null}">
+            <c:if test="${projetoSelecionado.id>0}">
                 <div>
                     <span>
                         Projeto de trabalho: ${projetoSelecionado.nome}

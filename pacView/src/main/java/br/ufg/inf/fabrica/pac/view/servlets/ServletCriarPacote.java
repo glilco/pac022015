@@ -5,21 +5,17 @@ import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
-import br.ufg.inf.fabrica.pac.dominio.utils.FileService;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosConfiguracao;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,9 +50,6 @@ public class ServletCriarPacote extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     * @throws java.text.ParseException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
 
@@ -73,7 +66,7 @@ public class ServletCriarPacote extends HttpServlet {
             String newFileName = null;
             try {
                 newFileName = salvarArquivo(request, response);
-            } catch (Exception ex) {
+            } catch (ServletException | IOException ex) {
                 UtilVisao.direcionarPaginaErro(request, response,
                         "Falha ao criar arquivo");
             }
