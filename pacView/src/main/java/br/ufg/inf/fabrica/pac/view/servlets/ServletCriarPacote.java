@@ -56,6 +56,8 @@ public class ServletCriarPacote extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+        
+        String newFileName = null;
         try {
             HttpSession session = request.getSession();
             Usuario autor = (Usuario) session.getAttribute(AtributosSessao.USUARIO_LOGADO);
@@ -63,14 +65,6 @@ public class ServletCriarPacote extends HttpServlet {
 
             Pacote pacote = new Pacote();
 
-            String newFileName = null;
-            try {
-                newFileName = salvarArquivo(request, response);
-            } catch (ServletException | IOException ex) {
-                UtilVisao.direcionarPaginaErro(request, response,
-                        "Falha ao criar arquivo");
-            }
-            pacote.setDocumento(newFileName);
             DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             pacote.setNome(request.getParameter("nomePacote"));
             pacote.setDescricao(request.getParameter("descricaoPacote"));
@@ -92,23 +86,32 @@ public class ServletCriarPacote extends HttpServlet {
                 }
                 pacote.setDataPrevistaRealizacao(dataPrevistaRealizacao);
             }
-
+            try {
+                newFileName = salvarArquivo(request, response);
+                pacote.setDocumento(newFileName);
+            } catch (ServletException | IOException ex) {
+                UtilVisao.direcionarPaginaErro(request, response,
+                        "Falha ao criar arquivo");
+            }
+            
             GestorDePacotes gestor = GestorDePacotes.getInstance();
             Resposta<Pacote> resposta = gestor.criarPacote(autor, pacote, projeto);
-            if (!resposta.isSucesso()) {
-                UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
-            } else {
+            if (resposta.isSucesso()) {
                 UtilVisao.direcionar(request, response, "index.jsp");
+            } else {
+                deletarArquivo(newFileName);
+                UtilVisao.direcionarPaginaErro(request, response,
+                        resposta.getLaudo().toString());
             }
 
         } catch (IOException | ServletException ex) {
-            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.SEVERE, null, ex);
-
+            Logger.getLogger(ServletCriarPacote.class.getName()).log(
+                    Level.SEVERE, null, ex);
+            deletarArquivo(newFileName);
             UtilVisao.direcionarPaginaErro(request, response, ex.getMessage());
         }
 
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -148,7 +151,7 @@ public class ServletCriarPacote extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
     private String salvarArquivo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Properties prop = (Properties) getServletContext().
@@ -163,7 +166,6 @@ public class ServletCriarPacote extends HttpServlet {
         String newFileName = df.format(dateFile) + extension;
         OutputStream out = null;
         InputStream fileContent = null;
-        final PrintWriter writer = response.getWriter();
         File newFile = new File(pathFolder + File.separator + newFileName);
         try {
             out = new FileOutputStream(newFile);
@@ -182,6 +184,23 @@ public class ServletCriarPacote extends HttpServlet {
             }
         }
         return newFileName;
+    }
+
+    private void deletarArquivo(String newFileName) {
+        try {
+            Properties prop = (Properties) getServletContext().
+                getAttribute(AtributosConfiguracao.VARIAVEL_PROPRIEDADES);
+            String pathFolder = prop.getProperty(
+                    AtributosConfiguracao.FILE_FOLDERS);
+            File newFile = new File(pathFolder + File.separator + newFileName);
+            if (newFile.exists()) {
+                newFile.delete();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ServletCriarPacote.class.getName()).log(Level.INFO,
+                    "Falha na exclusão do arquivo");
+        }
+
     }
 
     private String getOriginalName(final Part part) {
