@@ -27,6 +27,6 @@ public class Transacao {
     }
     
     public void cancelar() throws SQLException{
-        connection.rollback();
+        connection.close();
     }
 }
