@@ -111,15 +111,20 @@ public class GestorDePacotes implements ICriarPacote {
         IDaoAndamento daoAndamento = new DaoAndamento();
         IDaoPacote daoPacote = new DaoPacote();
 
+        Transacao transacao = null;
         try {
-            Transacao transacao;
             transacao = Transacao.getInstance();
             daoPacote.salvar(pacote, transacao);
             andamento.setIdPacote(pacote.getId());
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
+            try{
+                transacao.cancelar();
+            }catch(SQLException ex2){
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex2.getMessage());
+            }
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             return UtilsNegocio.criarRespostaComErro("Falha de transação");
         }
         return UtilsNegocio.criarRespostaValida(pacote);
