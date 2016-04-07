@@ -37,7 +37,11 @@ public class AutenticadorStub implements IAutenticador{
         
         //Verifica na persistencia se o usuário esta ativo
         IDaoUsuario daoUsuario = new DaoUsuarioStub();
-        u = daoUsuario.buscar(u.getId());
+        try {
+            u = daoUsuario.buscar(u.getId());
+        } catch (SQLException ex) {
+            Logger.getLogger(AutenticadorStub.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if(u==null){
             try {
                 Transacao transacao = Transacao.getInstance();

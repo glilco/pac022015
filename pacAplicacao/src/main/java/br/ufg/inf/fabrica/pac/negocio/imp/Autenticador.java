@@ -38,7 +38,11 @@ public class Autenticador implements IAutenticador {
         Usuario usuarioBanco = new Usuario();
         //Verifica na persistencia se o usuário esta ativo
         IDaoUsuario daoUsuario = new DaoUsuario();
-        usuarioBanco = daoUsuario.buscar(u.getId());
+        try {
+            usuarioBanco = daoUsuario.buscar(u.getId());
+        } catch (SQLException ex) {
+            Logger.getLogger(Autenticador.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (usuarioBanco != null) {
             u.setAtivo(usuarioBanco.isAtivo());
