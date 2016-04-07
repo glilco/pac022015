@@ -97,6 +97,8 @@ public class ServletCriarPacote extends HttpServlet {
             Resposta<Pacote> resposta = gestor.criarPacote(autor, pacote, projeto);
             if (!resposta.isSucesso()) {
                 UtilVisao.direcionarPaginaErro(request, response, resposta.getLaudo().toString());
+            } else {
+                UtilVisao.direcionar(request, response, "index.jsp");
             }
 
         } catch (IOException | ServletException ex) {
@@ -107,17 +109,45 @@ public class ServletCriarPacote extends HttpServlet {
 
     }
 
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.processRequest(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.processRequest(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
-    
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
     
     private String salvarArquivo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -149,9 +179,6 @@ public class ServletCriarPacote extends HttpServlet {
             }
             if (fileContent != null) {
                 fileContent.close();
-            }
-            if (writer != null) {
-                writer.close();
             }
         }
         return newFileName;
