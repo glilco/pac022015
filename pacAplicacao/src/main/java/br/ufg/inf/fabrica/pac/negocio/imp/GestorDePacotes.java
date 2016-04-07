@@ -45,6 +45,16 @@ public class GestorDePacotes implements ICriarPacote {
 
     @Override
     public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
+        if(pacote==null){
+            return UtilsNegocio.criarRespostaComErro("Pacote não informado");
+        }
+        if(autor==null || autor.getId()<1){
+            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
+        }
+        if(projetoSelecionado==null || 
+                projetoSelecionado.getId()<1){
+            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
+        }
         IDaoMembro daoMembro = new DaoMembro();
         List<Membro> papeis;
         List<String> nomePapeis = new ArrayList<>();
@@ -70,6 +80,8 @@ public class GestorDePacotes implements ICriarPacote {
         pacote.setAbandonado(false);
         pacote.setDataCriacao(UtilsNegocio.buscarDataAtual());
         pacote.setEstado(Estado.NOVO);
+        pacote.setProjeto(projetoSelecionado);
+        pacote.setIdProjeto(projetoSelecionado.getId());
 
         List<String> inconsistencias
                 = pacote.validar();
