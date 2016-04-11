@@ -1,12 +1,15 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author danilloguimaraes
  */
-public class Projeto {
+public class Projeto implements Validavel {
+
     private long id;
     private String nome;
     private String descricao;
@@ -62,17 +65,43 @@ public class Projeto {
     public void setStakeholders(String stakeholders) {
         this.stakeholders = stakeholders;
     }
-    
-    public void setId(long id){
+
+    public void setId(long id) {
         this.id = id;
     }
-    
-    public long getId(){
+
+    public long getId() {
         return this.id;
-    }    
+    }
 
     public boolean isValido() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if (nome == null || nome.isEmpty()) {
+            inconsistencias.add("Nome não informado");
+        }
+        if (descricao == null || descricao.isEmpty()) {
+            inconsistencias.add("Descrição não informada");
+        }
+        if (dataInicio == null) {
+            inconsistencias.add("Data de inicio não informada");
+        }
+        if (dataTermino == null) {
+            inconsistencias.add("Data de término não informada");
+        }
+        if (patrocinador == null || patrocinador.isEmpty()) {
+            inconsistencias.add("Patrocinador não informado");
+        }
+        if (stakeholders == null || stakeholders.isEmpty()) {
+            inconsistencias.add("Stakeholder não informado");
+        }
+        if (dataInicio.after(dataInicio)) {
+            inconsistencias.add("Data de inicio após data de término");
+        }
+        return inconsistencias;
+    }
 }

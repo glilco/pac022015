@@ -4,7 +4,6 @@ import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.Autenticador;
-import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +37,7 @@ public class AutenticacaoServlet extends HttpServlet {
         
         if(retornado!=null){
             request.getSession().setAttribute("usuarioLogado", retornado);            
-            response.sendRedirect("pacotesAtribuidos.jsp");
+            response.sendRedirect("index.jsp");
         } else {
             request.getSession().setAttribute("errorMessage", "Falha da autenticacao");
             response.sendRedirect("erro.jsp");

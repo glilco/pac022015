@@ -6,8 +6,8 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
-import br.ufg.inf.fabrica.pac.dominio.PapelProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
+import br.ufg.inf.fabrica.pac.dominio.enums.Papel;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorMembrosImpl;
@@ -48,17 +48,17 @@ public class ServletAdicionarMembro extends HttpServlet {
         Usuario usuarioLogado = beanAtribuir.getUsuarioLogado();
         Projeto projetoSelecionado = beanAtribuir.getProjetoSelecionado();
         
-        List<MembroProjeto> membros = new ArrayList<>();
+        List<Membro> membros = new ArrayList<>();
         for (String usuario : usuarios) {
             for (String papel : papeis) {
-                MembroProjeto membro = new MembroProjeto();
+                Membro membro = new Membro();
                 membro.setIdProjeto(projetoSelecionado.getId());
                 membro.setIdUsuario(Integer.parseInt(usuario));
                 membro.setPapel(papel);
                 //Somente adiciona se o papel informado estiver consistente
-                //com os papéis definidos no Enum PapelProjeto
+                //com os papéis definidos no Enum Papel
                 try{
-                    PapelProjeto p = PapelProjeto.valueOf(papel);
+                    Papel p = Papel.valueOf(papel);
                     membros.add(membro);
                 }catch(IllegalArgumentException ex){
                     

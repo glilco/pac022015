@@ -1,10 +1,12 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import br.ufg.inf.fabrica.pac.dominio.enums.Papel;
+
 /**
  *
  * @author Danillo
  */
-public class MembroProjeto {
+public class Membro {
 
     private long idUsuario;
     private long idProjeto;
@@ -13,7 +15,7 @@ public class MembroProjeto {
     //Transient
     private Usuario usuario;
     private Projeto projeto;
-    private PapelProjeto papel_entity;
+    private Papel papelProjeto;
 
     public long getIdUsuario() {
         return idUsuario;
@@ -55,12 +57,12 @@ public class MembroProjeto {
         this.papel = papel;
     }
 
-    public PapelProjeto getPapel_entity() {
-        return papel_entity;
+    public Papel getPapelProjeto() {
+        return papelProjeto;
     }
 
-    public void setPapel_entity(PapelProjeto papel_entity) {
-        this.papel_entity = papel_entity;
+    public void setPapelProjeto(Papel papelProjeto) {
+        this.papelProjeto = papelProjeto;
     }
 
 }

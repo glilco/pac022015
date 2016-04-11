@@ -2,6 +2,7 @@ package br.ufg.inf.fabrica.pac.persistencia.imp;
 
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
 public class DaoUsuario implements IDaoUsuario{
 
     @Override
-    public Usuario salvar(Usuario entity) {
+    public Usuario salvar(Usuario entity, Transacao transacao) {
         String sqlUpdate = "update USUARIO set ativo=? where id=?";
         String sqlInsert = "insert into USUARIO (ativo, id, nome, email) values (?, ?, ?, ? )";
         try {
@@ -39,7 +40,7 @@ public class DaoUsuario implements IDaoUsuario{
     }
 
     @Override
-    public Usuario excluir(Usuario entity) {
+    public Usuario excluir(Usuario entity, Transacao transacao) {
         String sql = "delete from USUARIO where id=?";
         try {
             PreparedStatement pst;

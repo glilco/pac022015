@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.persistencia.imp;
 
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembroProjeto;
+import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import br.ufg.inf.fabrica.pac.persistencia.util.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,43 +20,43 @@ import java.util.logging.Logger;
  *
  * @author auf
  */
-public class DaoMembroProjeto implements IDaoMembroProjeto {
+public class DaoMembro implements IDaoMembro {
 
     @Override
-    public MembroProjeto salvar(MembroProjeto entity) {
+    public Membro salvar(Membro entity, Transacao transacao) {
         return null;
     }
 
     @Override
-    public MembroProjeto excluir(MembroProjeto entity) {
+    public Membro excluir(Membro entity, Transacao transacao) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public MembroProjeto buscar(long id) {
+    public Membro buscar(long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<MembroProjeto> buscar(Projeto projeto, String papel) {
-        String sql = "select * from MEMBROPROJETO where idProjeto=?, papel=?";
+    public List<Membro> buscar(Projeto projeto, String papel) {
+        String sql = "select * from MEMBRO where idProjeto=?, papel=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setString(2, papel);
             ResultSet rs = pst.executeQuery();
-            List<MembroProjeto> membroProjeto = new ArrayList<>();
-            MembroProjeto mP = null;
+            List<Membro> membro = new ArrayList<>();
+            Membro mP = null;
 
             while (rs.next()) {
-                mP = new MembroProjeto();
+                mP = new Membro();
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -68,25 +64,25 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
     }
 
     @Override
-    public List<MembroProjeto> buscar(Projeto projeto, Usuario usuario) {
-        String sql = "select * from MEMBROPROJETO where idProjeto=? and idUsuario=?";
+    public List<Membro> buscar(Projeto projeto, Usuario usuario) {
+        String sql = "select * from MEMBRO where idProjeto=? and idUsuario=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setLong(2, usuario.getId());
             ResultSet rs = pst.executeQuery();
-            List<MembroProjeto> membroProjeto = new ArrayList<>();
-            MembroProjeto mP = null;
+            List<Membro> membro = new ArrayList<>();
+            Membro mP = null;
 
             while (rs.next()) {
-                mP = new MembroProjeto();
+                mP = new Membro();
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -94,25 +90,25 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
     }
 
     @Override
-    public List<MembroProjeto> buscar(String papel, Usuario usuario) {
-        String sql = "select * from MEMBROPROJETO where papel=?, idUsuario=?";
+    public List<Membro> buscar(String papel, Usuario usuario) {
+        String sql = "select * from MEMBRO where papel=?, idUsuario=?";
         try {
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setString(1, papel);
             pst.setLong(2, usuario.getId());
             ResultSet rs = pst.executeQuery();
-            List<MembroProjeto> membroProjeto = new ArrayList<>();
-            MembroProjeto mP = null;
+            List<Membro> membro = new ArrayList<>();
+            Membro mP = null;
 
             while (rs.next()) {
-                mP = new MembroProjeto();
+                mP = new Membro();
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
-                membroProjeto.add(mP);
+                membro.add(mP);
             }
-            return membroProjeto;
+            return membro;
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -123,7 +119,7 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
     public Resposta<List<Usuario>> buscarUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("select U.*, M.* from USUARIO U ").
-                append("left join MEMBROPROJETO M on U.ID = M.IDUSUARIO ").
+                append("left join MEMBRO M on U.ID = M.IDUSUARIO ").
                 append("order by U.ID");
         Resposta resposta = new Resposta();
         try {
@@ -133,7 +129,7 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
             List<Usuario> usuarios = new ArrayList();
             while (rs.next()) {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
-                MembroProjeto membro = Util.populaObjeto(MembroProjeto.class,
+                Membro membro = Util.populaObjeto(Membro.class,
                         rs);
                 if (membro.getIdUsuario() > 0) {
                     membro.setUsuario(usuario);
@@ -156,7 +152,7 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
         StringBuilder sql = new StringBuilder();
         sql.append("select u.* from Usuario u ").
                 append("where u.nome like ? and u.id not in ").
-                append("(select m.idUsuario from MembroProjeto m ").
+                append("(select m.idUsuario from Membro m ").
                 append("where m.idProjeto = ?)");
         Resposta resposta = new Resposta();
         try {
@@ -181,9 +177,9 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
     }
 
     @Override
-    public Resposta<List<MembroProjeto>> buscarMembrosPorProjeto(long idProjeto) {
+    public Resposta<List<Membro>> buscarMembrosPorProjeto(long idProjeto) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select m.*, u.* from MEMBROPROJETO m ").
+        sql.append("select m.*, u.* from MEMBRO m ").
                 append("inner join USUARIO u ").
                 append("on m.IDUSUARIO=u.ID ").
                 append("where m.IDPROJETO = ? ORDER by m.IDUSUARIO");
@@ -194,10 +190,10 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
             pst = Conexao.getConnection().prepareStatement(sql.toString());
             pst.setLong(1, idProjeto);
             ResultSet rs = pst.executeQuery();
-            List<MembroProjeto> membros = new ArrayList();
+            List<Membro> membros = new ArrayList();
             while (rs.next()) {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
-                MembroProjeto membro = Util.populaObjeto(MembroProjeto.class,
+                Membro membro = Util.populaObjeto(Membro.class,
                         rs);
                 membro.setUsuario(usuario);
                 membros.add(membro);
@@ -213,19 +209,19 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
     }
 
     @Override
-    public List<MembroProjeto> adicionarMembrosProjeto(
-            List<MembroProjeto> membros) throws SQLException {
+    public List<Membro> adicionarMembrosProjeto(
+            List<Membro> membros) throws SQLException {
         Connection con = null;
         try {
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into MEMBROPROJETO ").
+            sql.append("insert into MEMBRO ").
                     append("(IDUSUARIO, IDPROJETO, PAPEL) ").
                     append("values (?, ?, ?)");
 
             con = Conexao.getConnection();
             PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql.toString());
-            for (MembroProjeto membro : membros) {
+            for (Membro membro : membros) {
                 pst.setLong(1, membro.getIdUsuario());
                 pst.setLong(2, membro.getIdProjeto());
                 pst.setString(3, membro.getPapel());
@@ -242,14 +238,14 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
 
     @Override
     public void atualizarPapeisDeUsuarioEmUmProjeto(
-            List<MembroProjeto> papeisRemovidos,
-            List<MembroProjeto> papeisAdicionados) throws SQLException {
+            List<Membro> papeisRemovidos,
+            List<Membro> papeisAdicionados) throws SQLException {
         StringBuilder sqlInsercao = new StringBuilder();
         StringBuilder sqlDelecao = new StringBuilder();
-        sqlInsercao.append("insert into MEMBROPROJETO").
+        sqlInsercao.append("insert into MEMBRO").
                 append(" (IDUSUARIO, IDPROJETO, PAPEL) ").
                 append(" VALUES (?,?,?)");
-        sqlDelecao.append("delete from MEMBROPROJETO ").
+        sqlDelecao.append("delete from MEMBRO ").
                 append("where IDUSUARIO = ? and ").
                 append("IDPROJETO = ? and ").
                 append("PAPEL like ? ");
@@ -259,14 +255,14 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
             con = Conexao.getConnection(true);
 
             PreparedStatement pstmt;
-            for (MembroProjeto papelAdicionado : papeisAdicionados) {
+            for (Membro papelAdicionado : papeisAdicionados) {
                 pstmt = con.prepareStatement(sqlInsercao.toString());
                 pstmt.setLong(1, papelAdicionado.getIdUsuario());
                 pstmt.setLong(2, papelAdicionado.getIdProjeto());
                 pstmt.setString(3, papelAdicionado.getPapel());
                 pstmt.execute();
             }
-            for (MembroProjeto papelRemovido : papeisRemovidos) {
+            for (Membro papelRemovido : papeisRemovidos) {
                 pstmt = con.prepareStatement(sqlDelecao.toString());
                 pstmt.setLong(1, papelRemovido.getIdUsuario());
                 pstmt.setLong(2, papelRemovido.getIdProjeto());
@@ -280,6 +276,28 @@ public class DaoMembroProjeto implements IDaoMembroProjeto {
                 con.close();
             }
         }
+    }
+
+    @Override
+    public List<Membro> buscarPapeis(long idUsuario) throws SQLException {
+        String sql = "select * from MEMBRO where idUsuario=?";
+
+        PreparedStatement pst;
+        pst = Conexao.getConnection().prepareStatement(sql);
+        pst.setLong(1, idUsuario);
+        ResultSet rs = pst.executeQuery();
+        List<Membro> membro = new ArrayList<>();
+        Membro mP = null;
+
+        while (rs.next()) {
+            mP = new Membro();
+            mP.setIdProjeto(rs.getLong("idProjeto"));
+            mP.setIdUsuario(rs.getLong("idUsuario"));
+            mP.setPapel(rs.getString("papel"));
+            membro.add(mP);
+        }
+        return membro;
+
     }
 
 }

@@ -9,8 +9,7 @@ import java.util.List;
  */
 public class Resposta <Chave> {
     private Chave chave;
-    private final List<String> laudo = new ArrayList<>();
-    private boolean sucesso = true;
+    private final List<String> laudo;
     
     public Chave getChave() {
         return chave;
@@ -26,10 +25,18 @@ public class Resposta <Chave> {
     
     public void addItemLaudo(String item){
         this.laudo.add(item);
-        this.sucesso = false;
+    }
+    
+    public void addItemLaudo(List laudo){
+        this.laudo.addAll(laudo);
     }
     
     public boolean isSucesso(){
-        return this.sucesso;
+        return this.laudo.isEmpty();
+    }
+    
+    public Resposta(){
+        this.chave = null;
+        this.laudo = new ArrayList<>();
     }
 }

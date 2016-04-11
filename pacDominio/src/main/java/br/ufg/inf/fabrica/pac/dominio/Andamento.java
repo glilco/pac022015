@@ -1,19 +1,23 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author danilloguimaraes
  */
-public class Andamento {
+public class Andamento implements Validavel {
+
     private long id;
     private Date dataModificacao;
     private Date dataPrevistaConclusao;
     private String descricao;
-    
+
     private long idPacote;
-    private long idEstado;
+    private String nomeEstado;
     private long idUsuarioRemetente;    // Usuario responsável pela ação que criou o andamento
     private long idUsuarioDestinatario; // Usuário que ficará responsável pelo pacote após a ação 
 
@@ -23,21 +27,27 @@ public class Andamento {
     private Usuario usuarioRemetente;
     private Usuario usuarioDestinatario;
 
-    public Andamento(){
-        
+    public Andamento() {
+
     }
-    
-    public Andamento(Date dataModificacao, Date dataPrevistaConclusao, String descricao, long idPacote, long idEstado, long idUsuarioRemetente, long idUsuarioDestinatario) {
-        this.dataModificacao = dataModificacao;
-        this.dataPrevistaConclusao = dataPrevistaConclusao;
-        this.descricao = descricao;
-        this.idPacote = idPacote;
-        this.idEstado = idEstado;
-        this.idUsuarioRemetente = idUsuarioRemetente;
-        this.idUsuarioDestinatario = idUsuarioDestinatario;
-     }
-    
-    
+
+    public String getNomeEstado() {
+        return nomeEstado;
+    }
+
+    public void setNomeEstado(String nomeEstado) {
+        this.nomeEstado = nomeEstado;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+        if(estado!=null)
+            this.nomeEstado = estado.getNome();
+    }
 
     public Pacote getPacote() {
         return pacote;
@@ -47,29 +57,12 @@ public class Andamento {
         this.pacote = pacote;
     }
 
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-        
     public long getIdPacote() {
         return idPacote;
     }
 
     public void setIdPacote(long idPacote) {
         this.idPacote = idPacote;
-    }
-
-    public long getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(long idEstado) {
-        this.idEstado = idEstado;
     }
 
     public Date getDataModificacao() {
@@ -95,12 +88,12 @@ public class Andamento {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
-    public void setId(long id){
+
+    public void setId(long id) {
         this.id = id;
     }
-    
-    public long getId(){
+
+    public long getId() {
         return this.id;
     }
 
@@ -136,10 +129,19 @@ public class Andamento {
         this.usuarioDestinatario = usuarioDestinatario;
     }
 
-        public static void main(String[] args) {
-        
-        System.out.println(PapelProjeto.GPR.name());
-        
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if (nomeEstado == null) {
+            inconsistencias.add("Estado não informado");
         }
-    
+        if (pacote == null) {
+            inconsistencias.add("Pacote não informado");
+        }
+        if (usuarioRemetente == null) {
+            inconsistencias.add("Autor não informado");
+        }
+        return inconsistencias;
+    }
+
 }
