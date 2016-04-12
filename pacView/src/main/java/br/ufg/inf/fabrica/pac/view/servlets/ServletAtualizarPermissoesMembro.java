@@ -2,7 +2,7 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorMembrosImpl;
@@ -54,7 +54,7 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
             novosPapeis = Arrays.asList(request.getParameterValues("papeis"));
         }
         
-        List<MembroProjeto> papeisAntigos = null;
+        List<Membro> papeisAntigos = null;
         
         //Busca a lista de membros ja carregas no bean e encontra o objeto do 
         // respectivo usuario
@@ -67,24 +67,24 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
         }
         
         //Busca os papéis para remoção
-        List<MembroProjeto> papeisRemovidos = new ArrayList<>();
-        for (MembroProjeto papelAntigo : papeisAntigos) {
+        List<Membro> papeisRemovidos = new ArrayList<>();
+        for (Membro papelAntigo : papeisAntigos) {
             if(!novosPapeis.contains(papelAntigo.getPapel()))
                 papeisRemovidos.add(papelAntigo);
         }
         
         //Busca os papéis para adição
-        List<MembroProjeto> papeisAdicionados = new ArrayList<>();
+        List<Membro> papeisAdicionados = new ArrayList<>();
         for (String novoPapel : novosPapeis) {
             boolean naoExistia = true;
-            for (MembroProjeto membro : papeisAntigos) {
+            for (Membro membro : papeisAntigos) {
                 if(novoPapel.equals(membro.getPapel())){
                     naoExistia = false;
                     break;
                 }
             }
             if(naoExistia){
-                MembroProjeto membro = new MembroProjeto();
+                Membro membro = new Membro();
                 membro.setIdProjeto(projetoSelecionado.getId());
                 membro.setIdUsuario(idUsuarioEmAlteracao);
                 membro.setPapel(novoPapel);

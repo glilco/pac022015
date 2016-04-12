@@ -15,7 +15,7 @@ public class Conexao {
     }
 
     public static Connection getConnection(boolean controleTransacao) throws SQLException {
-        String dbUrl = "jdbc:mysql://localhost:3306/PAC2015?zeroDateTimeBehavior=convertToNull";
+        String dbUrl = "jdbc:mysql://localhost:3306/pac?zeroDateTimeBehavior=convertToNull";
         String user = "pac";
         String senha = "pac";
         DriverManager.registerDriver(new com.mysql.jdbc.Driver());

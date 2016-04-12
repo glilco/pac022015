@@ -2,7 +2,7 @@ package br.ufg.inf.fabrica.pac.view.beans;
 
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
@@ -67,12 +67,12 @@ public class BeanAtribuirEquipe {
         this.projetoSelecionado = projeto;
     }
     
-    private List<MembroProjeto> getMembros(){
-        List<MembroProjeto> membros = new ArrayList();
+    private List<Membro> getMembros(){
+        List<Membro> membros = new ArrayList();
         Resposta resposta;
         resposta = gestor.buscarMembros(usuarioLogado, projetoSelecionado);
         if(resposta.isSucesso()){
-            membros = (List<MembroProjeto>) resposta.getChave();
+            membros = (List<Membro>) resposta.getChave();
         }
         
         
@@ -81,12 +81,12 @@ public class BeanAtribuirEquipe {
     }
     
     public List<UsuarioView> getUsuariosMembros(){
-        List<MembroProjeto> membros = getMembros();
+        List<Membro> membros = getMembros();
         usuarios = new ArrayList<>();
-        List<MembroProjeto> papeis = new ArrayList<>();
+        List<Membro> papeis = new ArrayList<>();
         Usuario usuarioAtual = null;
         
-        for (MembroProjeto membro : membros) {
+        for (Membro membro : membros) {
             if(usuarioAtual==null)
                 usuarioAtual = membro.getUsuario();
             if(membro.getIdUsuario()==usuarioAtual.getId()){

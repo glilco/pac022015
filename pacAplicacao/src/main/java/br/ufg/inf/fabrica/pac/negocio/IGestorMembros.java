@@ -1,6 +1,6 @@
 package br.ufg.inf.fabrica.pac.negocio;
 
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
@@ -27,7 +27,7 @@ public interface IGestorMembros {
      * @param projeto
      * @return 
      */
-    public Resposta<List<MembroProjeto>> buscarMembros(Usuario autor, Projeto projeto);
+    public Resposta<List<Membro>> buscarMembros(Usuario autor, Projeto projeto);
     
     /**
      * 
@@ -35,7 +35,7 @@ public interface IGestorMembros {
      * @param membro
      * @return 
      */
-    public Resposta<MembroProjeto> adicionarMembroProjeto(Usuario autor, MembroProjeto membro);
+    public Resposta<Membro> adicionarMembroProjeto(Usuario autor, Membro membro);
     
     /**
      * 
@@ -43,7 +43,7 @@ public interface IGestorMembros {
      * @param membro
      * @return 
      */
-    public Resposta<MembroProjeto> removerMembroProjeto(Usuario autor, MembroProjeto membro);
+    public Resposta<Membro> removerMembroProjeto(Usuario autor, Membro membro);
 
     /**
      * 
@@ -51,7 +51,7 @@ public interface IGestorMembros {
      * @param membros 
      * @return  
      */
-    public Resposta<List<MembroProjeto>> adicionarMembrosProjeto(Usuario autor, List<MembroProjeto> membros);
+    public Resposta<List<Membro>> adicionarMembrosProjeto(Usuario autor, List<Membro> membros);
 
     /**
      * 
@@ -61,5 +61,5 @@ public interface IGestorMembros {
      * @return 
      */
     public Resposta<String> atualizarPapeisDeUsuarioEmUmProjeto(Usuario autor, 
-            List<MembroProjeto> papeisRemovidos, List<MembroProjeto> papeisAdicionados);
+            List<Membro> papeisRemovidos, List<Membro> papeisAdicionados);
 }

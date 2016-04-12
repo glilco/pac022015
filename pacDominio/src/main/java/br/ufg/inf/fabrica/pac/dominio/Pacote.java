@@ -8,6 +8,7 @@ package br.ufg.inf.fabrica.pac.dominio;
  * domínio que não deve ser persistido, deve ser comentado acima com a palavra
  * "Transient"
  */
+import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author danilloguimaraes
  */
-public class Pacote {
+public class Pacote implements Validavel{
 
     private long id;
     private String nome;
@@ -25,7 +26,7 @@ public class Pacote {
     private boolean abandonado;
     private String documento;
     private Date dataPrevistaRealizacao;
-    private long idEstado;
+    private String nomeEstado;
     private long idProjeto;
     private long idUsuario;
 
@@ -37,6 +38,14 @@ public class Pacote {
 
     public Pacote() {
         andamentos = new ArrayList<>();
+    }
+
+    public String getNomeEstado() {
+        return nomeEstado;
+    }
+
+    public void setNomeEstado(String nomeEstado) {
+        this.nomeEstado = nomeEstado;
     }
 
     public long getId() {
@@ -95,14 +104,6 @@ public class Pacote {
         this.dataPrevistaRealizacao = dataPrevistaRealizacao;
     }
 
-    public long getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(long idEstado) {
-        this.idEstado = idEstado;
-    }
-
     public long getIdUsuario() {
         return idUsuario;
     }
@@ -133,6 +134,8 @@ public class Pacote {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+        if(estado!=null)
+            this.nomeEstado = estado.getNome();
     }
 
     public Usuario getUsuario() {
@@ -149,6 +152,28 @@ public class Pacote {
 
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
+    }
+
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if(nome==null || nome.isEmpty())
+            inconsistencias.add("Nome não informado");
+        if(descricao==null || descricao.isEmpty())
+            inconsistencias.add("Descrição não informada");
+        if(dataCriacao==null)
+            inconsistencias.add("Data de criação não informada");
+        if(documento==null || documento.isEmpty())
+            inconsistencias.add("Documento não informado");
+        if(estado==null)
+            inconsistencias.add("Estado não informado");
+        if(projeto==null)
+            inconsistencias.add("Projeto não informado");
+        if(dataCriacao.after(dataPrevistaRealizacao)){
+            inconsistencias.add("Data de criação maior que previsão de "
+                    + "realização do pacote");
+        }
+        return inconsistencias;
     }
 
 }

@@ -1,5 +1,8 @@
 package br.ufg.inf.fabrica.pac.persistencia;
 
+import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
+import java.sql.SQLException;
+
 /**
  *
  * @author Danillo
@@ -7,9 +10,9 @@ package br.ufg.inf.fabrica.pac.persistencia;
  */
 public interface IDao<T> {
     
-    public T salvar(T entity);
+    public T salvar(T entity, Transacao transacao)throws SQLException;
     
-    public T excluir(T entity);
+    public T excluir(T entity, Transacao transacao)throws SQLException;
     
-    public T buscar(long id);
+    public T buscar(long id) throws SQLException;
 }

@@ -16,6 +16,7 @@ import br.ufg.inf.fabrica.pac.dominio.Usuario;
  */
 public interface ICriarPacote {
 
-    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado);
+    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, 
+            Projeto projetoSelecionado);
 
 }

@@ -1,6 +1,6 @@
 package br.ufg.inf.fabrica.pac.view.apoio;
 
-import br.ufg.inf.fabrica.pac.dominio.MembroProjeto;
+import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public class UsuarioView extends Usuario{
     private Projeto projetoSelecionado;
     private String papeis;
-    private List<MembroProjeto> membros;
+    private List<Membro> membros;
     
-    public UsuarioView(Usuario usuario, List<MembroProjeto> membros){
+    public UsuarioView(Usuario usuario, List<Membro> membros){
         this.setId(usuario.getId());
         this.setAtivo(usuario.isAtivo());
         this.setEmail(usuario.getEmail());
@@ -22,7 +22,7 @@ public class UsuarioView extends Usuario{
         this.setNome(usuario.getNome());
         this.setSenha(usuario.getSenha());
         this.papeis = "";
-        for (MembroProjeto membro : membros) {
+        for (Membro membro : membros) {
             if(papeis.length()>0)
                 papeis+=",";
             papeis+=membro.getPapel();
@@ -46,11 +46,11 @@ public class UsuarioView extends Usuario{
         this.papeis = papeis;
     }
 
-    public List<MembroProjeto> getMembros() {
+    public List<Membro> getMembros() {
         return membros;
     }
 
-    public void setMembros(List<MembroProjeto> membros) {
+    public void setMembros(List<Membro> membros) {
         this.membros = membros;
     }
 

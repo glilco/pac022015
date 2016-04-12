@@ -1,13 +1,5 @@
-create table ESTADO(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    nome VARCHAR(50) NOT NULL,
-    estadoFinal BOOLEAN NOT NULL,
-    descricao VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 create table PROJETO(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    id INTEGER NOT NULL AUTO_INCREMENT,
     nome VARCHAR(50) NOT NULL,
     descricao VARCHAR(500) NOT NULL,
     dataInicio Date NOT NULL,
@@ -26,42 +18,43 @@ create table USUARIO(
 );
 
 create table PACOTE(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    id INTEGER NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     descricao VARCHAR(500) NOT NULL,
     dataCriacao Date NOT NULL,
     dataPrevistaRealizacao Date NOT NULL,
     abandonado BOOLEAN NOT NULL,
     documento VARCHAR(100) NOT NULL,
-    idEstado INTEGER NOT NULL,    
+    nomeEstado VARCHAR(50) NOT NULL,
     idUsuario INTEGER NOT NULL,    
     idProjeto INTEGER NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (idEstado) REFERENCES ESTADO(id),
     FOREIGN KEY (idUsuario) REFERENCES USUARIO(id),
     FOREIGN KEY (idProjeto) REFERENCES PROJETO(id)
 );
 
 create table ANDAMENTO(
-    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    id INTEGER NOT NULL AUTO_INCREMENT,
     dataModificacao Date NOT NULL,
     dataPrevistaConclusao Date NOT NULL,
     descricao VARCHAR(100) NOT NULL,
     idPacote  INTEGER NOT NULL,
-    idEstado  INTEGER NOT NULL,
-    idUsuario INTEGER NOT NULL,
+    nomeEstado  VARCHAR(30) NOT NULL,
+    idUsuarioRemetente INTEGER NOT NULL,
+    idUsuarioDestinatario INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (idPacote) REFERENCES PACOTE(id),
-    FOREIGN KEY (idEstado) REFERENCES ESTADO(id),
-    FOREIGN KEY (idUsuario) REFERENCES USUARIO(id)
+    FOREIGN KEY (idUsuarioRemetente) REFERENCES USUARIO(id),
+    FOREIGN KEY (idUsuarioDestinatario) REFERENCES USUARIO(id)
 );
 
-create table MEMBRO_PROJETO(
+
+create table MEMBRO(
     idUsuario INTEGER NOT NULL,
-    idProjeto INTEGER NOT NULL,
+    idProjeto INTEGER,
     papel VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id_usuario, id_projeto, papel),
-    FOREIGN KEY (id_usuario) REFERENCES USUARIO(id),
-    FOREIGN KEY (id_projeto) REFERENCES PROJETO(id)
+    PRIMARY KEY (idUsuario, idProjeto, papel),
+    FOREIGN KEY (idUsuario) REFERENCES USUARIO(id),
+    FOREIGN KEY (idProjeto) REFERENCES PROJETO(id)
 );
 

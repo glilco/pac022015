@@ -1,7 +1,5 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
-import java.util.List;
-
 /**
  *
  * @author danilloguimaraes

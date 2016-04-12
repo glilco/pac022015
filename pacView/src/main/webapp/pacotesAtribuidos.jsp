@@ -13,13 +13,19 @@
     </head>
     <body>
 
-        Usuario <b> '${usuarioLogado.nome}' </b>  - Email: <b> ${usuarioLogado.email} </b> logado com sucesso
+        Usuario <b> '${usuarioLogado.nome}' </b>  - 
+        Email: <b> ${usuarioLogado.email} </b> logado com sucesso
+        <form action="deslogar" method="post">
+            <input type="submit" value="Sair [X]">
+        </form>
 
         <h1>Pacotes atribuidos</h1>
         <form action="ManipuladorDePacote" method="post">
             <input type="submit" value="Visualizar detalhes"/>
-            <input type="button" value="Criar Pacotes" onclick="window.open('criarPacote.jsp')"/>
-            <input type="button" value="Atribuir Equipe" onclick="window.open('atribuirEquipe.jsp')"/>
+            <input type="button" value="Criar Pacotes" 
+                   onclick="window.open('criarPacote.jsp')"/>
+            <input type="button" value="Atribuir Equipe" 
+                   onclick="window.open('atribuirEquipe.jsp')"/>
             
         </form>
 

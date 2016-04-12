@@ -1,17 +1,24 @@
-package br.ufg.inf.fabrica.pac.dominio;
+package br.ufg.inf.fabrica.pac.dominio.enums;
 
 /**
  *
  * @author Danillo
  */
-public enum PapelProjeto {
+public enum Papel {
     GPR,// ("GPR"), // Gerente de Projetos
     MEG,// ("MEG"), // Membro de equipe gerencial
     MEM;// ("ME");   // Membro de equipe
     
+    public static Papel getPapel(String value){
+        for (Papel papel : values()) {
+            if(papel.name().toUpperCase().equals(value.toUpperCase()))
+                return papel;
+        }
+        return null;
+    }
 //    private String codigo;
 //
-//    PapelProjeto(String codigo) {
+//    Papel(String codigo) {
 //        this.codigo = codigo;
 //    }
 //
