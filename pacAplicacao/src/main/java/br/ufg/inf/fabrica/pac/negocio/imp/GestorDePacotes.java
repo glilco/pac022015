@@ -45,35 +45,28 @@ public class GestorDePacotes implements ICriarPacote {
 
     @Override
     public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
-        if(pacote==null){
+        if (pacote == null) {
             return UtilsNegocio.criarRespostaComErro("Pacote não informado");
         }
-        if(autor==null || autor.getId()<1){
+        if (autor == null || autor.getId() < 1) {
             return UtilsNegocio.criarRespostaComErro("Usuário não informado");
         }
-        if(projetoSelecionado==null || 
-                projetoSelecionado.getId()<1){
+        if (projetoSelecionado == null
+                || projetoSelecionado.getId() < 1) {
             return UtilsNegocio.criarRespostaComErro("Projeto não informado");
         }
-        IDaoMembro daoMembro = new DaoMembro();
-        List<Membro> papeis;
-        List<String> nomePapeis = new ArrayList<>();
-        String recursoId = null;
+
+        String recursoId = "recursoId";
         try {
-            papeis = daoMembro.buscarPapeis(autor.getId());
-            for (Membro membro : papeis) {
-                nomePapeis.add(membro.getPapel());
+            if (!AutorizadorDeAcesso.autorizar(recursoId, autor, projetoSelecionado)) {
+                String menssagemErro = "Usuário não possui permissão para acessar recurso";
+                Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
+                Resposta resposta = UtilsNegocio.criarRespostaComErro(menssagemErro);
+                return resposta;
             }
         } catch (SQLException ex) {
             Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
             Resposta resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
-            return resposta;
-        }
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomePapeis)) {
-            String menssagemErro = "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(menssagemErro);
             return resposta;
         }
 
@@ -119,9 +112,9 @@ public class GestorDePacotes implements ICriarPacote {
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {
-            try{
+            try {
                 transacao.cancelar();
-            }catch(SQLException ex2){
+            } catch (SQLException ex2) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex2.getMessage());
             }
             Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex.getMessage());
