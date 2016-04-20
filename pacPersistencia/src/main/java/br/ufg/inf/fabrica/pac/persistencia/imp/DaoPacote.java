@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,9 +32,18 @@ public class DaoPacote implements IDaoPacote {
             pst.setLong(10, entity.getId());
         }
 
+        java.sql.Date data;
         pst.setBoolean(1, entity.isAbandonado());
-        pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataCriacao()));
-        pst.setDate(3, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaRealizacao()));
+        if (entity.getDataCriacao() != null) {
+            pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataCriacao()));
+        } else {
+            pst.setDate(2, null);
+        }
+        if (entity.getDataPrevistaRealizacao()!= null) {
+            pst.setDate(3, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaRealizacao()));
+        } else {
+            pst.setDate(3, null);
+        }
         pst.setString(4, entity.getDescricao());
         pst.setString(5, entity.getDocumento());
         pst.setString(6, entity.getNomeEstado());
