@@ -169,7 +169,8 @@ public class Pacote implements Validavel{
             inconsistencias.add("Estado não informado");
         if(projeto==null)
             inconsistencias.add("Projeto não informado");
-        if(dataCriacao.after(dataPrevistaRealizacao)){
+        if(dataPrevistaRealizacao!=null && 
+                dataCriacao.after(dataPrevistaRealizacao)){
             inconsistencias.add("Data de criação maior que previsão de "
                     + "realização do pacote");
         }
