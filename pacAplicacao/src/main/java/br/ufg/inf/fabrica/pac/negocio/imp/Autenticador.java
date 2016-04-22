@@ -8,6 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
+import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticador;
 import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticadorStub;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -21,46 +22,46 @@ public class Autenticador implements IAutenticador {
 
     @Override
     public Usuario solicitarAutenticacao(Usuario usuario) throws AutenticacaoException {
-        if (usuario == null) {
+        validarUsuarioValidoInformado(usuario);
+        Usuario usuarioLDAP = new LdapAutenticador().autenticar(usuario);
+
+        if (usuarioLDAP == null) {
             return null;
+        }
+
+        Usuario usuarioPac = buscarUsuarioPac(usuarioLDAP.getId());
+        if (usuarioPac == null) {
+            cadastrarNovoUsuarioPac(usuarioLDAP);
+            usuarioPac = usuarioLDAP;
+        }
+        
+        if (!usuarioPac.isAtivo()) {
+            return null;
+        }
+        return usuarioPac;
+    }
+
+    private void validarUsuarioValidoInformado(Usuario usuario) throws AutenticacaoException {
+        if (usuario == null) {
+            throw new AutenticacaoException("Informe um usuário para solicitar autenticação");
         }
         if (Utils.stringVaziaOuNula(usuario.getLogin()) || Utils.stringVaziaOuNula(usuario.getSenha())) {
             throw new AutenticacaoException("Informe um usuário e uma senha para solicitar autenticação");
         }
-        //Busca usuário no ldap
-        ILdapAutenticador ldapAutenticador = new LdapAutenticadorStub();
-        Usuario u = ldapAutenticador.autenticar(usuario);
+    }
 
-        if (u == null) {
-            return null;
-        }
+    private Usuario buscarUsuarioPac(long idUsuario) throws AutenticacaoException {
+        return new DaoUsuario().buscar(idUsuario);
+    }
 
-        Usuario usuarioBanco = new Usuario();
-        //Verifica na persistencia se o usuário esta ativo
-        IDaoUsuario daoUsuario = new DaoUsuario();
+    private void cadastrarNovoUsuarioPac(Usuario u) {
         try {
-            usuarioBanco = daoUsuario.buscar(u.getId());
+            Transacao transacao = Transacao.getInstance();
+            new DaoUsuario().salvar(u, transacao);
+            transacao.confirmar();
+            u.setAtivo(true);
         } catch (SQLException ex) {
             Logger.getLogger(Autenticador.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        if (usuarioBanco != null) {
-            u.setAtivo(usuarioBanco.isAtivo());
-        }
-
-        if (usuarioBanco == null) {
-            try {
-                Transacao transacao = Transacao.getInstance();
-                daoUsuario.salvar(u, transacao);
-                transacao.confirmar();
-                u.setAtivo(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(Autenticador.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (!u.isAtivo()) {
-            return null;
-        }
-        return u;
     }
 }
