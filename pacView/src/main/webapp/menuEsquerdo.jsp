@@ -20,6 +20,7 @@
     <span>Pacotes</span>
     <ul>
         <li><a href="criarPacote.jsp">Cadastrar</a></li>
+        <li><a href="ServletPesquisarPacotes">Pacotes novos</a></li>
     </ul>    
 </body>
 </html>

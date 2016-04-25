@@ -1,8 +1,7 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
 
 import br.ufg.inf.fabrica.pac.dominio.Andamento;
-import br.ufg.inf.fabrica.pac.negocio.ICriarPacote;
-import br.ufg.inf.fabrica.pac.dominio.Membro;
+import br.ufg.inf.fabrica.pac.negocio.IGestorDePacotes;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
@@ -10,16 +9,14 @@ import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoAndamento;
-import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoPacote;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.Pesquisa;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNumerico;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroTexto;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
-import br.ufg.inf.fabrica.pac.seguranca.Seguranca;
-import br.ufg.inf.fabrica.pac.seguranca.imp.SegurancaStub;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author auf
  */
-public class GestorDePacotes implements ICriarPacote {
+public class GestorDePacotes implements IGestorDePacotes {
 
     private static GestorDePacotes gestor;
 
@@ -121,5 +118,29 @@ public class GestorDePacotes implements ICriarPacote {
             return UtilsNegocio.criarRespostaComErro("Falha de transação");
         }
         return UtilsNegocio.criarRespostaValida(pacote);
+    }
+
+    @Override
+    public Resposta<List<Pacote>> pesquisarPacotesNovos(Usuario autor, long projetoSelecionado) {
+        if (autor == null || autor.getId() < 1) {
+            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
+        }
+        if (projetoSelecionado < 1) {
+            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
+        }
+        Pesquisa pesquisa = new Pesquisa(Pacote.class);
+        pesquisa.adicionarFiltroTexto("nomeEstado", OperacaoFiltroTexto.IGUAL, Estado.NOVO.getNome());
+        pesquisa.adicionarFiltroNumerico("idProjeto", OperacaoFiltroNumerico.IGUAL, projetoSelecionado);
+        
+        Resposta<List<Pacote>> resposta;
+        IDaoPacote daoPacote = new DaoPacote();
+        try {
+            List<Pacote> pacotes = daoPacote.pesquisar(pesquisa);
+            resposta = UtilsNegocio.criarRespostaValida(pacotes);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
+            resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
+        return resposta;
     }
 }
