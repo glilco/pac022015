@@ -3,11 +3,14 @@ package br.ufg.inf.fabrica.pac.persistencia.imp;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.Pesquisa;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -98,4 +101,29 @@ public class DaoPacote implements IDaoPacote {
         return pacote;
     }
 
+    public List pesquisar(Pesquisa pesquisa) throws SQLException{
+        String sql = pesquisa.construirConsulta();
+
+        PreparedStatement pst;
+        pst = Conexao.getConnection().prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+        
+        List<Pacote> pacotes = new ArrayList<>();
+        if (rs.next()) {
+            Pacote pacote = new Pacote();
+            pacote.setId(rs.getLong("id"));
+            pacote.setAbandonado(rs.getBoolean("abandonado"));
+            pacote.setDataCriacao(rs.getDate("dataCriacao"));
+            pacote.setDataPrevistaRealizacao(rs.getDate("dataPrevistaRealizacao"));
+            pacote.setDescricao(rs.getString("descricao"));
+            pacote.setDocumento(rs.getString("documento"));
+            pacote.setId(rs.getLong("id"));
+            pacote.setNomeEstado(rs.getString("nomeEstado"));
+            pacote.setIdProjeto(rs.getLong("idProjeto"));
+            pacote.setIdUsuario(rs.getLong("idUsuario"));
+            pacote.setNome(rs.getString("nome"));
+            pacotes.add(pacote);
+        }
+        return pacotes;
+    }
 }
