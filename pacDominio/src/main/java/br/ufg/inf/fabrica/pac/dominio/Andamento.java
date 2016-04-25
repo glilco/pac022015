@@ -45,8 +45,9 @@ public class Andamento implements Validavel {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
-        if(estado!=null)
+        if (estado != null) {
             this.nomeEstado = estado.getNome();
+        }
     }
 
     public Pacote getPacote() {
@@ -119,6 +120,9 @@ public class Andamento implements Validavel {
 
     public void setUsuarioRemetente(Usuario usuarioRemetente) {
         this.usuarioRemetente = usuarioRemetente;
+        if (usuarioRemetente != null) {
+            this.idUsuarioRemetente = usuarioRemetente.getId();
+        }
     }
 
     public Usuario getUsuarioDestinatario() {
@@ -127,6 +131,9 @@ public class Andamento implements Validavel {
 
     public void setUsuarioDestinatario(Usuario usuarioDestinatario) {
         this.usuarioDestinatario = usuarioDestinatario;
+        if(usuarioDestinatario!=null){
+            this.idUsuarioDestinatario=usuarioDestinatario.getId();
+        }
     }
 
     @Override

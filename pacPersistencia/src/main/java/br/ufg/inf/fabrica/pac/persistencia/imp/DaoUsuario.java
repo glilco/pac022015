@@ -65,8 +65,10 @@ public class DaoUsuario implements IDaoUsuario{
             Usuario usuario = null;
             if (rs.next()){
                 usuario = new Usuario();
-                usuario.setId(rs.getLong("id"));
+                usuario.setId(id);
                 usuario.setAtivo(rs.getBoolean("ativo"));
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
             }
             return usuario;
         } catch (SQLException ex) {

@@ -2,6 +2,9 @@ package br.ufg.inf.fabrica.pac.seguranca.imp;
 
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
+import br.ufg.inf.fabrica.pac.seguranca.excecoes.VariavelAmbienteNaoDefinidaException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +25,15 @@ public class LdapAutenticador implements ILdapAutenticador {
         String login = user.getLogin();
         String senha = user.getSenha();
 
-        return efetuaLogin(login, senha);
-    }
-
-    private Usuario efetuaLogin(String login, String senha) {
         String pathUser = "uid=" + login + ", ou=Users, dc=inf, dc=ufg, dc=br";
-        Usuario usuarioRetorno = new Usuario();
+        try {
+            ConexaoLdap.lerParametros();
+        } catch (VariavelAmbienteNaoDefinidaException | 
+                IOException ex) {
+            Logger.getLogger(LdapAutenticador.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        Usuario usuarioRetorno;
         try {
             DirContext dir = this.getContext(pathUser, senha);
             usuarioRetorno = buscaDadosDoUsuario(login, dir);
@@ -40,14 +46,11 @@ public class LdapAutenticador implements ILdapAutenticador {
         }
         return usuarioRetorno;
     }
-//
 
-    public DirContext getContext(String login, String senha) throws NamingException {
+    private DirContext getContext(String login, String senha) throws NamingException {
         Hashtable env = new Hashtable(11);
-        ConexoesLdap.lerParametros();
-        System.setProperty("javax.net.ssl.trustStore", "C:\\Program Files\\Java\\jdk1.7.0_25\\lib\\security\\cacerts.jks");
-        env.put(Context.INITIAL_CONTEXT_FACTORY, ConexoesLdap.getINITIAL_CTX());
-        env.put(Context.PROVIDER_URL, ConexoesLdap.getSERVIDOR_LDAP());
+        env.put(Context.INITIAL_CONTEXT_FACTORY, ConexaoLdap.getINITIAL_CTX());
+        env.put(Context.PROVIDER_URL, ConexaoLdap.getSERVIDOR_LDAP());
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         env.put(Context.SECURITY_PROTOCOL, "ssl");
         env.put(Context.SECURITY_PRINCIPAL, login);
@@ -57,8 +60,6 @@ public class LdapAutenticador implements ILdapAutenticador {
     }
 
     private Usuario buscaDadosDoUsuario(String login, DirContext ctx) {
-        Usuario usuario = null;
-        ConexoesLdap.lerParametros();
         String[] atributosRetorno = new String[]{"uidNumber", "mail", "cn", "shadowExpire"};
         SearchControls searchCtls = new SearchControls();
         searchCtls.setReturningAttributes(atributosRetorno);
@@ -67,7 +68,7 @@ public class LdapAutenticador implements ILdapAutenticador {
 
         try {
             NamingEnumeration resultado = ctx.search(
-                    ConexoesLdap.getSEARCHBASE(), searchFilter, searchCtls);
+                    ConexaoLdap.getSEARCHBASE(), searchFilter, searchCtls);
 
             if (resultado.hasMore()) {
                 SearchResult sr = (SearchResult) resultado.next();
@@ -89,7 +90,7 @@ public class LdapAutenticador implements ILdapAutenticador {
     }
 
     private Usuario constroiUsuario(Attributes atributos) throws NamingException {
-        return new Usuario( Long.parseLong( getValorAtributo(atributos, "uidNumber")),
+        return new Usuario(Long.parseLong(getValorAtributo(atributos, "uidNumber")),
                 getValorAtributo(atributos, "cn"),
                 getValorAtributo(atributos, "mail")
         );

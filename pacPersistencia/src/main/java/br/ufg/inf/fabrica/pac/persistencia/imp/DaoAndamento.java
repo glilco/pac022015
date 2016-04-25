@@ -8,7 +8,9 @@ import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,14 +40,25 @@ public class DaoAndamento implements IDaoAndamento {
             pst = Conexao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(7, entity.getId());
         }
-
-        pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
-        pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
+        if (entity.getDataModificacao()!=null) {
+            pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
+        } else {
+            pst.setDate(1, null);
+        }
+        if (entity.getDataPrevistaConclusao()!=null) {
+            pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
+        } else {
+            pst.setDate(2, null);
+        }
         pst.setString(3, entity.getDescricao());
         pst.setString(4, entity.getNomeEstado());
         pst.setLong(5, entity.getIdPacote());
         pst.setLong(6, entity.getIdUsuarioRemetente());
-        pst.setLong(7, entity.getIdUsuarioDestinatario());
+        if(entity.getIdUsuarioDestinatario()==0){
+            pst.setNull(7, Types.BIGINT);
+        } else {
+            pst.setLong(7, entity.getIdUsuarioDestinatario());
+        }
         pst.execute();
         if (entity.getId() == 0) {
             ResultSet keys = pst.getGeneratedKeys();

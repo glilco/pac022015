@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,7 +74,7 @@ public class ServletCriarPacote extends HttpServlet {
             pacote.setProjeto(projeto);
             pacote.setIdUsuario(autor.getId());
             pacote.setUsuario(autor);
-            if (dataPrevista != null) {
+            if (dataPrevista!=null && !dataPrevista.isEmpty()) {
                 Date dataPrevistaRealizacao = null;
                 try {
                     dataPrevistaRealizacao = sdf.parse(dataPrevista);
