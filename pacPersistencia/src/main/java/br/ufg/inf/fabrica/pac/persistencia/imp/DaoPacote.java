@@ -29,9 +29,9 @@ public class DaoPacote implements IDaoPacote {
                 + "IdProjeto, IdUsuario, Nome) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         if (entity.getId() == 0) {
-            pst = Conexao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            pst = transacao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
         } else {
-            pst = Conexao.getConnection().prepareStatement(sqlUpdate);
+            pst = transacao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(10, entity.getId());
         }
 
@@ -69,7 +69,7 @@ public class DaoPacote implements IDaoPacote {
     public Pacote excluir(Pacote entity, Transacao transacao) throws SQLException {
         String sql = "delete from PACOTE where id=?";
         PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
+        pst = transacao.getConnection().prepareStatement(sql);
         pst.setLong(1, entity.getId());
         pst.execute();
         return entity;
@@ -98,16 +98,17 @@ public class DaoPacote implements IDaoPacote {
             pacote.setIdUsuario(rs.getLong("idUsuario"));
             pacote.setNome(rs.getString("nome"));
         }
+        pst.close();
         return pacote;
     }
 
+    @Override
     public List pesquisar(Pesquisa pesquisa) throws SQLException{
         String sql = pesquisa.construirConsulta();
 
         PreparedStatement pst;
         pst = Conexao.getConnection().prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
-        
         List<Pacote> pacotes = new ArrayList<>();
         if (rs.next()) {
             Pacote pacote = new Pacote();
@@ -124,6 +125,7 @@ public class DaoPacote implements IDaoPacote {
             pacote.setNome(rs.getString("nome"));
             pacotes.add(pacote);
         }
+        pst.close();
         return pacotes;
     }
 }

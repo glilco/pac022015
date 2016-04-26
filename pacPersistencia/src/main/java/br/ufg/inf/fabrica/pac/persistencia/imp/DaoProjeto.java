@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,10 +29,10 @@ public class DaoProjeto implements IDaoProjeto {
 
         PreparedStatement pst;
         if (entity.getId() == 0) {
-            pst = Conexao.getConnection().prepareStatement(sqlInsert,
+            pst = transacao.getConnection().prepareStatement(sqlInsert,
                     Statement.RETURN_GENERATED_KEYS);
         } else {
-            pst = Conexao.getConnection().prepareStatement(sqlUpdate);
+            pst = transacao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(7, entity.getId());
         }
         pst.setDate(1, Utils.convertUtilDateToSqlDate(
@@ -62,7 +60,7 @@ public class DaoProjeto implements IDaoProjeto {
         String sql = "delete from PROJETO where id=?";
 
         PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
+        pst = transacao.getConnection().prepareStatement(sql);
         pst.setLong(1, entity.getId());
         pst.execute();
         return entity;
@@ -89,6 +87,7 @@ public class DaoProjeto implements IDaoProjeto {
             projeto.setPatrocinador(rs.getString("patrocinador"));
             projeto.setStakeholders(rs.getString("stakeholders"));
         }
+        pst.close();
         return projeto;
     }
 
@@ -113,6 +112,7 @@ public class DaoProjeto implements IDaoProjeto {
             projeto.setStakeholders(rs.getString("stakeholders"));
             projetos.add(projeto);
         }
+        pst.close();
         return projetos;
     }
 

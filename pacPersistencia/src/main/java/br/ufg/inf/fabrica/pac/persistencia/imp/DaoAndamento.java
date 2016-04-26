@@ -8,12 +8,9 @@ import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -35,9 +32,9 @@ public class DaoAndamento implements IDaoAndamento {
                 + "nomeEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         if (entity.getId() == 0) {
-            pst = Conexao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            pst = transacao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
         } else {
-            pst = Conexao.getConnection().prepareStatement(sqlUpdate);
+            pst = transacao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(7, entity.getId());
         }
         if (entity.getDataModificacao()!=null) {
@@ -73,7 +70,7 @@ public class DaoAndamento implements IDaoAndamento {
     public Andamento excluir(Andamento entity, Transacao transacao) throws SQLException {
         String sql = "delete from ANDAMENTO where id=?";
         PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
+        pst = transacao.getConnection().prepareStatement(sql);
         pst.setLong(1, entity.getId());
         pst.execute();
         return entity;
@@ -100,6 +97,7 @@ public class DaoAndamento implements IDaoAndamento {
             andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
             andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
         }
+        pst.getConnection().close();
         return andamento;
     }
 
