@@ -6,6 +6,10 @@ package br.ufg.inf.fabrica.pac.dominio.utils;
  */
 public class UtilsValidacao {
     
+    private UtilsValidacao(){
+        
+    }
+    
     public static boolean isNullOrEmpty(String value){
         return value==null || value.isEmpty();
     }

@@ -56,14 +56,12 @@ public class FileService {
 
     private String getYear() {
         Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        return String.valueOf(year);
+        return String.valueOf(calendar.get(Calendar.YEAR));
     }
 
     private String getMonth() {
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        return String.valueOf(month);
+        return String.valueOf(calendar.get(Calendar.MONTH) + 1);
     }
 
     private String getFileName(final Part part) {
