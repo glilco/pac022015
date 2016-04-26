@@ -5,10 +5,10 @@ import java.util.List;
 
 /**
  *
- * @param <TIPO>
+ * @param <T>
  */
-public class Resposta <TIPO> {
-    private TIPO chave;
+public class Resposta <T> {
+    private T chave;
     private final List<String> laudo;
     
     public Resposta(){
@@ -16,11 +16,11 @@ public class Resposta <TIPO> {
         this.laudo = new ArrayList<>();
     }
     
-    public TIPO getChave() {
+    public T getChave() {
         return chave;
     }
 
-    public void setChave(TIPO chave) {
+    public void setChave(T chave) {
         this.chave = chave;
     }
 
