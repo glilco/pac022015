@@ -110,7 +110,9 @@ public class GestorDePacotes implements IGestorDePacotes {
             transacao.confirmar();
         } catch (SQLException ex) {
             try {
-                transacao.cancelar();
+                if(transacao!=null){
+                    transacao.cancelar();
+                }
             } catch (SQLException ex2) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex2.getMessage());
             }
