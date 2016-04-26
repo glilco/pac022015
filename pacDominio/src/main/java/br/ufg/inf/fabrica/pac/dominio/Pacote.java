@@ -4,11 +4,12 @@ package br.ufg.inf.fabrica.pac.dominio;
  * Foi definido que: 1 - Toda entidade possui um único atributo identificador,
  * ficando vetado a identificação por composição de atributos. 2 - Toda
  * referência ao objeto associado deve ser realizada feita identificando o
- * atributo como: "id" + nome da entidade (capitular). 3 - Todo objeto no módulo
- * domínio que não deve ser persistido, deve ser comentado acima com a palavra
+ * atributo como: "id" + nome da entidade (capitular). 3 -Todos objetos no módulo
+ * domínio que não devem ser persistidos, devem ser comentados acima com a palavra
  * "Transient"
  */
 import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
+import br.ufg.inf.fabrica.pac.dominio.utils.UtilsValidacao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -157,19 +158,19 @@ public class Pacote implements Validavel{
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
-        if(nome==null || nome.isEmpty())
+        if(UtilsValidacao.isNullOrEmpty(nome))
             inconsistencias.add("Nome não informado");
-        if(descricao==null || descricao.isEmpty())
+        if(UtilsValidacao.isNullOrEmpty(descricao))
             inconsistencias.add("Descrição não informada");
         if(dataCriacao==null)
             inconsistencias.add("Data de criação não informada");
-        if(documento==null || documento.isEmpty())
+        if(UtilsValidacao.isNullOrEmpty(documento))
             inconsistencias.add("Documento não informado");
         if(estado==null)
             inconsistencias.add("Estado não informado");
         if(projeto==null)
             inconsistencias.add("Projeto não informado");
-        if(dataPrevistaRealizacao!=null && 
+        if(dataCriacao!=null && dataPrevistaRealizacao!=null && 
                 dataCriacao.after(dataPrevistaRealizacao)){
             inconsistencias.add("Data de criação maior que previsão de "
                     + "realização do pacote");

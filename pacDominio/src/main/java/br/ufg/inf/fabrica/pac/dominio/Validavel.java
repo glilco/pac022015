@@ -6,6 +6,7 @@ import java.util.List;
  *
  * @author Danillo
  */
+@FunctionalInterface
 public interface Validavel {
     
     /**
