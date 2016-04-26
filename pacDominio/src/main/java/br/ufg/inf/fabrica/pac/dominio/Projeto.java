@@ -1,5 +1,6 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import br.ufg.inf.fabrica.pac.dominio.utils.UtilsValidacao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,10 +82,10 @@ public class Projeto implements Validavel {
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
-        if (nome == null || nome.isEmpty()) {
+        if(UtilsValidacao.isNullOrEmpty(nome)){
             inconsistencias.add("Nome não informado");
         }
-        if (descricao == null || descricao.isEmpty()) {
+        if(UtilsValidacao.isNullOrEmpty(descricao)){
             inconsistencias.add("Descrição não informada");
         }
         if (dataInicio == null) {
@@ -93,10 +94,10 @@ public class Projeto implements Validavel {
         if (dataTermino == null) {
             inconsistencias.add("Data de término não informada");
         }
-        if (patrocinador == null || patrocinador.isEmpty()) {
+        if(UtilsValidacao.isNullOrEmpty(patrocinador)){
             inconsistencias.add("Patrocinador não informado");
         }
-        if (stakeholders == null || stakeholders.isEmpty()) {
+        if(UtilsValidacao.isNullOrEmpty(stakeholders)){
             inconsistencias.add("Stakeholder não informado");
         }
         if (dataInicio!=null && dataInicio.after(dataInicio)) {

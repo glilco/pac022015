@@ -5,17 +5,22 @@ import java.util.List;
 
 /**
  *
- * @param <Chave>
+ * @param <TIPO>
  */
-public class Resposta <Chave> {
-    private Chave chave;
+public class Resposta <TIPO> {
+    private TIPO chave;
     private final List<String> laudo;
     
-    public Chave getChave() {
+    public Resposta(){
+        this.chave = null;
+        this.laudo = new ArrayList<>();
+    }
+    
+    public TIPO getChave() {
         return chave;
     }
 
-    public void setChave(Chave chave) {
+    public void setChave(TIPO chave) {
         this.chave = chave;
     }
 
@@ -33,10 +38,5 @@ public class Resposta <Chave> {
     
     public boolean isSucesso(){
         return this.laudo.isEmpty();
-    }
-    
-    public Resposta(){
-        this.chave = null;
-        this.laudo = new ArrayList<>();
     }
 }

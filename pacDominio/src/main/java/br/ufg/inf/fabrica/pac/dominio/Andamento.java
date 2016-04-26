@@ -27,10 +27,6 @@ public class Andamento implements Validavel {
     private Usuario usuarioRemetente;
     private Usuario usuarioDestinatario;
 
-    public Andamento() {
-
-    }
-
     public String getNomeEstado() {
         return nomeEstado;
     }

@@ -90,10 +90,11 @@ public class LdapAutenticador implements ILdapAutenticador {
     }
 
     private Usuario constroiUsuario(Attributes atributos) throws NamingException {
-        return new Usuario(Long.parseLong(getValorAtributo(atributos, "uidNumber")),
-                getValorAtributo(atributos, "cn"),
-                getValorAtributo(atributos, "mail")
-        );
+        Usuario usuario = new Usuario();
+        usuario.setId(Long.parseLong(getValorAtributo(atributos, "uidNumber")));
+        usuario.setNome(getValorAtributo(atributos, "cn"));
+        usuario.setEmail(getValorAtributo(atributos, "mail"));
+        return usuario;
     }
 
     private String getValorAtributo(Attributes atributos, String nomeAtributo) throws NamingException {
