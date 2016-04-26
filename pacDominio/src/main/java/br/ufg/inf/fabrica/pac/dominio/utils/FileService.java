@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.dominio.utils;
 
 /**
@@ -22,13 +17,12 @@ import javax.servlet.http.Part;
 @SuppressWarnings("unchecked")
 public class FileService {
 
-    private String year;
-    private String month;
+    private final String year;
+    private final String month;
 
     public FileService() {
         this.year = getYear();
         this.month = getMonth();
-
     }
 
     public Path createFolder(String baseDir) {
@@ -49,7 +43,6 @@ public class FileService {
     public String saveFile(String destination, Part part) {
 
         String fileName = getFileName(part);
-        //String contentType = part.getContentType();        
         try {
             
             fileName = destination + File.separator + fileName.replace("\"", "");

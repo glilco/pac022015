@@ -16,13 +16,4 @@ public enum Papel {
         }
         return null;
     }
-//    private String codigo;
-//
-//    Papel(String codigo) {
-//        this.codigo = codigo;
-//    }
-//
-//    public String getCodigo() {
-//        return codigo;
-//    }
 }
