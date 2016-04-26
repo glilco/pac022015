@@ -99,7 +99,7 @@ public class Projeto implements Validavel {
         if (stakeholders == null || stakeholders.isEmpty()) {
             inconsistencias.add("Stakeholder não informado");
         }
-        if (dataInicio.after(dataInicio)) {
+        if (dataInicio!=null && dataInicio.after(dataInicio)) {
             inconsistencias.add("Data de inicio após data de término");
         }
         return inconsistencias;
