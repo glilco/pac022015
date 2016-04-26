@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Danillo
  */
-public class DaoUsuario implements IDaoUsuario{
+public class DaoUsuario implements IDaoUsuario {
 
     @Override
     public Usuario salvar(Usuario entity, Transacao transacao) {
@@ -22,15 +22,15 @@ public class DaoUsuario implements IDaoUsuario{
         try {
             PreparedStatement pst;
             Usuario u = buscar(entity.getId());
-            if(u==null){
-                pst = Conexao.getConnection().prepareStatement(sqlInsert);
+            if (u == null) {
+                pst = transacao.getConnection().prepareStatement(sqlInsert);
+                pst.setString(3, entity.getNome());
+                pst.setString(4, entity.getEmail());
             } else {
-                pst = Conexao.getConnection().prepareStatement(sqlUpdate);
+                pst = transacao.getConnection().prepareStatement(sqlUpdate);
             }
             pst.setBoolean(1, true);
             pst.setLong(2, entity.getId());
-            pst.setString(3, entity.getNome());
-            pst.setString(4, entity.getEmail());
             pst.execute();
             return entity;
         } catch (SQLException ex) {
@@ -63,7 +63,7 @@ public class DaoUsuario implements IDaoUsuario{
             pst.setLong(1, id);
             ResultSet rs = pst.executeQuery();
             Usuario usuario = null;
-            if (rs.next()){
+            if (rs.next()) {
                 usuario = new Usuario();
                 usuario.setId(id);
                 usuario.setAtivo(rs.getBoolean("ativo"));
@@ -76,5 +76,5 @@ public class DaoUsuario implements IDaoUsuario{
             return null;
         }
     }
-    
+
 }

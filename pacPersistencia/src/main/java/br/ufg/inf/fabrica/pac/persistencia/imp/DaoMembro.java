@@ -40,17 +40,15 @@ public class DaoMembro implements IDaoMembro {
     @Override
     public List<Membro> buscar(Projeto projeto, String papel) {
         String sql = "select * from MEMBRO where idProjeto=?, papel=?";
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setString(2, papel);
             ResultSet rs = pst.executeQuery();
             List<Membro> membro = new ArrayList<>();
-            Membro mP = null;
-
             while (rs.next()) {
-                mP = new Membro();
+                Membro mP = new Membro();
                 mP.setIdProjeto(rs.getLong("idProjeto"));
                 mP.setIdUsuario(rs.getLong("idUsuario"));
                 mP.setPapel(rs.getString("papel"));
@@ -60,14 +58,22 @@ public class DaoMembro implements IDaoMembro {
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     @Override
     public List<Membro> buscar(Projeto projeto, Usuario usuario) {
         String sql = "select * from MEMBRO where idProjeto=? and idUsuario=?";
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setLong(1, projeto.getId());
             pst.setLong(2, usuario.getId());
@@ -86,14 +92,23 @@ public class DaoMembro implements IDaoMembro {
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     @Override
     public List<Membro> buscar(String papel, Usuario usuario) {
         String sql = "select * from MEMBRO where papel=?, idUsuario=?";
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
+            
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setString(1, papel);
             pst.setLong(2, usuario.getId());
@@ -112,6 +127,14 @@ public class DaoMembro implements IDaoMembro {
         } catch (SQLException ex) {
             Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -122,8 +145,9 @@ public class DaoMembro implements IDaoMembro {
                 append("left join MEMBRO M on U.ID = M.IDUSUARIO ").
                 append("order by U.ID");
         Resposta resposta = new Resposta();
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
+            
             pst = Conexao.getConnection().prepareStatement(sb.toString());
             ResultSet rs = pst.executeQuery();
             List<Usuario> usuarios = new ArrayList();
@@ -142,6 +166,14 @@ public class DaoMembro implements IDaoMembro {
                     ex);
             resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return resposta;
     }
@@ -155,8 +187,8 @@ public class DaoMembro implements IDaoMembro {
                 append("(select m.idUsuario from Membro m ").
                 append("where m.idProjeto = ?)");
         Resposta resposta = new Resposta();
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql.toString());
             pst.setString(1, usuarioPesquisado + "%");
             pst.setLong(2, idProjeto);
@@ -172,6 +204,14 @@ public class DaoMembro implements IDaoMembro {
                     ex);
             resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return resposta;
     }
@@ -185,8 +225,8 @@ public class DaoMembro implements IDaoMembro {
                 append("where m.IDPROJETO = ? ORDER by m.IDUSUARIO");
 
         Resposta resposta = new Resposta();
+        PreparedStatement pst = null;
         try {
-            PreparedStatement pst;
             pst = Conexao.getConnection().prepareStatement(sql.toString());
             pst.setLong(1, idProjeto);
             ResultSet rs = pst.executeQuery();
@@ -204,6 +244,14 @@ public class DaoMembro implements IDaoMembro {
                     ex);
             resposta.setChave(null);
             resposta.addItemLaudo(ex.getMessage());
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return resposta;
     }
@@ -229,7 +277,7 @@ public class DaoMembro implements IDaoMembro {
             }
             con.commit();
         } finally {
-            if (!con.isClosed()) {
+            if (con!=null && !con.isClosed()) {
                 con.close();
             }
         }
@@ -272,7 +320,7 @@ public class DaoMembro implements IDaoMembro {
 
             con.commit();
         } finally {
-            if (!con.isClosed()) {
+            if (con!=null && !con.isClosed()) {
                 con.close();
             }
         }
@@ -282,20 +330,20 @@ public class DaoMembro implements IDaoMembro {
     public List<Membro> buscarPapeis(long idUsuario) throws SQLException {
         String sql = "select * from MEMBRO where idUsuario=?";
 
-        PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
+        PreparedStatement pst = Conexao.getConnection().prepareStatement(sql);
         pst.setLong(1, idUsuario);
         ResultSet rs = pst.executeQuery();
         List<Membro> membro = new ArrayList<>();
-        Membro mP = null;
+        
 
         while (rs.next()) {
-            mP = new Membro();
+            Membro mP = new Membro();
             mP.setIdProjeto(rs.getLong("idProjeto"));
             mP.setIdUsuario(rs.getLong("idUsuario"));
             mP.setPapel(rs.getString("papel"));
             membro.add(mP);
         }
+        pst.getConnection().close();
         return membro;
 
     }
