@@ -11,7 +11,7 @@ public enum Papel {
     
     public static Papel getPapel(String value){
         for (Papel papel : values()) {
-            if(papel.name().toUpperCase().equals(value.toUpperCase()))
+            if(papel.name().equalsIgnoreCase(value))
                 return papel;
         }
         return null;
