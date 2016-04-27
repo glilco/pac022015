@@ -51,7 +51,7 @@ public interface IGestorMembros {
      * @param membros 
      * @return  
      */
-    public Resposta<List<Membro>> adicionarMembrosProjeto(Usuario autor, List<Membro> membros);
+    public Resposta<Boolean> adicionarMembrosProjeto(Usuario autor, List<Membro> membros);
 
     /**
      * 

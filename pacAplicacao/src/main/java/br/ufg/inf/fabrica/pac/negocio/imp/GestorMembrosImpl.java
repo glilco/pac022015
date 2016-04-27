@@ -5,6 +5,7 @@ import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import java.sql.SQLException;
@@ -38,8 +39,13 @@ public class GestorMembrosImpl implements IGestorMembros {
             usuarioPesquisado = "";
         }
         IDaoMembro dao = new DaoMembro();
-        List<Usuario> usuarios;
-        usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), usuarioPesquisado).getChave();
+        List<Usuario> usuarios = null;
+        try {
+            usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), 
+                    usuarioPesquisado).getChave();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         resposta.setChave(usuarios);
         return resposta;
     }
@@ -53,15 +59,21 @@ public class GestorMembrosImpl implements IGestorMembros {
             return resposta;
         }
         IDaoMembro dao = new DaoMembro();
-        List<Membro> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        List<Membro> membros = null;
+        try {
+            membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
         resposta.setChave(membros);
         return resposta;
     }
 
     @Override
-    public Resposta<List<Membro>> adicionarMembrosProjeto(
+    public Resposta<Boolean> adicionarMembrosProjeto(
             Usuario autor, List<Membro> membros) {
-        Resposta<List<Membro>> resposta = new Resposta<>();
+        Resposta<Boolean> resposta = new Resposta<>();
         for (Membro membro : membros) {
             if (membro.getIdProjeto() <= 0) {
                 resposta.addItemLaudo("Informe o projeto do membro");
@@ -75,9 +87,11 @@ public class GestorMembrosImpl implements IGestorMembros {
         }
         IDaoMembro dao = new DaoMembro();
         try {
-            resposta.setChave(dao.adicionarMembrosProjeto(membros));
+            dao.adicionarMembrosProjeto(membros);
+            resposta.setChave(Boolean.TRUE);
         } catch (SQLException ex) {
             Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
+            resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
         return resposta;
     }

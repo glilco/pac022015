@@ -11,6 +11,7 @@ import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class UtilsNegocio {
     }
 
     public static boolean UsuarioLogadoPossuiPapel(Usuario user, Projeto proj, 
-            String papel) {
+            String papel) throws SQLException {
         List<Membro> membroProjeto;
         IDaoMembro dao = new DaoMembro();
         membroProjeto = dao.buscar(proj, user);
