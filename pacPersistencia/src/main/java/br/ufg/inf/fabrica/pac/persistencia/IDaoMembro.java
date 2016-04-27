@@ -59,7 +59,7 @@ public interface IDaoMembro extends IDao<Membro> {
      * @param papel
      * @return
      */
-    public List<Membro> buscar(Projeto projeto, String papel);
+    public List<Membro> buscar(Projeto projeto, String papel) throws SQLException;
 
     /**
      *

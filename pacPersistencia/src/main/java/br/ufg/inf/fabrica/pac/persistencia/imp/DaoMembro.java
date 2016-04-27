@@ -38,35 +38,23 @@ public class DaoMembro implements IDaoMembro {
     }
 
     @Override
-    public List<Membro> buscar(Projeto projeto, String papel) {
+    public List<Membro> buscar(Projeto projeto, String papel) throws SQLException {
         String sql = "select * from MEMBRO where idProjeto=?, papel=?";
-        PreparedStatement pst = null;
-        try {
-            pst = Conexao.getConnection().prepareStatement(sql);
-            pst.setLong(1, projeto.getId());
-            pst.setString(2, papel);
-            ResultSet rs = pst.executeQuery();
-            List<Membro> membro = new ArrayList<>();
-            while (rs.next()) {
-                Membro mP = new Membro();
-                mP.setIdProjeto(rs.getLong("idProjeto"));
-                mP.setIdUsuario(rs.getLong("idUsuario"));
-                mP.setPapel(rs.getString("papel"));
-                membro.add(mP);
-            }
-            return membro;
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } finally {
-            try {
-                if (pst != null) {
-                    pst.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        Connection con = Conexao.getConnection();
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setLong(1, projeto.getId());
+        pst.setString(2, papel);
+        ResultSet rs = pst.executeQuery();
+        List<Membro> membro = new ArrayList<>();
+        while (rs.next()) {
+            Membro mP = new Membro();
+            mP.setIdProjeto(rs.getLong("idProjeto"));
+            mP.setIdUsuario(rs.getLong("idUsuario"));
+            mP.setPapel(rs.getString("papel"));
+            membro.add(mP);
         }
+        con.close();
+        return membro;
     }
 
     @Override
@@ -89,16 +77,21 @@ public class DaoMembro implements IDaoMembro {
                 membro.add(mP);
             }
             return membro;
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPacote.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
             return null;
         } finally {
             try {
                 if (pst != null) {
                     pst.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DaoMembro.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -108,7 +101,7 @@ public class DaoMembro implements IDaoMembro {
         String sql = "select * from MEMBRO where papel=?, idUsuario=?";
         PreparedStatement pst = null;
         try {
-            
+
             pst = Conexao.getConnection().prepareStatement(sql);
             pst.setString(1, papel);
             pst.setLong(2, usuario.getId());
@@ -124,16 +117,21 @@ public class DaoMembro implements IDaoMembro {
                 membro.add(mP);
             }
             return membro;
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoPacote.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPacote.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
             return null;
         } finally {
             try {
                 if (pst != null) {
                     pst.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DaoMembro.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -147,32 +145,41 @@ public class DaoMembro implements IDaoMembro {
         Resposta resposta = new Resposta();
         PreparedStatement pst = null;
         try {
-            
+
             pst = Conexao.getConnection().prepareStatement(sb.toString());
             ResultSet rs = pst.executeQuery();
             List<Usuario> usuarios = new ArrayList();
+
             while (rs.next()) {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
                 Membro membro = Util.populaObjeto(Membro.class,
                         rs);
-                if (membro.getIdUsuario() > 0) {
+
+                if (membro.getIdUsuario()
+                        > 0) {
                     membro.setUsuario(usuario);
                 }
+
                 usuarios.add(usuario);
             }
             resposta.setChave(usuarios);
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
-                    ex);
-            resposta.setChave(null);
+            Logger.getLogger(DaoUsuario.class
+                    .getName()).log(Level.SEVERE, null,
+                            ex);
+            resposta.setChave(
+                    null);
             resposta.addItemLaudo(ex.getMessage());
         } finally {
             try {
                 if (pst != null) {
                     pst.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DaoMembro.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         return resposta;
@@ -194,23 +201,29 @@ public class DaoMembro implements IDaoMembro {
             pst.setLong(2, idProjeto);
             ResultSet rs = pst.executeQuery();
             List<Usuario> usuarios = new ArrayList();
+
             while (rs.next()) {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
                 usuarios.add(usuario);
             }
             resposta.setChave(usuarios);
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
-                    ex);
-            resposta.setChave(null);
+            Logger.getLogger(DaoUsuario.class
+                    .getName()).log(Level.SEVERE, null,
+                            ex);
+            resposta.setChave(
+                    null);
             resposta.addItemLaudo(ex.getMessage());
         } finally {
             try {
                 if (pst != null) {
                     pst.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DaoMembro.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         return resposta;
@@ -231,26 +244,34 @@ public class DaoMembro implements IDaoMembro {
             pst.setLong(1, idProjeto);
             ResultSet rs = pst.executeQuery();
             List<Membro> membros = new ArrayList();
+
             while (rs.next()) {
                 Usuario usuario = Util.populaObjeto(Usuario.class, rs);
                 Membro membro = Util.populaObjeto(Membro.class,
                         rs);
+
                 membro.setUsuario(usuario);
+
                 membros.add(membro);
             }
             resposta.setChave(membros);
+
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null,
-                    ex);
-            resposta.setChave(null);
+            Logger.getLogger(DaoUsuario.class
+                    .getName()).log(Level.SEVERE, null,
+                            ex);
+            resposta.setChave(
+                    null);
             resposta.addItemLaudo(ex.getMessage());
         } finally {
             try {
                 if (pst != null) {
                     pst.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DaoMembro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DaoMembro.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         return resposta;
@@ -277,7 +298,7 @@ public class DaoMembro implements IDaoMembro {
             }
             con.commit();
         } finally {
-            if (con!=null && !con.isClosed()) {
+            if (con != null && !con.isClosed()) {
                 con.close();
             }
         }
@@ -320,7 +341,7 @@ public class DaoMembro implements IDaoMembro {
 
             con.commit();
         } finally {
-            if (con!=null && !con.isClosed()) {
+            if (con != null && !con.isClosed()) {
                 con.close();
             }
         }
@@ -334,7 +355,6 @@ public class DaoMembro implements IDaoMembro {
         pst.setLong(1, idUsuario);
         ResultSet rs = pst.executeQuery();
         List<Membro> membro = new ArrayList<>();
-        
 
         while (rs.next()) {
             Membro mP = new Membro();
