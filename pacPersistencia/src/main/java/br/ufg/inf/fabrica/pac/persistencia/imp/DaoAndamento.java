@@ -78,28 +78,35 @@ public class DaoAndamento implements IDaoAndamento {
     }
 
     @Override
-    public Andamento buscar(long id) throws SQLException{
+    public Andamento buscar(long id) throws SQLException {
         String sql = "select a.* from ANDAMENTO a where a.id=?";
-        PreparedStatement pst;
+
         try (Connection con = Conexao.getConnection();) {
-            pst = con.prepareStatement(sql);
-            pst.setLong(1, id);
-            ResultSet rs = pst.executeQuery();
-            Andamento andamento = null;
-            if (rs.next()) {
-                andamento = new Andamento();
-                andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
-                        rs.getDate("dataModificacao")));
-                andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
-                        rs.getDate("dataPrevistaConclusao")));
-                andamento.setDescricao(rs.getString("descricao"));
-                andamento.setId(id);
-                andamento.setNomeEstado(rs.getString("nomeEstado"));
-                andamento.setIdPacote(rs.getLong("idPacote"));
-                andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
-                andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+            PreparedStatement pst = null;
+            try {
+                pst = con.prepareStatement(sql);
+                pst.setLong(1, id);
+                ResultSet rs = pst.executeQuery();
+                Andamento andamento = null;
+                if (rs.next()) {
+                    andamento = new Andamento();
+                    andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataModificacao")));
+                    andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataPrevistaConclusao")));
+                    andamento.setDescricao(rs.getString("descricao"));
+                    andamento.setId(id);
+                    andamento.setNomeEstado(rs.getString("nomeEstado"));
+                    andamento.setIdPacote(rs.getLong("idPacote"));
+                    andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
+                    andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+                }
+                return andamento;
+            } finally {
+                if(pst!=null){
+                    pst.close();
+                }
             }
-            return andamento;
         }
     }
 
