@@ -38,22 +38,24 @@ public class DaoMembro implements IDaoMembro {
     }
 
     @Override
-    public List<Membro> buscar(Projeto projeto, String papel) throws SQLException {
+    public List<Membro> buscar(Projeto projeto, String papel) 
+            throws SQLException {
         String sql = "select * from MEMBRO where idProjeto=?, papel=?";
-        Connection con = Conexao.getConnection();
-        PreparedStatement pst = con.prepareStatement(sql);
-        pst.setLong(1, projeto.getId());
-        pst.setString(2, papel);
-        ResultSet rs = pst.executeQuery();
-        List<Membro> membro = new ArrayList<>();
-        while (rs.next()) {
-            Membro mP = new Membro();
-            mP.setIdProjeto(rs.getLong("idProjeto"));
-            mP.setIdUsuario(rs.getLong("idUsuario"));
-            mP.setPapel(rs.getString("papel"));
-            membro.add(mP);
+        List<Membro> membro;
+        try (Connection con = Conexao.getConnection();) {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setLong(1, projeto.getId());
+            pst.setString(2, papel);
+            ResultSet rs = pst.executeQuery();
+            membro = new ArrayList<>();
+            while (rs.next()) {
+                Membro mP = new Membro();
+                mP.setIdProjeto(rs.getLong("idProjeto"));
+                mP.setIdUsuario(rs.getLong("idUsuario"));
+                mP.setPapel(rs.getString("papel"));
+                membro.add(mP);
+            }
         }
-        con.close();
         return membro;
     }
 
