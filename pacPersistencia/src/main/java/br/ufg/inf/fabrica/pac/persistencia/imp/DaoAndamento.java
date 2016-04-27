@@ -80,13 +80,10 @@ public class DaoAndamento implements IDaoAndamento {
     @Override
     public Andamento buscar(long id) throws SQLException {
         String sql = "select a.* from ANDAMENTO a where a.id=?";
-
-        try (Connection con = Conexao.getConnection();) {
-            PreparedStatement pst = null;
-            try {
-                pst = con.prepareStatement(sql);
-                pst.setLong(1, id);
-                ResultSet rs = pst.executeQuery();
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql);) {
+            pst.setLong(1, id);
+            try (ResultSet rs = pst.executeQuery();) {
                 Andamento andamento = null;
                 if (rs.next()) {
                     andamento = new Andamento();
@@ -102,12 +99,7 @@ public class DaoAndamento implements IDaoAndamento {
                     andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
                 }
                 return andamento;
-            } finally {
-                if(pst!=null){
-                    pst.close();
-                }
             }
         }
     }
-
 }
