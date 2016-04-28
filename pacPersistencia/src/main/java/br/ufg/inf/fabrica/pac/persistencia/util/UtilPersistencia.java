@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.persistencia.util;
 
 import java.lang.reflect.Constructor;
@@ -19,7 +14,11 @@ import java.util.List;
  *
  * @author Danillo
  */
-public class Util {
+public class UtilPersistencia {
+
+    private UtilPersistencia() {
+
+    }
 
     public static <T> List<T> populaObjetos(Class k, ResultSet rs) {
         List resposta = new ArrayList<>();
@@ -47,7 +46,7 @@ public class Util {
         }
         return new ArrayList<>();
     }
-    
+
     public static <T> T populaObjeto(Class k, ResultSet rs) {
         try {
             Constructor c = k.getConstructor();
@@ -70,13 +69,13 @@ public class Util {
         return null;
     }
 
-    private static void getAttrValue(Method method, Class classParam, 
-            Object objeto, ResultSet rs, String attrName) 
-            throws NoSuchMethodException, IllegalArgumentException, 
-            InvocationTargetException, SecurityException, 
+    private static void getAttrValue(Method method, Class classParam,
+            Object objeto, ResultSet rs, String attrName)
+            throws NoSuchMethodException, IllegalArgumentException,
+            InvocationTargetException, SecurityException,
             IllegalAccessException {
 
-        try{
+        try {
             if (classParam == String.class) {
                 method.invoke(objeto, rs.getString(attrName));
             } else if (classParam == long.class) {
@@ -90,10 +89,9 @@ public class Util {
             }
             //Erro de sqlException não será tratado na execução pois, é esperado 
             // em situações onde a classe diverge da tabela
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    
 }

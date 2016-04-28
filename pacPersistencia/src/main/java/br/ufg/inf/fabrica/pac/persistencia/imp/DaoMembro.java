@@ -6,7 +6,7 @@ import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
-import br.ufg.inf.fabrica.pac.persistencia.util.Util;
+import br.ufg.inf.fabrica.pac.persistencia.util.UtilPersistencia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -90,8 +90,8 @@ public class DaoMembro implements IDaoMembro {
                 ResultSet rs = pst.executeQuery();) {
             List<Usuario> usuarios = new ArrayList();
             while (rs.next()) {
-                Usuario usuario = Util.populaObjeto(Usuario.class, rs);
-                Membro membro = Util.populaObjeto(Membro.class, rs);
+                Usuario usuario = UtilPersistencia.populaObjeto(Usuario.class, rs);
+                Membro membro = UtilPersistencia.populaObjeto(Membro.class, rs);
                 if (membro.getIdUsuario() > 0) {
                     membro.setUsuario(usuario);
                 }
@@ -118,7 +118,7 @@ public class DaoMembro implements IDaoMembro {
             try (ResultSet rs = pst.executeQuery();) {
                 List<Usuario> usuarios = new ArrayList();
                 while (rs.next()) {
-                    Usuario usuario = Util.populaObjeto(Usuario.class, rs);
+                    Usuario usuario = UtilPersistencia.populaObjeto(Usuario.class, rs);
                     usuarios.add(usuario);
                 }
                 resposta.setChave(usuarios);
@@ -142,8 +142,8 @@ public class DaoMembro implements IDaoMembro {
             try (ResultSet rs = pst.executeQuery();) {
                 List<Membro> membros = new ArrayList();
                 while (rs.next()) {
-                    Usuario usuario = Util.populaObjeto(Usuario.class, rs);
-                    Membro membro = Util.populaObjeto(Membro.class, rs);
+                    Usuario usuario = UtilPersistencia.populaObjeto(Usuario.class, rs);
+                    Membro membro = UtilPersistencia.populaObjeto(Membro.class, rs);
                     membro.setUsuario(usuario);
                     membros.add(membro);
                 }
