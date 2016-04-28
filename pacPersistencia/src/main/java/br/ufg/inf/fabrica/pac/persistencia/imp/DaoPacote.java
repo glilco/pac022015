@@ -36,7 +36,6 @@ public class DaoPacote implements IDaoPacote {
             pst.setLong(10, entity.getId());
         }
 
-        java.sql.Date data;
         pst.setBoolean(1, entity.isAbandonado());
         if (entity.getDataCriacao() != null) {
             pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataCriacao()));
@@ -86,18 +85,7 @@ public class DaoPacote implements IDaoPacote {
             try (ResultSet rs = pst.executeQuery();) {
                 Pacote pacote = null;
                 if (rs.next()) {
-                    pacote = new Pacote();
-                    pacote.setId(rs.getLong("id"));
-                    pacote.setAbandonado(rs.getBoolean("abandonado"));
-                    pacote.setDataCriacao(rs.getDate("dataCriacao"));
-                    pacote.setDataPrevistaRealizacao(rs.getDate("dataPrevistaRealizacao"));
-                    pacote.setDescricao(rs.getString("descricao"));
-                    pacote.setDocumento(rs.getString("documento"));
-                    pacote.setId(rs.getLong("id"));
-                    pacote.setNomeEstado(rs.getString("nomeEstado"));
-                    pacote.setIdProjeto(rs.getLong("idProjeto"));
-                    pacote.setIdUsuario(rs.getLong("idUsuario"));
-                    pacote.setNome(rs.getString("nome"));
+                    pacote = construirPacote(rs);
                 }
                 pst.close();
                 return pacote;
@@ -113,23 +101,29 @@ public class DaoPacote implements IDaoPacote {
                 ResultSet rs = pst.executeQuery();) {
 
             List<Pacote> pacotes = new ArrayList<>();
-            if (rs.next()) {
+            while (rs.next()) {
                 Pacote pacote = new Pacote();
-                pacote.setId(rs.getLong("id"));
-                pacote.setAbandonado(rs.getBoolean("abandonado"));
-                pacote.setDataCriacao(rs.getDate("dataCriacao"));
-                pacote.setDataPrevistaRealizacao(rs.getDate("dataPrevistaRealizacao"));
-                pacote.setDescricao(rs.getString("descricao"));
-                pacote.setDocumento(rs.getString("documento"));
-                pacote.setId(rs.getLong("id"));
-                pacote.setNomeEstado(rs.getString("nomeEstado"));
-                pacote.setIdProjeto(rs.getLong("idProjeto"));
-                pacote.setIdUsuario(rs.getLong("idUsuario"));
-                pacote.setNome(rs.getString("nome"));
+                pacote = construirPacote(rs);
                 pacotes.add(pacote);
             }
             pst.close();
             return pacotes;
         }
+    }
+
+    private Pacote construirPacote(final ResultSet rs) throws SQLException {
+        Pacote pacote = new Pacote();
+        pacote.setId(rs.getLong("id"));
+        pacote.setAbandonado(rs.getBoolean("abandonado"));
+        pacote.setDataCriacao(rs.getDate("dataCriacao"));
+        pacote.setDataPrevistaRealizacao(rs.getDate("dataPrevistaRealizacao"));
+        pacote.setDescricao(rs.getString("descricao"));
+        pacote.setDocumento(rs.getString("documento"));
+        pacote.setId(rs.getLong("id"));
+        pacote.setNomeEstado(rs.getString("nomeEstado"));
+        pacote.setIdProjeto(rs.getLong("idProjeto"));
+        pacote.setIdUsuario(rs.getLong("idUsuario"));
+        pacote.setNome(rs.getString("nome"));
+        return pacote;
     }
 }
