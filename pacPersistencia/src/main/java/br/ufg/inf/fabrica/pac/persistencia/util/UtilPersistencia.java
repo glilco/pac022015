@@ -75,9 +75,8 @@ public class UtilPersistencia {
 
     private static void getAttrValue(Method method, Class classParam,
             Object objeto, ResultSet rs, String attrName)
-            throws NoSuchMethodException, IllegalArgumentException,
-            InvocationTargetException, SecurityException,
-            IllegalAccessException {
+            throws NoSuchMethodException, InvocationTargetException, 
+            SecurityException, IllegalAccessException {
         try {
             if (classParam == String.class) {
                 method.invoke(objeto, rs.getString(attrName));
