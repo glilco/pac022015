@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -41,23 +39,15 @@ public class DaoMembro implements IDaoMembro {
     public List<Membro> buscar(Projeto projeto, String papel)
             throws SQLException {
         String sql = "select * from MEMBRO where idProjeto=?, papel=?";
-        List<Membro> membro;
+        
         try (Connection con = Conexao.getConnection();
                 PreparedStatement pst = con.prepareStatement(sql);) {
             pst.setLong(1, projeto.getId());
             pst.setString(2, papel);
             try (ResultSet rs = pst.executeQuery();) {
-                membro = new ArrayList<>();
-                while (rs.next()) {
-                    Membro mP = new Membro();
-                    mP.setIdProjeto(rs.getLong("idProjeto"));
-                    mP.setIdUsuario(rs.getLong("idUsuario"));
-                    mP.setPapel(rs.getString("papel"));
-                    membro.add(mP);
-                }
+                return construirMembros(rs);
             }
         }
-        return membro;
     }
 
     @Override
@@ -69,15 +59,7 @@ public class DaoMembro implements IDaoMembro {
             pst.setLong(1, projeto.getId());
             pst.setLong(2, usuario.getId());
             try (ResultSet rs = pst.executeQuery();) {
-                List<Membro> membro = new ArrayList<>();
-                while (rs.next()) {
-                    Membro mP = new Membro();
-                    mP.setIdProjeto(rs.getLong("idProjeto"));
-                    mP.setIdUsuario(rs.getLong("idUsuario"));
-                    mP.setPapel(rs.getString("papel"));
-                    membro.add(mP);
-                }
-                return membro;
+                return construirMembros(rs);
             }
         }
     }
@@ -91,15 +73,7 @@ public class DaoMembro implements IDaoMembro {
             pst.setString(1, papel);
             pst.setLong(2, usuario.getId());
             try (ResultSet rs = pst.executeQuery();) {
-                List<Membro> membro = new ArrayList<>();
-                while (rs.next()) {
-                    Membro mP = new Membro();
-                    mP.setIdProjeto(rs.getLong("idProjeto"));
-                    mP.setIdUsuario(rs.getLong("idUsuario"));
-                    mP.setPapel(rs.getString("papel"));
-                    membro.add(mP);
-                }
-                return membro;
+                return construirMembros(rs);
             }
         }
     }
@@ -255,4 +229,17 @@ public class DaoMembro implements IDaoMembro {
             }
         }
     }
+
+    private List<Membro> construirMembros(final ResultSet rs) throws SQLException {
+        List<Membro> membros = new ArrayList<>();
+        while (rs.next()) {
+            Membro membro = new Membro();
+            membro.setIdProjeto(rs.getLong("idProjeto"));
+            membro.setIdUsuario(rs.getLong("idUsuario"));
+            membro.setPapel(rs.getString("papel"));
+            membros.add(membro);
+        }
+        return membros;
+    }
+
 }
