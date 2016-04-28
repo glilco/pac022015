@@ -45,8 +45,7 @@ public class UtilPersistencia {
                 SQLException | IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).
-                    log(Level.INFO, ex.toString());
+            registraLogException(ex);
         }
         return new ArrayList<>();
     }
@@ -69,8 +68,7 @@ public class UtilPersistencia {
                 IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).
-                    log(Level.INFO, ex.toString());
+            registraLogException(ex);
         }
         return null;
     }
@@ -80,7 +78,6 @@ public class UtilPersistencia {
             throws NoSuchMethodException, IllegalArgumentException,
             InvocationTargetException, SecurityException,
             IllegalAccessException {
-
         try {
             if (classParam == String.class) {
                 method.invoke(objeto, rs.getString(attrName));
@@ -96,9 +93,12 @@ public class UtilPersistencia {
             //Erro de sqlException não será tratado na execução pois, é esperado 
             // em situações onde a classe diverge da tabela
         } catch (SQLException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).
-                    log(Level.INFO, ex.toString());
+            registraLogException(ex);
         }
     }
-
+    
+    public static void registraLogException(Exception ex){
+        Logger.getLogger(UtilPersistencia.class.getName()).
+                    log(Level.INFO, ex.getMessage());
+    }
 }
