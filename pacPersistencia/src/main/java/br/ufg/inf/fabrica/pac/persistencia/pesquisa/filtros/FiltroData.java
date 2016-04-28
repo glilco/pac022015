@@ -14,7 +14,7 @@ import java.util.Date;
  *
  * @author Danillo
  */
-public class FiltroData extends Filtro{
+public class FiltroData implements Filtro{
 
     private final OperacaoFiltroData operacao;
     private final String nomeCampo;

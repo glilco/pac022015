@@ -99,7 +99,6 @@ public class DaoPacote implements IDaoPacote {
         try (Connection con = Conexao.getConnection();
                 PreparedStatement pst = con.prepareStatement(sql);
                 ResultSet rs = pst.executeQuery();) {
-
             List<Pacote> pacotes = new ArrayList<>();
             while (rs.next()) {
                 Pacote pacote = construirPacote(rs);

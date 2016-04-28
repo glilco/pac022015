@@ -12,7 +12,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.texto.TerminaCom;
  *
  * @author Danillo
  */
-public class FiltroTexto extends Filtro{
+public class FiltroTexto implements Filtro{
 
     private final OperacaoFiltroTexto operacao;
     private final String nomeCampo;

@@ -13,7 +13,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.numericas.MenorQue
  *
  * @author Danillo
  */
-public class FiltroNumerico extends Filtro{
+public class FiltroNumerico implements Filtro{
 
     private final OperacaoFiltroNumerico operacao;
     private final String nomeCampo;
