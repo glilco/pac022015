@@ -101,10 +101,9 @@ public class DaoProjeto implements IDaoProjeto {
         try (Connection con = Conexao.getConnection();
                 PreparedStatement pst = con.prepareStatement(sql);
                 ResultSet rs = pst.executeQuery();) {
-            Projeto projeto = null;
             List<Projeto> projetos = new ArrayList<>();
             while (rs.next()) {
-                projeto = new Projeto();
+                Projeto projeto = new Projeto();
                 projeto.setId(rs.getLong("id"));
                 projeto.setDataInicio(Utils.convertSqlDateToUtilDate(
                         rs.getDate("dataInicio")));
