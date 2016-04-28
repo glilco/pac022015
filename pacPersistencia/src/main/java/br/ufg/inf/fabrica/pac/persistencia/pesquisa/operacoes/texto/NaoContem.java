@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  */
 public class NaoContem extends OperacaoFiltroTexto {
 
-    private static final String operador = "not like ";
+    private static final String OPERADOR = "not like ";
 
     public NaoContem(String valor) {
         super(valor);
@@ -17,7 +17,7 @@ public class NaoContem extends OperacaoFiltroTexto {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '%").append(getValor()).append("%'");
+        sb.append(OPERADOR).append(" '%").append(getValor()).append("%'");
         return sb.toString();
     }
 }

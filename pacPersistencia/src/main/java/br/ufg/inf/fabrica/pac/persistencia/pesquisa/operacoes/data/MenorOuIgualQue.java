@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class MenorOuIgualQue extends OperacaoFiltroData {
 
-    private static final String operador = "<=";
+    private static final String OPERADOR = "<=";
     private final Date valor;
 
     public MenorOuIgualQue(Date valor) {
@@ -19,7 +19,7 @@ public class MenorOuIgualQue extends OperacaoFiltroData {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).
+        sb.append(OPERADOR).
                 append(" '").
                 append(valor).
                 append("'");

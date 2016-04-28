@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class MaiorOuIgualQue extends OperacaoFiltroNumerico {
 
-    private static final String operador = ">=";
+    private static final String OPERADOR = ">=";
 
     public MaiorOuIgualQue(Number valor) {
         super(valor);
@@ -17,7 +17,7 @@ public class MaiorOuIgualQue extends OperacaoFiltroNumerico {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(getValor());
+        sb.append(OPERADOR).append(getValor());
         return sb.toString();
     }
 }

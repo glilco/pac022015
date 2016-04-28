@@ -8,7 +8,7 @@ import java.util.Date;
  * @author Danillo
  */
 public class MaiorOuIgualQue extends OperacaoFiltroData{
-    private static final String operador = ">=";
+    private static final String OPERADOR = ">=";
     private final Date valor;
 
     public MaiorOuIgualQue(Date valor) {
@@ -18,7 +18,7 @@ public class MaiorOuIgualQue extends OperacaoFiltroData{
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).
+        sb.append(OPERADOR).
                 append(" '").
                 append(valor).
                 append("'");

@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  */
 public class ComecaCom extends OperacaoFiltroTexto {
 
-    private static final String operador = "like";
+    private static final String OPERADOR = "like";
 
     public ComecaCom(String valor) {
         super(valor);
@@ -17,7 +17,7 @@ public class ComecaCom extends OperacaoFiltroTexto {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '").append(getValor()).append("%'");
+        sb.append(OPERADOR).append(" '").append(getValor()).append("%'");
         return sb.toString();
     }
 }
