@@ -3,6 +3,7 @@ package br.ufg.inf.fabrica.pac.persistencia.imp;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,40 +41,34 @@ public class DaoUsuario implements IDaoUsuario {
     }
 
     @Override
-    public Usuario excluir(Usuario entity, Transacao transacao) {
+    public Usuario excluir(Usuario entity, Transacao transacao)
+            throws SQLException {
         String sql = "delete from USUARIO where id=?";
-        try {
-            PreparedStatement pst;
-            pst = Conexao.getConnection().prepareStatement(sql);
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareCall(sql);) {
             pst.setLong(1, entity.getId());
             pst.execute();
             return entity;
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
     }
 
     @Override
-    public Usuario buscar(long id) {
+    public Usuario buscar(long id) throws SQLException {
         String sql = "select U.* from USUARIO as U where id=?";
-        try {
-            PreparedStatement pst;
-            pst = Conexao.getConnection().prepareStatement(sql);
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareCall(sql);) {
             pst.setLong(1, id);
-            ResultSet rs = pst.executeQuery();
-            Usuario usuario = null;
-            if (rs.next()) {
-                usuario = new Usuario();
-                usuario.setId(id);
-                usuario.setAtivo(rs.getBoolean("ativo"));
-                usuario.setNome(rs.getString("nome"));
-                usuario.setEmail(rs.getString("email"));
+            try (ResultSet rs = pst.executeQuery();) {
+                Usuario usuario = null;
+                if (rs.next()) {
+                    usuario = new Usuario();
+                    usuario.setId(id);
+                    usuario.setAtivo(rs.getBoolean("ativo"));
+                    usuario.setNome(rs.getString("nome"));
+                    usuario.setEmail(rs.getString("email"));
+                }
+                return usuario;
             }
-            return usuario;
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
     }
 

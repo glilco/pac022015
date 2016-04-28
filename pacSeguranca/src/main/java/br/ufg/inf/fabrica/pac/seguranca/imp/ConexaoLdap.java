@@ -24,7 +24,7 @@ public class ConexaoLdap {
     private static String BASE_DN;
 
     public static void lerParametros()
-            throws VariavelAmbienteNaoDefinidaException, FileNotFoundException, IOException {
+            throws VariavelAmbienteNaoDefinidaException, IOException {
         String pathSistema
                 = System.getenv(Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES);
 
@@ -37,7 +37,7 @@ public class ConexaoLdap {
         }
 
         File file = new File(pathSistema);
-        InputStream input = null;
+        InputStream input;
         input = new FileInputStream(file);
         Properties prop = new Properties();
         prop.load(input);

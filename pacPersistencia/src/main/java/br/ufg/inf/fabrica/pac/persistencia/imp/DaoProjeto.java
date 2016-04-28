@@ -97,26 +97,28 @@ public class DaoProjeto implements IDaoProjeto {
     @Override
     public List<Projeto> buscarTodos() throws SQLException {
         String sql = "select P.* from PROJETO as P";
-        PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-        Projeto projeto = null;
-        List<Projeto> projetos = new ArrayList<>();
-        while (rs.next()) {
-            projeto = new Projeto();
-            projeto.setId(rs.getLong("id"));
-            projeto.setDataInicio(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataInicio")));
-            projeto.setDataTermino(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataTermino")));
-            projeto.setDescricao(rs.getString("descricao"));
-            projeto.setNome(rs.getString("nome"));
-            projeto.setPatrocinador(rs.getString("patrocinador"));
-            projeto.setStakeholders(rs.getString("stakeholders"));
-            projetos.add(projeto);
+
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery();) {
+            Projeto projeto = null;
+            List<Projeto> projetos = new ArrayList<>();
+            while (rs.next()) {
+                projeto = new Projeto();
+                projeto.setId(rs.getLong("id"));
+                projeto.setDataInicio(Utils.convertSqlDateToUtilDate(
+                        rs.getDate("dataInicio")));
+                projeto.setDataTermino(Utils.convertSqlDateToUtilDate(
+                        rs.getDate("dataTermino")));
+                projeto.setDescricao(rs.getString("descricao"));
+                projeto.setNome(rs.getString("nome"));
+                projeto.setPatrocinador(rs.getString("patrocinador"));
+                projeto.setStakeholders(rs.getString("stakeholders"));
+                projetos.add(projeto);
+            }
+            pst.close();
+            return projetos;
         }
-        pst.close();
-        return projetos;
     }
 
 }

@@ -1,10 +1,15 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
+import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
+import br.ufg.inf.fabrica.pac.dominio.utils.UtilsValidacao;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author danilloguimaraes
  */
-public class Usuario {
+public class Usuario implements Validavel{
 
     //Id não é gerado automaticamente, ele é gerado pelo ldap
     private long id;
@@ -64,11 +69,15 @@ public class Usuario {
         this.ativo = value;
     }
 
-    public boolean isGPP() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean isGPR() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public List<String> validar() {
+        List<String> inconsistencias = new ArrayList<>();
+        if (UtilsValidacao.isNullOrEmpty(login)) {
+            inconsistencias.add("Login de usuário não informado");
+        }
+        if (Utils.stringVaziaOuNula(senha)) {
+            inconsistencias.add("Senha de usuário não informada");
+        }
+        return inconsistencias;
     }
 }
