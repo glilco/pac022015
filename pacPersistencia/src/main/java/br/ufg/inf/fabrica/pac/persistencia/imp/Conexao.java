@@ -10,6 +10,10 @@ import java.sql.SQLException;
  */
 public class Conexao {
 
+    private Conexao() {
+
+    }
+
     public static Connection getConnection() throws SQLException {
         return Conexao.getConnection(false);
     }
