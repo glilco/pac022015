@@ -6,8 +6,6 @@ package br.ufg.inf.fabrica.pac.persistencia.pesquisa;
  */
 public abstract class Filtro {
     
-    private String nomeCampo;
-    
     public String getConsultaFiltro(){
         return null;
     }
