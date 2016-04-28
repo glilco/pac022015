@@ -6,7 +6,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.Operacao;
  *
  * @author Danillo
  */
-public abstract class OperacaoFiltroTexto extends Operacao{
+public abstract class OperacaoFiltroTexto implements Operacao{
     public final static int COMECA_COM = 0;
     public final static int CONTEM = 1;
     public final static int IGUAL = 2;

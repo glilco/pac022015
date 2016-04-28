@@ -9,7 +9,7 @@ import java.util.Date;
  *
  * @author Danillo
  */
-public abstract class OperacaoFiltroData extends Operacao{
+public abstract class OperacaoFiltroData implements Operacao{
     public final static int IGUAL = 0;
     public final static int DIFERENTE = 1;
     public final static int MAIOR_QUE = 2;

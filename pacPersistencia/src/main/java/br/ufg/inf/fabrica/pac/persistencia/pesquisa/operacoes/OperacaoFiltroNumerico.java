@@ -6,7 +6,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.Operacao;
  *
  * @author Danillo
  */
-public abstract class OperacaoFiltroNumerico extends Operacao{
+public abstract class OperacaoFiltroNumerico implements Operacao{
     public final static int IGUAL = 0;
     public final static int DIFERENTE = 1;
     public final static int MAIOR_QUE = 2;
