@@ -6,18 +6,18 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  *
  * @author Danillo
  */
-public class Diferente extends OperacaoFiltroNumerico{
+public class Diferente extends OperacaoFiltroNumerico {
+
     private final String operador = "!=";
-    private final Number valor;
 
     public Diferente(Number valor) {
-        this.valor = valor;
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(valor);
+        sb.append(operador).append(getValor());
         return sb.toString();
     }
 }

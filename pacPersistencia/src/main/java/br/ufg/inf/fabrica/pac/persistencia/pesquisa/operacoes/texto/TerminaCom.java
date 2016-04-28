@@ -9,16 +9,15 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
 public class TerminaCom extends OperacaoFiltroTexto {
 
     private final String operador = "like ";
-    private final String valor;
 
     public TerminaCom(String valor) {
-        this.valor = valor;
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '%").append(valor).append("'");
+        sb.append(operador).append(" '%").append(getValor()).append("'");
         return sb.toString();
     }
 }

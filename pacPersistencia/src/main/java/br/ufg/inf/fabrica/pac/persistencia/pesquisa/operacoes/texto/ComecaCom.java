@@ -6,18 +6,18 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  *
  * @author Danillo
  */
-public class ComecaCom extends OperacaoFiltroTexto{
+public class ComecaCom extends OperacaoFiltroTexto {
+
     private final String operador = "like";
-    private final String valor;
-    
-    public ComecaCom(String valor){
-        this.valor = valor;
+
+    public ComecaCom(String valor) {
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '").append(valor).append("%'");
+        sb.append(operador).append(" '").append(getValor()).append("%'");
         return sb.toString();
     }
 }
