@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class MaiorQue extends OperacaoFiltroNumerico {
 
-    private final String operador = ">";
+    private static final String operador = ">";
 
     public MaiorQue(Number valor) {
         super(valor);

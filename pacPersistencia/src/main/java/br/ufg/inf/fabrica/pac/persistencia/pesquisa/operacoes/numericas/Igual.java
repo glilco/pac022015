@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class Igual extends OperacaoFiltroNumerico {
 
-    private final String operador = "=";
+    private static final String operador = "=";
 
     public Igual(Number valor) {
         super(valor);

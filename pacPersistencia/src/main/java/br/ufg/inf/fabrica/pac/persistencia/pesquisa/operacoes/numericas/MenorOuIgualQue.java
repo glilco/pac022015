@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class MenorOuIgualQue extends OperacaoFiltroNumerico {
 
-    private final String operador = "<=";
+    private static final String operador = "<=";
 
     public MenorOuIgualQue(Number valor) {
         super(valor);

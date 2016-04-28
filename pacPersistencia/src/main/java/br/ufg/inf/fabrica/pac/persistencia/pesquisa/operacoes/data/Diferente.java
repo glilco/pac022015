@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Diferente extends OperacaoFiltroData {
 
-    private final String operador = "!=";
+    private static final String operador = "!=";
 
     public Diferente(Date valor) {
         this.setValor(valor);

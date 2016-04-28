@@ -14,33 +14,25 @@ import java.util.Date;
  *
  * @author Danillo
  */
-public class FiltroData implements Filtro{
+public class FiltroData implements Filtro {
 
     private final OperacaoFiltroData operacao;
     private final String nomeCampo;
 
-    public String getNomeCampo(){
-        return nomeCampo;
-    }
-    
-    public OperacaoFiltroData getOperacao() {
-        return operacao;
-    }
-    
-    public FiltroData(String nomeCampo, int operacao, Date valor){
+    public FiltroData(String nomeCampo, int operacao, Date valor) {
         this.nomeCampo = nomeCampo;
-        
-        if(operacao==OperacaoFiltroData.IGUAL){
+
+        if (operacao == OperacaoFiltroData.IGUAL) {
             this.operacao = new Igual(valor);
-        } else if(operacao==OperacaoFiltroData.DIFERENTE){
+        } else if (operacao == OperacaoFiltroData.DIFERENTE) {
             this.operacao = new Diferente(valor);
-        } else if(operacao==OperacaoFiltroData.MAIOR_QUE){
+        } else if (operacao == OperacaoFiltroData.MAIOR_QUE) {
             this.operacao = new MaiorQue(valor);
-        } else if(operacao==OperacaoFiltroData.MAIOR_OU_IGUAL_QUE){
+        } else if (operacao == OperacaoFiltroData.MAIOR_OU_IGUAL_QUE) {
             this.operacao = new MaiorOuIgualQue(valor);
-        } else if(operacao==OperacaoFiltroData.MENOR_QUE){
+        } else if (operacao == OperacaoFiltroData.MENOR_QUE) {
             this.operacao = new MenorQue(valor);
-        } else if(operacao==OperacaoFiltroData.MENOR_OU_IGUAL_QUE){
+        } else if (operacao == OperacaoFiltroData.MENOR_OU_IGUAL_QUE) {
             this.operacao = new MenorOuIgualQue(valor);
         } else {
             this.operacao = null;
@@ -48,7 +40,15 @@ public class FiltroData implements Filtro{
                     "Operação de filtro numérico inválido");
         }
     }
-    
+
+    public String getNomeCampo() {
+        return nomeCampo;
+    }
+
+    public OperacaoFiltroData getOperacao() {
+        return operacao;
+    }
+
     @Override
     public String getConsultaFiltro() {
         StringBuilder sb = new StringBuilder();
@@ -57,5 +57,5 @@ public class FiltroData implements Filtro{
                 append(operacao.getOperadorEValor());
         return sb.toString();
     }
-    
+
 }

@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  */
 public class TerminaCom extends OperacaoFiltroTexto {
 
-    private final String operador = "like ";
+    private static final String operador = "like ";
 
     public TerminaCom(String valor) {
         super(valor);

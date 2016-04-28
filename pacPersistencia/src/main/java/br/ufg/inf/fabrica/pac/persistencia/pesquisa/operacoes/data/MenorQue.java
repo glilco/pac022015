@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class MenorQue extends OperacaoFiltroData {
 
-    private final String operador = "<";
+    private static final String operador = "<";
     private final Date valor;
 
     public MenorQue(Date valor) {

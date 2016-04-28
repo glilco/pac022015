@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class MenorQue extends OperacaoFiltroNumerico {
 
-    private final String operador = "<";
+    private static final String operador = "<";
 
     public MenorQue(Number valor) {
         super(valor);

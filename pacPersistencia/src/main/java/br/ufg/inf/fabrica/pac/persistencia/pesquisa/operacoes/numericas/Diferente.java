@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
  */
 public class Diferente extends OperacaoFiltroNumerico {
 
-    private final String operador = "!=";
+    private static final String operador = "!=";
 
     public Diferente(Number valor) {
         super(valor);

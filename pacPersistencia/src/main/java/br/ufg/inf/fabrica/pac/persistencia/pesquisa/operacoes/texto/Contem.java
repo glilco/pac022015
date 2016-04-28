@@ -8,7 +8,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  */
 public class Contem extends OperacaoFiltroTexto {
 
-    private final String operador = "like";
+    private static final String operador = "like";
 
     public Contem(String valor) {
         super(valor);
