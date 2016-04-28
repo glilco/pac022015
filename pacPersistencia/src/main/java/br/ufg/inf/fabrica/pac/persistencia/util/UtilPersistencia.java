@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +31,8 @@ public class UtilPersistencia {
                 for (Field field : k.getDeclaredFields()) {
                     Class classParam = field.getType();
                     String attrName = field.getName();
-                    String capitular = attrName.substring(0, 1).toUpperCase() + attrName.substring(1, attrName.length());
+                    String capitular = attrName.substring(0, 1).toUpperCase() + 
+                            attrName.substring(1, attrName.length());
                     String methodName = "set" + capitular;
                     Method method = k.getMethod(methodName, classParam);
                     getAttrValue(method, classParam, objeto, rs, attrName);
@@ -42,7 +45,7 @@ public class UtilPersistencia {
                 SQLException | IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            System.out.println(ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, ex.getMessage());
         }
         return new ArrayList<>();
     }
@@ -54,7 +57,8 @@ public class UtilPersistencia {
             for (Field field : k.getDeclaredFields()) {
                 Class classParam = field.getType();
                 String attrName = field.getName();
-                String capitular = attrName.substring(0, 1).toUpperCase() + attrName.substring(1, attrName.length());
+                String capitular = attrName.substring(0, 1).toUpperCase() + 
+                        attrName.substring(1, attrName.length());
                 String methodName = "set" + capitular;
                 Method method = k.getMethod(methodName, classParam);
                 getAttrValue(method, classParam, objeto, rs, attrName);
@@ -64,7 +68,7 @@ public class UtilPersistencia {
                 IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            System.out.println(ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, ex.getMessage());
         }
         return null;
     }
@@ -90,7 +94,8 @@ public class UtilPersistencia {
             //Erro de sqlException não será tratado na execução pois, é esperado 
             // em situações onde a classe diverge da tabela
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, 
+                    ex.getMessage());
         }
     }
 
