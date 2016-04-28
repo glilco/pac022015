@@ -45,7 +45,8 @@ public class UtilPersistencia {
                 SQLException | IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).
+                    log(Level.INFO, ex.toString());
         }
         return new ArrayList<>();
     }
@@ -68,7 +69,8 @@ public class UtilPersistencia {
                 IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).
+                    log(Level.INFO, ex.toString());
         }
         return null;
     }
@@ -94,8 +96,8 @@ public class UtilPersistencia {
             //Erro de sqlException não será tratado na execução pois, é esperado 
             // em situações onde a classe diverge da tabela
         } catch (SQLException ex) {
-            Logger.getLogger(UtilPersistencia.class.getName()).log(Level.INFO, 
-                    ex.getMessage());
+            Logger.getLogger(UtilPersistencia.class.getName()).
+                    log(Level.INFO, ex.toString());
         }
     }
 
