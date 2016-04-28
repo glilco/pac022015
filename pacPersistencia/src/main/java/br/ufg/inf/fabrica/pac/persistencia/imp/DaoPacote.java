@@ -102,8 +102,7 @@ public class DaoPacote implements IDaoPacote {
 
             List<Pacote> pacotes = new ArrayList<>();
             while (rs.next()) {
-                Pacote pacote = new Pacote();
-                pacote = construirPacote(rs);
+                Pacote pacote = construirPacote(rs);
                 pacotes.add(pacote);
             }
             pst.close();
