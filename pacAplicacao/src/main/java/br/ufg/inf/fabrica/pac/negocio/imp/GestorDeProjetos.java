@@ -32,7 +32,7 @@ public class GestorDeProjetos implements IGestorDeProjeto {
     public Resposta<Projeto> criar(Usuario autor, Projeto projeto) {
         String recursoId = "recursoId-criar";
         AutorizadorDeAcesso autorizador = 
-                new AutorizadorDeAcesso(recursoId, autor);
+                new AutorizadorDeAcesso(recursoId, autor, projeto);
         if(!autorizador.isAutorizado()){
             return UtilsNegocio.criarRespostaComErro(autorizador.getDetalhes());
         }
@@ -59,7 +59,7 @@ public class GestorDeProjetos implements IGestorDeProjeto {
     public Resposta<List<Projeto>> buscarTodos(Usuario autor) {
         String recursoId = "recursoId-buscarTodos";
         AutorizadorDeAcesso autorizador = 
-                new AutorizadorDeAcesso(recursoId, autor);
+                new AutorizadorDeAcesso(recursoId, autor, null);
         if(!autorizador.isAutorizado()){
             return UtilsNegocio.criarRespostaComErro(autorizador.getDetalhes());
         }

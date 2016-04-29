@@ -3,6 +3,7 @@ package br.ufg.inf.fabrica.pac.negocio.imp;
 import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import br.ufg.inf.fabrica.pac.seguranca.Seguranca;
@@ -19,84 +20,60 @@ import java.util.logging.Logger;
  */
 public class AutorizadorDeAcesso {
 
-    private final boolean autorizado;
+    private boolean autorizado;
 
-    private final String detalhes;
+    private String detalhes;
 
     private AutorizadorDeAcesso() {
         this.autorizado = false;
         this.detalhes = null;
     }
 
-    public AutorizadorDeAcesso(String recurso, Usuario autor) {
-        String recursoId = "recursoIdCriarProjeto";
+    public AutorizadorDeAcesso(String recurso, Usuario autor, Projeto projeto) {
+        if (Utils.stringVaziaOuNula(recurso)) {
+            rejeitar("Recurso da solicitação não informado");
+            return;
+        }
         if (autor == null) {
-            this.autorizado = false;
-            this.detalhes = "Autor da solicitação não informado";
+            rejeitar("Autor da solicitação não informado");
+            return;
+        }
+        if (autor.getId() < 1) {
+            rejeitar("Usuário inválido");
+            return;
+        }
+        if (projeto != null && projeto.getId() < 1) {
+            rejeitar("Projeto inválido");
             return;
         }
 
         List<String> nomesPapeis;
         try {
-            nomesPapeis = buscarListaPapeis(autor);
+            if (projeto == null) {
+                nomesPapeis = buscarListaPapeis(autor, null);
+            } else {
+                nomesPapeis = buscarListaPapeis(autor, projeto);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(GestorDeProjetos.class.getName()).
                     log(Level.SEVERE, null, ex);
-            this.autorizado = false;
-            this.detalhes = "Falha no sistema";
+            rejeitar("Falha no sistema");
             return;
         }
         Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
-            String menssagemErro = 
-                    "Usuário não possui permissão para acessar recurso";
+        if (!seguranca.autorizar(recurso, nomesPapeis)) {
+            String menssagemErro
+                    = "Usuário não possui permissão para acessar recurso";
             Logger.getLogger(GestorDePacotes.class.getName()).
                     log(Level.SEVERE, null, menssagemErro);
-            this.autorizado = false;
-            this.detalhes = menssagemErro;
+            rejeitar(menssagemErro);
         } else {
-            this.autorizado = true;
-            this.detalhes = "";
+            autorizar();
         }
 
     }
 
-    public AutorizadorDeAcesso(String recurso, Usuario autor, 
-            Projeto projeto) {
-        String recursoId = "recursoIdCriarProjeto";
-        if (autor == null) {
-            this.autorizado = false;
-            this.detalhes = "Autor da solicitação não informado";
-            return;
-        }
-
-        List<String> nomesPapeis;
-        try {
-            nomesPapeis = buscarListaPapeis(autor);
-        } catch (SQLException ex) {
-            Logger.getLogger(GestorDeProjetos.class.getName()).
-                    log(Level.SEVERE, null, ex);
-            this.autorizado = false;
-            this.detalhes = "Falha no sistema";
-            return;
-        }
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomesPapeis, 
-                Long.toString(projeto.getId()))) {
-            String menssagemErro = 
-                    "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).
-                    log(Level.SEVERE, null, menssagemErro);
-            this.autorizado = false;
-            this.detalhes = menssagemErro;
-        } else {
-            this.autorizado = true;
-            this.detalhes = "";
-        }
-
-    }
-
-    private List<String> buscarListaPapeis(Usuario autor) 
+    private List<String> buscarListaPapeis(Usuario autor, Projeto projeto)
             throws SQLException {
         if (autor == null) {
             return null;
@@ -104,7 +81,11 @@ public class AutorizadorDeAcesso {
         IDaoMembro daoMembro = new DaoMembro();
         List<Membro> papeis;
         List<String> nomesPapeis = new ArrayList<>();
-        papeis = daoMembro.buscarPapeis(autor.getId());
+        if(projeto==null){
+            papeis = daoMembro.buscarPapeis(autor.getId());
+        } else {
+            papeis = daoMembro.buscar(projeto, autor);
+        }
         for (Membro papel : papeis) {
             nomesPapeis.add(papel.getPapel());
         }
@@ -117,5 +98,15 @@ public class AutorizadorDeAcesso {
 
     public String getDetalhes() {
         return detalhes;
+    }
+
+    private void rejeitar(String detalhes) {
+        this.autorizado = false;
+        this.detalhes = detalhes;
+    }
+
+    private void autorizar() {
+        this.autorizado = true;
+        this.detalhes = "";
     }
 }
