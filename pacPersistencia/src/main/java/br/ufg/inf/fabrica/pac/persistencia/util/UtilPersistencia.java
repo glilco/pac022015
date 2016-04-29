@@ -41,9 +41,8 @@ public class UtilPersistencia {
                 resposta.add(objeto);
             }
             return resposta;
-        } catch (NoSuchMethodException | SecurityException |
-                SQLException | IllegalArgumentException |
-                IllegalAccessException | InvocationTargetException |
+        } catch (NoSuchMethodException | SQLException | 
+                IllegalArgumentException | IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
             registraLogException(ex);
         }
@@ -64,8 +63,7 @@ public class UtilPersistencia {
                 getAttrValue(method, classParam, objeto, rs, attrName);
             }
             return (T) objeto;
-        } catch (NoSuchMethodException | SecurityException |
-                IllegalArgumentException |
+        } catch (NoSuchMethodException | IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
             registraLogException(ex);
@@ -89,8 +87,6 @@ public class UtilPersistencia {
             } else if (classParam == int.class) {
                 method.invoke(objeto, rs.getInt(attrName));
             }
-            //Erro de sqlException não será tratado na execução pois, é esperado 
-            // em situações onde a classe diverge da tabela
         } catch (SQLException ex) {
             registraLogException(ex);
         }
