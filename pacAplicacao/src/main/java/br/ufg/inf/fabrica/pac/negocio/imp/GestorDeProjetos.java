@@ -36,24 +36,9 @@ public class GestorDeProjetos implements IGestorDeProjeto {
 
     @Override
     public Resposta<Projeto> criar(Usuario autor, Projeto projeto) {
-        if(autor==null){
-            return UtilsNegocio.criarRespostaComErro("Recurso exige autenticação");
-        }
-        String recursoId = "recursoIdCriarProjeto";
-        List<String> nomesPapeis;
-        try {
-            nomesPapeis = buscarListaPapeis(autor);
-        } catch (SQLException ex) {
-            Logger.getLogger(GestorDeProjetos.class.getName()).
-                    log(Level.SEVERE, null, ex);
-            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
-        }
-
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
-            String menssagemErro = "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            return UtilsNegocio.criarRespostaComErro(menssagemErro);
+        Resposta resposta = autorizarAcesso(autor);
+        if(resposta!=null){
+            return resposta;
         }
 
         List<String> inconsistencias = projeto.validar();
@@ -76,24 +61,9 @@ public class GestorDeProjetos implements IGestorDeProjeto {
 
     @Override
     public Resposta<List<Projeto>> buscarTodos(Usuario autor) {
-        if(autor==null){
-            return UtilsNegocio.criarRespostaComErro("Recurso exige autenticação");
-        }
-        String recursoId = "recursoId";
-        List<String> nomesPapeis;
-        try {
-            nomesPapeis = buscarListaPapeis(autor);
-        } catch (SQLException ex) {
-            Logger.getLogger(GestorDeProjetos.class.getName()).
-                    log(Level.SEVERE, null, ex);
-            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
-        }
-
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
-            String menssagemErro = "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            return UtilsNegocio.criarRespostaComErro(menssagemErro);
+        Resposta resposta = autorizarAcesso(autor);
+        if(resposta!=null){
+            return resposta;
         }
 
         IDaoProjeto daoProjeto = new DaoProjeto();
@@ -117,5 +87,28 @@ public class GestorDeProjetos implements IGestorDeProjeto {
             nomesPapeis.add(papel.getPapel());
         }
         return nomesPapeis;
+    }
+    
+    private Resposta<Projeto> autorizarAcesso(Usuario autor){
+        if(autor==null){
+            return UtilsNegocio.criarRespostaComErro("Autor da solicitação não informado");
+        }
+        String recursoId = "recursoIdCriarProjeto";
+        List<String> nomesPapeis;
+        try {
+            nomesPapeis = buscarListaPapeis(autor);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDeProjetos.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
+
+        Seguranca seguranca = SegurancaStub.getInstance();
+        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
+            String menssagemErro = "Usuário não possui permissão para acessar recurso";
+            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.criarRespostaComErro(menssagemErro);
+        }
+        return null;
     }
 }
