@@ -7,6 +7,7 @@ import br.ufg.inf.fabrica.pac.dominio.Usuario;
  *
  * @author Danillo 
  */
+@FunctionalInterface
 public interface IAutenticador {
     
     /**
