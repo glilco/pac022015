@@ -9,4 +9,6 @@ import java.util.List;
 public interface Seguranca {
     
     public boolean autorizar(String recurso, List<String> papeis);
+    
+    public boolean autorizar(String recurso, List<String> papeis, String contexto);
 }

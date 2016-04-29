@@ -10,6 +10,8 @@ import br.ufg.inf.fabrica.pac.seguranca.imp.SegurancaStub;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,24 +19,103 @@ import java.util.List;
  */
 public class AutorizadorDeAcesso {
 
+    private final boolean autorizado;
+
+    private final String detalhes;
+
     private AutorizadorDeAcesso() {
+        this.autorizado = false;
+        this.detalhes = null;
+    }
+
+    public AutorizadorDeAcesso(String recurso, Usuario autor) {
+        String recursoId = "recursoIdCriarProjeto";
+        if (autor == null) {
+            this.autorizado = false;
+            this.detalhes = "Autor da solicitação não informado";
+            return;
+        }
+
+        List<String> nomesPapeis;
+        try {
+            nomesPapeis = buscarListaPapeis(autor);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDeProjetos.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            this.autorizado = false;
+            this.detalhes = "Falha no sistema";
+            return;
+        }
+        Seguranca seguranca = SegurancaStub.getInstance();
+        if (!seguranca.autorizar(recursoId, nomesPapeis)) {
+            String menssagemErro = 
+                    "Usuário não possui permissão para acessar recurso";
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            this.autorizado = false;
+            this.detalhes = menssagemErro;
+        } else {
+            this.autorizado = true;
+            this.detalhes = "";
+        }
 
     }
 
-    public static boolean autorizar(String recurso, Usuario usuario, Projeto projeto) 
-            throws SQLException {
-        IDaoMembro daoMembro = new DaoMembro();
-        List<Membro> papeis;
-        List<String> nomePapeis = new ArrayList<>();
-        papeis = daoMembro.buscar(projeto, usuario);
-        
-        for (Membro membro : papeis) {
-            nomePapeis.add(membro.getPapel());
+    public AutorizadorDeAcesso(String recurso, Usuario autor, 
+            Projeto projeto) {
+        String recursoId = "recursoIdCriarProjeto";
+        if (autor == null) {
+            this.autorizado = false;
+            this.detalhes = "Autor da solicitação não informado";
+            return;
+        }
+
+        List<String> nomesPapeis;
+        try {
+            nomesPapeis = buscarListaPapeis(autor);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDeProjetos.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            this.autorizado = false;
+            this.detalhes = "Falha no sistema";
+            return;
         }
         Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recurso, nomePapeis)) {
-            return false;
+        if (!seguranca.autorizar(recursoId, nomesPapeis, 
+                Long.toString(projeto.getId()))) {
+            String menssagemErro = 
+                    "Usuário não possui permissão para acessar recurso";
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            this.autorizado = false;
+            this.detalhes = menssagemErro;
+        } else {
+            this.autorizado = true;
+            this.detalhes = "";
         }
-        return true;
+
+    }
+
+    private List<String> buscarListaPapeis(Usuario autor) 
+            throws SQLException {
+        if (autor == null) {
+            return null;
+        }
+        IDaoMembro daoMembro = new DaoMembro();
+        List<Membro> papeis;
+        List<String> nomesPapeis = new ArrayList<>();
+        papeis = daoMembro.buscarPapeis(autor.getId());
+        for (Membro papel : papeis) {
+            nomesPapeis.add(papel.getPapel());
+        }
+        return nomesPapeis;
+    }
+
+    public boolean isAutorizado() {
+        return autorizado;
+    }
+
+    public String getDetalhes() {
+        return detalhes;
     }
 }

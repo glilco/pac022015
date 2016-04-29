@@ -23,4 +23,9 @@ public class SegurancaStub implements Seguranca {
         return true;
     }
 
+    @Override
+    public boolean autorizar(String recurso, List<String> papeis, String contexto) {
+        return true;
+    }
+
 }
