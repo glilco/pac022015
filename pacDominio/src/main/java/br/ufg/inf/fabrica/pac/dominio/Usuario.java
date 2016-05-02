@@ -72,12 +72,6 @@ public class Usuario implements Validavel{
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
-        if (UtilsValidacao.isNullOrEmpty(login)) {
-            inconsistencias.add("Login de usuário não informado");
-        }
-        if (Utils.stringVaziaOuNula(senha)) {
-            inconsistencias.add("Senha de usuário não informada");
-        }
         return inconsistencias;
     }
 }

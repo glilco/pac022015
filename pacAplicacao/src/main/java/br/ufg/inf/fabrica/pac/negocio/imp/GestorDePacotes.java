@@ -41,7 +41,7 @@ public class GestorDePacotes implements IGestorDePacotes {
     }
 
     @Override
-    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, 
+    public Resposta<Pacote> criar(Usuario autor, Pacote pacote, 
             Projeto projetoSelecionado) {
         if (pacote == null) {
             return UtilsNegocio.criarRespostaComErro("Pacote não informado");
