@@ -30,19 +30,14 @@ public class AutorizadorDeAcesso {
     }
 
     public AutorizadorDeAcesso(String recurso, Usuario autor, Projeto projeto) {
+
         if (Utils.stringVaziaOuNula(recurso)) {
             rejeitar("Recurso da solicitação não informado");
-            return;
-        }
-        if (autor == null) {
+        } else if (autor == null) {
             rejeitar("Autor da solicitação não informado");
-            return;
-        }
-        if (autor.getId() < 1) {
+        } else if (autor.getId() < 1) {
             rejeitar("Usuário inválido");
-            return;
-        }
-        if (projeto != null && projeto.getId() < 1) {
+        } else if (projeto != null && projeto.getId() < 1) {
             rejeitar("Projeto inválido");
             return;
         }
@@ -54,21 +49,20 @@ public class AutorizadorDeAcesso {
             } else {
                 nomesPapeis = buscarListaPapeis(autor, projeto);
             }
+            Seguranca seguranca = SegurancaStub.getInstance();
+            if (!seguranca.autorizar(recurso, nomesPapeis)) {
+                String menssagemErro
+                        = "Usuário não possui permissão para acessar recurso";
+                Logger.getLogger(GestorDePacotes.class.getName()).
+                        log(Level.SEVERE, null, menssagemErro);
+                rejeitar(menssagemErro);
+            } else {
+                autorizar();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(GestorDeProjetos.class.getName()).
                     log(Level.SEVERE, null, ex);
             rejeitar("Falha no sistema");
-            return;
-        }
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recurso, nomesPapeis)) {
-            String menssagemErro
-                    = "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).
-                    log(Level.SEVERE, null, menssagemErro);
-            rejeitar(menssagemErro);
-        } else {
-            autorizar();
         }
 
     }
@@ -76,12 +70,12 @@ public class AutorizadorDeAcesso {
     private List<String> buscarListaPapeis(Usuario autor, Projeto projeto)
             throws SQLException {
         if (autor == null) {
-            return null;
+            return new ArrayList<>();
         }
         IDaoMembro daoMembro = new DaoMembro();
         List<Membro> papeis;
         List<String> nomesPapeis = new ArrayList<>();
-        if(projeto==null){
+        if (projeto == null) {
             papeis = daoMembro.buscarPapeis(autor.getId());
         } else {
             papeis = daoMembro.buscar(projeto, autor);

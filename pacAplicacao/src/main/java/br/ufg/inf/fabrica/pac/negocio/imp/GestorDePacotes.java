@@ -73,9 +73,8 @@ public class GestorDePacotes implements IGestorDePacotes {
             String menssagemErro = "Pacote inconsistente";
             Logger.getLogger(GestorDePacotes.class.getName()).
                     log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.
+            return UtilsNegocio.
                     criarRespostaComErro(inconsistencias);
-            return resposta;
         }
 
         Andamento andamento = new Andamento();
@@ -91,9 +90,8 @@ public class GestorDePacotes implements IGestorDePacotes {
             String menssagemErro = "Pacote inconsistente";
             Logger.getLogger(GestorDePacotes.class.getName()).
                     log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.
+            return UtilsNegocio.
                     criarRespostaComErro(inconsistencias);
-            return resposta;
         }
 
         IDaoAndamento daoAndamento = new DaoAndamento();
