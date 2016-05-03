@@ -1,7 +1,6 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
-import br.ufg.inf.fabrica.pac.dominio.utils.UtilsValidacao;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +71,9 @@ public class Usuario implements Validavel{
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
+        if(Utils.stringVaziaOuNula(login)){
+            inconsistencias.add("Login não informado");
+        }
         return inconsistencias;
     }
 }
