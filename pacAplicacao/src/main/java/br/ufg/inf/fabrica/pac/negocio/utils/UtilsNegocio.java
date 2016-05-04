@@ -9,7 +9,6 @@ import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
@@ -67,16 +66,18 @@ public class UtilsNegocio {
         return new Date();
     }
 
-    public static void fecharTransacao(Transacao transacao, Exception ex) {
-        Logger.getLogger(UtilsNegocio.class.getName()).
-                    log(Level.SEVERE, ex.getMessage());
+    public static void fecharTransacao(Class klass, Transacao transacao, Exception ex) {
+        registrarLog(klass, Level.SEVERE, ex);
         try {
             if (transacao != null) {
                 transacao.cancelar();
             }
-        } catch (SQLException ex2) {
-            Logger.getLogger(UtilsNegocio.class.getName()).
-                    log(Level.SEVERE, ex2.getMessage());
+        } catch (SQLException e) {
+            registrarLog(klass, Level.SEVERE, e);
         }
+    }
+
+    public static void registrarLog(Class klass, Level level, Exception ex){
+        Logger.getLogger(klass.getName()).log(level, ex.getMessage());
     }
 }

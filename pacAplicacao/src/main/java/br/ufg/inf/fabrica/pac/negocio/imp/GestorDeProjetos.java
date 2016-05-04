@@ -4,6 +4,7 @@ import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.IGestorDeProjeto;
+import br.ufg.inf.fabrica.pac.negocio.utils.Constantes;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoProjeto;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoProjeto;
@@ -50,7 +51,7 @@ public class GestorDeProjetos implements IGestorDeProjeto {
         } catch (SQLException ex) {
             Logger.getLogger(GestorDeProjetos.class.getName()).log(Level.SEVERE,
                     null, ex);
-            UtilsNegocio.criarRespostaComErro("Falha na transação");
+            UtilsNegocio.criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
         }
         return UtilsNegocio.criarRespostaValida(projeto);
     }
@@ -70,7 +71,8 @@ public class GestorDeProjetos implements IGestorDeProjeto {
             todos = daoProjeto.buscarTodos();
             return UtilsNegocio.criarRespostaValida(todos);
         } catch (Exception ex) {
-            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+            UtilsNegocio.registrarLog(getClass(), Level.SEVERE, ex);
+            return UtilsNegocio.criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
         }
     }   
 }

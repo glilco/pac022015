@@ -99,7 +99,7 @@ public class GestorDePacotes implements IGestorDePacotes {
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {
-            UtilsNegocio.fecharTransacao(transacao, ex);
+            UtilsNegocio.fecharTransacao(getClass(), transacao, ex);
         }
         return UtilsNegocio.criarRespostaValida(pacote);
     }

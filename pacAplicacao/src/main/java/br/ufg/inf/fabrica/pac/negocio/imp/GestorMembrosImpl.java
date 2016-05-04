@@ -5,6 +5,7 @@ import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.negocio.utils.Constantes;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
@@ -32,11 +33,9 @@ public class GestorMembrosImpl implements IGestorMembros {
             Projeto projeto, String usuarioPesquisado) {
         Resposta<List<Usuario>> resposta = new Resposta();
         if (projeto == null) {
-            resposta.addItemLaudo("Projeto não informado");
-            return resposta;
-        }
-        if (usuarioPesquisado == null) {
-            usuarioPesquisado = "";
+            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
+        } else if (usuarioPesquisado == null) {
+            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
         }
         IDaoMembro dao = new DaoMembro();
         List<Usuario> usuarios = null;
@@ -64,7 +63,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
         } catch (SQLException ex) {
             Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+            return UtilsNegocio.criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
         }
         resposta.setChave(membros);
         return resposta;
@@ -91,7 +90,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             resposta.setChave(Boolean.TRUE);
         } catch (SQLException ex) {
             Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
-            resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
+            resposta = UtilsNegocio.criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
         }
         return resposta;
     }
@@ -139,7 +138,7 @@ public class GestorMembrosImpl implements IGestorMembros {
                 dao.atualizarPapeisDeUsuarioEmUmProjeto(papeisRemovidos, papeisAdicionados);
             } catch (SQLException ex) {
                 Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
-                resposta.addItemLaudo("Falha no sistema");
+                resposta.addItemLaudo(Constantes.FALHA_NO_SISTEMA);
             }
             return resposta;
         } else {
