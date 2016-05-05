@@ -19,7 +19,8 @@ public interface IGestorMembros {
      * @param usuarioPesquisado
      * @return
      */
-    public Resposta<List<Usuario>> buscarUsuariosNaoMembros(Usuario autor, Projeto projeto, String usuarioPesquisado);
+    public Resposta<List<Usuario>> buscarUsuariosNaoMembros(
+            Usuario autor, Projeto projeto, String usuarioPesquisado);
     
     /**
      * 
@@ -35,7 +36,8 @@ public interface IGestorMembros {
      * @param membro
      * @return 
      */
-    public Resposta<Membro> adicionarMembroProjeto(Usuario autor, Membro membro);
+    public Resposta<Membro> adicionarMembroProjeto(Usuario autor, 
+            Membro membro);
     
     /**
      * 
@@ -51,15 +53,19 @@ public interface IGestorMembros {
      * @param membros 
      * @return  
      */
-    public Resposta<Boolean> adicionarMembrosProjeto(Usuario autor, List<Membro> membros);
+    public Resposta<Boolean> adicionarMembrosProjeto(Usuario autor, 
+            List<Membro> membros);
 
     /**
      * 
      * @param autor
+     * @param idUsuario
+     * @param projetoSelecionado
      * @param papeisRemovidos
      * @param papeisAdicionados
      * @return 
      */
     public Resposta<String> atualizarPapeisDeUsuarioEmUmProjeto(Usuario autor, 
+            int idUsuario, Projeto projetoSelecionado,
             List<Membro> papeisRemovidos, List<Membro> papeisAdicionados);
 }

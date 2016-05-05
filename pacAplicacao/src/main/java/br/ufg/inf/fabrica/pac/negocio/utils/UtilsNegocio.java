@@ -48,7 +48,7 @@ public class UtilsNegocio {
         return resposta;
     }
 
-    public static boolean UsuarioLogadoPossuiPapel(Usuario user, Projeto proj,
+    public static boolean usuarioLogadoPossuiPapel(Usuario user, Projeto proj,
             String papel) throws SQLException {
         List<Membro> membroProjeto;
         IDaoMembro dao = new DaoMembro();
