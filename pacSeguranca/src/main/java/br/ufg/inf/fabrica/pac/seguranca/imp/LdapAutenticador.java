@@ -3,8 +3,13 @@ package br.ufg.inf.fabrica.pac.seguranca.imp;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
 import br.ufg.inf.fabrica.pac.seguranca.excecoes.VariavelAmbienteNaoDefinidaException;
+import br.ufg.inf.fabrica.pac.seguranca.utils.Constantes;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
+import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -24,7 +29,7 @@ public class LdapAutenticador implements ILdapAutenticador {
 
     private Attributes atributos = null;
 
-    public LdapAutenticador(String login, String senha)
+    public LdapAutenticador(Properties prop, String login, String senha)
             throws VariavelAmbienteNaoDefinidaException, IOException,
             NamingException {
         if (Utils.stringVaziaOuNula(login)) {
@@ -34,11 +39,11 @@ public class LdapAutenticador implements ILdapAutenticador {
             throw new IllegalArgumentException("Senha não informada");
         }
 
-        ConexaoLdap.lerParametros();
+        ParametrosLdap parametros = new ParametrosLdap(prop);
         if (ctxt == null) {
-            ctxt = this.getContext(login, senha);
+            ctxt = this.getContext(parametros, login, senha);
         }
-        boolean sucesso = confereDadosInformados(login, ctxt);
+        boolean sucesso = confereDadosInformados(parametros, login, ctxt);
         if (sucesso) {
             this.id = Long.parseLong(getValorAtributo(atributos, "uidNumber"));
             this.nome = getValorAtributo(atributos, "cn");
@@ -72,11 +77,11 @@ public class LdapAutenticador implements ILdapAutenticador {
         return this.credencialValida;
     }
 
-    private DirContext getContext(String login, String senha)
+    private DirContext getContext(ParametrosLdap parametros, String login, String senha)
             throws NamingException {
         Hashtable env = new Hashtable(11);
-        env.put(Context.INITIAL_CONTEXT_FACTORY, ConexaoLdap.getINITIAL_CTX());
-        env.put(Context.PROVIDER_URL, ConexaoLdap.getSERVIDOR_LDAP());
+        env.put(Context.INITIAL_CONTEXT_FACTORY, parametros.getINITIAL_CTX());
+        env.put(Context.PROVIDER_URL, parametros.getSERVIDOR_LDAP());
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         env.put(Context.SECURITY_PROTOCOL, "ssl");
         env.put(Context.SECURITY_PRINCIPAL, "uid=" + login
@@ -86,7 +91,7 @@ public class LdapAutenticador implements ILdapAutenticador {
         return new InitialDirContext(env);
     }
 
-    private boolean confereDadosInformados(String login, DirContext ctx) throws NamingException {
+    private boolean confereDadosInformados(ParametrosLdap parametros, String login, DirContext ctx) throws NamingException {
         String[] atributosRetorno
                 = new String[]{"uidNumber", "mail", "cn", "shadowExpire"};
         SearchControls searchCtls = new SearchControls();
@@ -95,7 +100,7 @@ public class LdapAutenticador implements ILdapAutenticador {
         String searchFilter = "(&(objectClass=*)(uid=" + login + "))";
 
         NamingEnumeration resultado = ctx.search(
-                ConexaoLdap.getSEARCHBASE(), searchFilter, searchCtls);
+                parametros.getSEARCHBASE(), searchFilter, searchCtls);
 
         if (resultado.hasMore()) {
             SearchResult sr = (SearchResult) resultado.next();

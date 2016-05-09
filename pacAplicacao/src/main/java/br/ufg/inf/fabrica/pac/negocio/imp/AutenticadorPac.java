@@ -8,10 +8,17 @@ import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
+import br.ufg.inf.fabrica.pac.seguranca.excecoes.VariavelAmbienteNaoDefinidaException;
 import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticador;
+import br.ufg.inf.fabrica.pac.seguranca.utils.Constantes;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +35,35 @@ public class AutenticadorPac implements IAutenticador {
             return UtilsNegocio.criarRespostaComErro(inconsistencias);
         }
 
+        String pathSistema
+                = System.getenv(Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES);
+
+        if (pathSistema == null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Variável de ambiente ").
+                    append(Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES).
+                    append(" não definida");
+            UtilsNegocio.registrarLog(this.getClass(), Level.SEVERE,
+                    "Variável de ambiente não definida");
+            return UtilsNegocio.criarRespostaComErro(
+                    Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES);
+        }
+
+        Properties prop;
+        try {
+            File file = new File(pathSistema);
+            InputStream input;
+            input = new FileInputStream(file);
+            prop = new Properties();
+            prop.load(input);
+        } catch (IOException ex) {
+            UtilsNegocio.registrarLog(this.getClass(), Level.SEVERE, ex);
+            return UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
+
         ILdapAutenticador ldapAutenticador;
         try {
-            ldapAutenticador = new LdapAutenticador(credencial.getLogin(),
+            ldapAutenticador = new LdapAutenticador(prop, credencial.getLogin(),
                     credencial.getSenha());
             if (!ldapAutenticador.isCredencialValida()) {
                 return UtilsNegocio.criarRespostaComErro("Login ou senha inválido");

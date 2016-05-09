@@ -80,4 +80,8 @@ public class UtilsNegocio {
     public static void registrarLog(Class klass, Level level, Exception ex){
         Logger.getLogger(klass.getName()).log(level, ex.getMessage());
     }
+    
+    public static void registrarLog(Class klass, Level level, String mensagem){
+        Logger.getLogger(klass.getName()).log(level, mensagem);
+    }
 }

@@ -1,13 +1,10 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
-import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.AutenticadorPac;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
