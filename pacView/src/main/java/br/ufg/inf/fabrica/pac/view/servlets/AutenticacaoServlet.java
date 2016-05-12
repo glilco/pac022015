@@ -33,7 +33,7 @@ public class AutenticacaoServlet extends HttpServlet {
             request.getSession().setAttribute("usuarioLogado", resposta.getChave());
             response.sendRedirect("index.jsp");
         } else {
-            request.getSession().setAttribute("errorMessage", resposta.getLaudo());
+            request.getSession().setAttribute("errorMessages", resposta.getLaudo());
             response.sendRedirect("erro.jsp");
         }
 

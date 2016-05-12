@@ -1,16 +1,17 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
 
+import br.ufg.inf.fabrica.pac.controleAcesso.IAutorizacao;
+import br.ufg.inf.fabrica.pac.controleAcesso.imp.AutorizacaoStub;
 import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
-import br.ufg.inf.fabrica.pac.seguranca.Seguranca;
-import br.ufg.inf.fabrica.pac.seguranca.imp.SegurancaStub;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,15 +43,15 @@ public class AutorizadorDeAcesso {
             return;
         }
 
-        List<String> nomesPapeis;
+        Set<String> nomesPapeis;
         try {
             if (projeto == null) {
                 nomesPapeis = buscarListaPapeis(autor, null);
             } else {
                 nomesPapeis = buscarListaPapeis(autor, projeto);
             }
-            Seguranca seguranca = SegurancaStub.getInstance();
-            if (!seguranca.autorizar(recurso, nomesPapeis)) {
+            IAutorizacao autorizacao = new AutorizacaoStub();
+            if (!autorizacao.verificaAutorizacao(nomesPapeis, recurso)) {
                 String menssagemErro
                         = "Usuário não possui permissão para acessar recurso";
                 Logger.getLogger(GestorDePacotes.class.getName()).
@@ -67,14 +68,14 @@ public class AutorizadorDeAcesso {
 
     }
 
-    private List<String> buscarListaPapeis(Usuario autor, Projeto projeto)
+    private Set<String> buscarListaPapeis(Usuario autor, Projeto projeto)
             throws SQLException {
         if (autor == null) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
         IDaoMembro daoMembro = new DaoMembro();
         List<Membro> papeis;
-        List<String> nomesPapeis = new ArrayList<>();
+        Set<String> nomesPapeis = new HashSet<>();
         if (projeto == null) {
             papeis = daoMembro.buscarPapeis(autor.getId());
         } else {

@@ -1,16 +1,15 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
 
+import br.ufg.inf.fabrica.ldapinfautenticador.ILdapAutenticador;
+import br.ufg.inf.fabrica.ldapinfautenticador.imp.LdapAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.negocio.utils.Constantes;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoUsuario;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
-import br.ufg.inf.fabrica.pac.seguranca.ILdapAutenticador;
-import br.ufg.inf.fabrica.pac.seguranca.excecoes.VariavelAmbienteNaoDefinidaException;
-import br.ufg.inf.fabrica.pac.seguranca.imp.LdapAutenticador;
-import br.ufg.inf.fabrica.pac.seguranca.utils.Constantes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,31 +35,27 @@ public class AutenticadorPac implements IAutenticador {
         }
 
         String pathSistema
-                = System.getenv(Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES);
+                = System.getenv(Constantes.PAC_PROPERTIES_VARIAVEL);
 
         if (pathSistema == null) {
             StringBuilder sb = new StringBuilder();
             sb.append("Variável de ambiente ").
-                    append(Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES).
+                    append(Constantes.PAC_PROPERTIES_VARIAVEL).
                     append(" não definida");
             UtilsNegocio.registrarLog(this.getClass(), Level.SEVERE,
                     "Variável de ambiente não definida");
-            return UtilsNegocio.criarRespostaComErro(
-                    Constantes.VARIAVEL_AMBIENTE_ARQUIVO_LDAP_PROPERTIES);
+            return UtilsNegocio.criarRespostaComErro(sb.toString());
         }
 
         Properties prop;
         try {
-            File file = new File(pathSistema);
-            InputStream input;
-            input = new FileInputStream(file);
-            prop = new Properties();
-            prop.load(input);
+            prop = loadPropertiesFile(pathSistema);
         } catch (IOException ex) {
-            UtilsNegocio.registrarLog(this.getClass(), Level.SEVERE, ex);
+            Logger.getLogger(AutenticadorPac.class.getName()).
+                    log(Level.SEVERE, null, ex);
             return UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
-
+        
         ILdapAutenticador ldapAutenticador;
         try {
             ldapAutenticador = new LdapAutenticador(prop, credencial.getLogin(),
@@ -92,6 +87,16 @@ public class AutenticadorPac implements IAutenticador {
             return UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
 
+    }
+
+    private Properties loadPropertiesFile(String pathSistema) 
+            throws IOException {
+        File file = new File(pathSistema);
+        InputStream input;
+        input = new FileInputStream(file);
+        Properties prop = new Properties();
+        prop.load(input);
+        return prop;
     }
 
     private void registrarUsuarioNoSistema(Usuario usuarioPac, Usuario usuario, IDaoUsuario daoUsuario) throws SQLException {
