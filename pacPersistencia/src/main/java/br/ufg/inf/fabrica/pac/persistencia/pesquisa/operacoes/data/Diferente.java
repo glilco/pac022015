@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Diferente extends OperacaoFiltroData {
 
-    private final String operador = "!=";
+    private static final String OPERADOR = "!=";
 
     public Diferente(Date valor) {
         this.setValor(valor);
@@ -18,7 +18,7 @@ public class Diferente extends OperacaoFiltroData {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).
+        sb.append(OPERADOR).
                 append(" '").
                 append(getSqlDate()).
                 append("'");

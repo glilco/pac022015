@@ -21,6 +21,10 @@
     <ul>
         <li><a href="criarPacote.jsp">Cadastrar</a></li>
         <li><a href="ServletPesquisarPacotes">Pacotes novos</a></li>
-    </ul>    
+    </ul>
+    <span>Equipe</span>
+    <ul>
+        <li><a href="atribuirEquipe.jsp">Equipe</a></li>
+    </ul>
 </body>
 </html>

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Igual extends OperacaoFiltroData {
 
-    private final String operador = "=";
+    private static final String OPERADOR = "=";
     private final Date valor;
 
     public Igual(Date valor) {
@@ -19,7 +19,7 @@ public class Igual extends OperacaoFiltroData {
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).
+        sb.append(OPERADOR).
                 append(" '").
                 append(valor).
                 append("'");

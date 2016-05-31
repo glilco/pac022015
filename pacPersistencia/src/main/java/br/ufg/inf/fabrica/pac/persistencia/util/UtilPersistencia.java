@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.persistencia.util;
 
 import java.lang.reflect.Constructor;
@@ -14,12 +9,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Danillo
  */
-public class Util {
+public class UtilPersistencia {
+
+    private UtilPersistencia() {
+
+    }
 
     public static <T> List<T> populaObjetos(Class k, ResultSet rs) {
         List resposta = new ArrayList<>();
@@ -30,7 +31,8 @@ public class Util {
                 for (Field field : k.getDeclaredFields()) {
                     Class classParam = field.getType();
                     String attrName = field.getName();
-                    String capitular = attrName.substring(0, 1).toUpperCase() + attrName.substring(1, attrName.length());
+                    String capitular = attrName.substring(0, 1).toUpperCase() + 
+                            attrName.substring(1, attrName.length());
                     String methodName = "set" + capitular;
                     Method method = k.getMethod(methodName, classParam);
                     getAttrValue(method, classParam, objeto, rs, attrName);
@@ -39,15 +41,14 @@ public class Util {
                 resposta.add(objeto);
             }
             return resposta;
-        } catch (NoSuchMethodException | SecurityException |
-                SQLException | IllegalArgumentException |
-                IllegalAccessException | InvocationTargetException |
+        } catch (NoSuchMethodException | SQLException | 
+                IllegalArgumentException | IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            System.out.println(ex.getMessage());
+            registraLogException(ex);
         }
         return new ArrayList<>();
     }
-    
+
     public static <T> T populaObjeto(Class k, ResultSet rs) {
         try {
             Constructor c = k.getConstructor();
@@ -55,28 +56,26 @@ public class Util {
             for (Field field : k.getDeclaredFields()) {
                 Class classParam = field.getType();
                 String attrName = field.getName();
-                String capitular = attrName.substring(0, 1).toUpperCase() + attrName.substring(1, attrName.length());
+                String capitular = attrName.substring(0, 1).toUpperCase() + 
+                        attrName.substring(1, attrName.length());
                 String methodName = "set" + capitular;
                 Method method = k.getMethod(methodName, classParam);
                 getAttrValue(method, classParam, objeto, rs, attrName);
             }
             return (T) objeto;
-        } catch (NoSuchMethodException | SecurityException |
-                IllegalArgumentException |
+        } catch (NoSuchMethodException | IllegalArgumentException |
                 IllegalAccessException | InvocationTargetException |
                 InstantiationException ex) {
-            System.out.println(ex.getMessage());
+            registraLogException(ex);
         }
         return null;
     }
 
-    private static void getAttrValue(Method method, Class classParam, 
-            Object objeto, ResultSet rs, String attrName) 
-            throws NoSuchMethodException, IllegalArgumentException, 
-            InvocationTargetException, SecurityException, 
+    private static void getAttrValue(Method method, Class classParam,
+            Object objeto, ResultSet rs, String attrName)
+            throws NoSuchMethodException, InvocationTargetException, 
             IllegalAccessException {
-
-        try{
+        try {
             if (classParam == String.class) {
                 method.invoke(objeto, rs.getString(attrName));
             } else if (classParam == long.class) {
@@ -88,12 +87,13 @@ public class Util {
             } else if (classParam == int.class) {
                 method.invoke(objeto, rs.getInt(attrName));
             }
-            //Erro de sqlException não será tratado na execução pois, é esperado 
-            // em situações onde a classe diverge da tabela
-        } catch(SQLException ex){
-            System.out.println(ex.getMessage());
+        } catch (SQLException ex) {
+            registraLogException(ex);
         }
     }
-
     
+    public static void registraLogException(Exception ex){
+        Logger.getLogger(UtilPersistencia.class.getName()).
+                    log(Level.INFO, ex.getMessage());
+    }
 }

@@ -25,7 +25,7 @@ public interface IDaoMembro extends IDao<Membro> {
      * @return
      */
     public Resposta<List<Usuario>> buscarUsuariosNaoMembrosPorProjeto(
-            long idProjeto, String usuarioPesquisado);
+            long idProjeto, String usuarioPesquisado) throws SQLException;
 
     /**
      *
@@ -33,7 +33,7 @@ public interface IDaoMembro extends IDao<Membro> {
      * @return
      */
     public Resposta<List<Membro>> buscarMembrosPorProjeto(
-            long idProjeto);
+            long idProjeto) throws SQLException;
 
     /**
      *
@@ -41,7 +41,7 @@ public interface IDaoMembro extends IDao<Membro> {
      * @return
      * @throws SQLException
      */
-    public List<Membro> adicionarMembrosProjeto(
+    public void adicionarMembrosProjeto(
             List<Membro> membros) throws SQLException;
 
     /**
@@ -59,7 +59,7 @@ public interface IDaoMembro extends IDao<Membro> {
      * @param papel
      * @return
      */
-    public List<Membro> buscar(Projeto projeto, String papel);
+    public List<Membro> buscar(Projeto projeto, String papel) throws SQLException;
 
     /**
      *
@@ -67,7 +67,8 @@ public interface IDaoMembro extends IDao<Membro> {
      * @param usuario
      * @return
      */
-    public List<Membro> buscar(Projeto projeto, Usuario usuario);
+    public List<Membro> buscar(Projeto projeto, Usuario usuario) 
+            throws SQLException;
 
     /**
      *
@@ -75,13 +76,14 @@ public interface IDaoMembro extends IDao<Membro> {
      * @param usuario
      * @return
      */
-    public List<Membro> buscar(String papel, Usuario usuario);
+    public List<Membro> buscar(String papel, Usuario usuario) 
+            throws SQLException;
     
     /**
      *
      * @return
      */
-    public Resposta<List<Usuario>> buscarUsuarios();
+    public Resposta<List<Usuario>> buscarUsuarios() throws SQLException;
 
     /**
      * 

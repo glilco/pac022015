@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface IGestorDePacotes {
 
-    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, 
+    public Resposta<Pacote> criar(Usuario autor, Pacote pacote, 
             Projeto projetoSelecionado);
     
     public Resposta<List<Pacote>> pesquisarPacotesNovos(Usuario autor,

@@ -94,7 +94,7 @@ public class ServletCriarPacote extends HttpServlet {
             }
             
             GestorDePacotes gestor = GestorDePacotes.getInstance();
-            Resposta<Pacote> resposta = gestor.criarPacote(autor, pacote, projeto);
+            Resposta<Pacote> resposta = gestor.criar(autor, pacote, projeto);
             if (resposta.isSucesso()) {
                 UtilVisao.direcionar(request, response, "index.jsp");
             } else {

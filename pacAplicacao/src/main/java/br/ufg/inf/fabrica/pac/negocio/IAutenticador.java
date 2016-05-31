@@ -1,11 +1,13 @@
 package br.ufg.inf.fabrica.pac.negocio;
 
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 
 /**
  *
- * @author Danillo
+ * @author Danillo 
  */
+@FunctionalInterface
 public interface IAutenticador {
     
     /**
@@ -14,7 +16,6 @@ public interface IAutenticador {
      * Interface para realizar autenticação
      * @param usuario 
      * @return  
-     * @throws br.ufg.inf.fabrica.pac.negocio.AutenticacaoException  
      */
-    public Usuario solicitarAutenticacao(Usuario usuario) throws AutenticacaoException;
+    public Resposta<Usuario> solicitarAutenticacao(Usuario usuario);
 }

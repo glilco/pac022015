@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Danillo
  */
-@WebServlet(name = "BeanAtualizarPermissoesMembro", urlPatterns = {"/atualizarPermissoesMembro"})
+@WebServlet(name = "BeanAtualizarPermissoesMembro", 
+        urlPatterns = {"/atualizarPermissoesMembro"})
 public class ServletAtualizarPermissoesMembro extends HttpServlet {
 
     /**
@@ -34,7 +35,8 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, 
+            HttpServletResponse response)
             throws ServletException, IOException {
         
         response.setContentType("text/html;charset=UTF-8");
@@ -93,12 +95,14 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
         }
         
         IGestorMembros gestor = new GestorMembrosImpl();
-        gestor.atualizarPapeisDeUsuarioEmUmProjeto(usuarioLogado, papeisRemovidos, papeisAdicionados);
+        gestor.atualizarPapeisDeUsuarioEmUmProjeto(usuarioLogado, 
+                idUsuarioEmAlteracao, projetoSelecionado, papeisRemovidos, 
+                papeisAdicionados);
         bean.setUsuarioEmAlteracao(0);
-        request.getRequestDispatcher("atribuirEquipe.jsp").forward(request, response);
+        request.getRequestDispatcher("atribuirEquipe.jsp").forward(request, 
+                response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -108,7 +112,8 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, 
+            HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -122,7 +127,8 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, 
+            HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }

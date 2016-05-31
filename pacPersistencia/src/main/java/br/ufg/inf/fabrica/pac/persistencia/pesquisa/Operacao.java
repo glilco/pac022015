@@ -4,8 +4,9 @@ package br.ufg.inf.fabrica.pac.persistencia.pesquisa;
  *
  * @author Danillo
  */
-public abstract class Operacao {
+@FunctionalInterface
+public interface Operacao {
 
-    public abstract String getOperadorEValor();
+    public String getOperadorEValor();
     
 }

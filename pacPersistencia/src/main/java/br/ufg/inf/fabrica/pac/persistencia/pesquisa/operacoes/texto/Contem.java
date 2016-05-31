@@ -8,17 +8,16 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  */
 public class Contem extends OperacaoFiltroTexto {
 
-    private final String operador = "like";
-    private final String valor;
+    private static final String OPERADOR = "like";
 
     public Contem(String valor) {
-        this.valor = valor;
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '%").append(valor).append("%'");
+        sb.append(OPERADOR).append(" '%").append(getValor()).append("%'");
         return sb.toString();
     }
 }

@@ -13,33 +13,25 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.numericas.MenorQue
  *
  * @author Danillo
  */
-public class FiltroNumerico extends Filtro{
+public class FiltroNumerico implements Filtro {
 
     private final OperacaoFiltroNumerico operacao;
     private final String nomeCampo;
 
-    public String getNomeCampo(){
-        return nomeCampo;
-    }
-    
-    public OperacaoFiltroNumerico getOperacao() {
-        return operacao;
-    }
-    
-    public FiltroNumerico(String nomeCampo, int operacao, Number valor){
+    public FiltroNumerico(String nomeCampo, int operacao, Number valor) {
         this.nomeCampo = nomeCampo;
-        
-        if(operacao==OperacaoFiltroNumerico.IGUAL){
+
+        if (operacao == OperacaoFiltroNumerico.IGUAL) {
             this.operacao = new Igual(valor);
-        } else if(operacao==OperacaoFiltroNumerico.DIFERENTE){
+        } else if (operacao == OperacaoFiltroNumerico.DIFERENTE) {
             this.operacao = new Diferente(valor);
-        } else if(operacao==OperacaoFiltroNumerico.MAIOR_QUE){
+        } else if (operacao == OperacaoFiltroNumerico.MAIOR_QUE) {
             this.operacao = new MaiorQue(valor);
-        } else if(operacao==OperacaoFiltroNumerico.MAIOR_OU_IGUAL_QUE){
+        } else if (operacao == OperacaoFiltroNumerico.MAIOR_OU_IGUAL_QUE) {
             this.operacao = new MaiorOuIgualQue(valor);
-        } else if(operacao==OperacaoFiltroNumerico.MENOR_QUE){
+        } else if (operacao == OperacaoFiltroNumerico.MENOR_QUE) {
             this.operacao = new MenorQue(valor);
-        } else if(operacao==OperacaoFiltroNumerico.MENOR_OU_IGUAL_QUE){
+        } else if (operacao == OperacaoFiltroNumerico.MENOR_OU_IGUAL_QUE) {
             this.operacao = new MenorOuIgualQue(valor);
         } else {
             this.operacao = null;
@@ -47,7 +39,15 @@ public class FiltroNumerico extends Filtro{
                     "Operação de filtro numérico inválido");
         }
     }
-    
+
+    public String getNomeCampo() {
+        return nomeCampo;
+    }
+
+    public OperacaoFiltroNumerico getOperacao() {
+        return operacao;
+    }
+
     @Override
     public String getConsultaFiltro() {
         StringBuilder sb = new StringBuilder();
@@ -56,5 +56,5 @@ public class FiltroNumerico extends Filtro{
                 append(operacao.getOperadorEValor());
         return sb.toString();
     }
-    
+
 }

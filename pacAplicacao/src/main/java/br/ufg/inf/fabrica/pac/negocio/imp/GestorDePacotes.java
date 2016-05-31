@@ -17,6 +17,7 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNume
 import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroTexto;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,30 +42,18 @@ public class GestorDePacotes implements IGestorDePacotes {
     }
 
     @Override
-    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
-        if (pacote == null) {
-            return UtilsNegocio.criarRespostaComErro("Pacote não informado");
+    public Resposta<Pacote> criar(Usuario autor, Pacote pacote, 
+            Projeto projetoSelecionado) {
+        List<String> inconsistencias = 
+                validarEntradasCriacao(pacote, autor, projetoSelecionado);
+        if(!inconsistencias.isEmpty()){
+            return UtilsNegocio.criarRespostaComErro(inconsistencias);
         }
-        if (autor == null || autor.getId() < 1) {
-            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
-        }
-        if (projetoSelecionado == null
-                || projetoSelecionado.getId() < 1) {
-            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
-        }
-
-        String recursoId = "recursoId";
-        try {
-            if (!AutorizadorDeAcesso.autorizar(recursoId, autor, projetoSelecionado)) {
-                String menssagemErro = "Usuário não possui permissão para acessar recurso";
-                Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-                Resposta resposta = UtilsNegocio.criarRespostaComErro(menssagemErro);
-                return resposta;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
-            return resposta;
+        String recursoId = "recursoId-criar";
+        AutorizadorDeAcesso autorizador = 
+                new AutorizadorDeAcesso(recursoId, autor, projetoSelecionado);
+        if(!autorizador.isAutorizado()){
+            return UtilsNegocio.criarRespostaComErro(autorizador.getDetalhes());
         }
 
         pacote.setAbandonado(false);
@@ -73,13 +62,13 @@ public class GestorDePacotes implements IGestorDePacotes {
         pacote.setProjeto(projetoSelecionado);
         pacote.setIdProjeto(projetoSelecionado.getId());
 
-        List<String> inconsistencias
-                = pacote.validar();
+        inconsistencias = pacote.validar();
         if (!inconsistencias.isEmpty()) {
             String menssagemErro = "Pacote inconsistente";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(inconsistencias);
-            return resposta;
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.
+                    criarRespostaComErro(inconsistencias);
         }
 
         Andamento andamento = new Andamento();
@@ -93,9 +82,10 @@ public class GestorDePacotes implements IGestorDePacotes {
         inconsistencias = andamento.validar();
         if (!inconsistencias.isEmpty()) {
             String menssagemErro = "Pacote inconsistente";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(inconsistencias);
-            return resposta;
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.
+                    criarRespostaComErro(inconsistencias);
         }
 
         IDaoAndamento daoAndamento = new DaoAndamento();
@@ -109,30 +99,26 @@ public class GestorDePacotes implements IGestorDePacotes {
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {
-            try {
-                if(transacao!=null){
-                    transacao.cancelar();
-                }
-            } catch (SQLException ex2) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex2.getMessage());
-            }
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-            return UtilsNegocio.criarRespostaComErro("Falha de transação");
+            UtilsNegocio.fecharTransacao(getClass(), transacao, ex);
         }
         return UtilsNegocio.criarRespostaValida(pacote);
     }
 
     @Override
-    public Resposta<List<Pacote>> pesquisarPacotesNovos(Usuario autor, long projetoSelecionado) {
+    public Resposta<List<Pacote>> pesquisarPacotesNovos(Usuario autor, 
+            long projetoSelecionado) {
         if (autor == null || autor.getId() < 1) {
             return UtilsNegocio.criarRespostaComErro("Usuário não informado");
         }
         if (projetoSelecionado < 1) {
             return UtilsNegocio.criarRespostaComErro("Projeto não informado");
         }
+        
         Pesquisa pesquisa = new Pesquisa(Pacote.class);
-        pesquisa.adicionarFiltroTexto("nomeEstado", OperacaoFiltroTexto.IGUAL, Estado.NOVO.getNome());
-        pesquisa.adicionarFiltroNumerico("idProjeto", OperacaoFiltroNumerico.IGUAL, projetoSelecionado);
+        pesquisa.adicionarFiltroTexto("nomeEstado", OperacaoFiltroTexto.IGUAL, 
+                Estado.NOVO.getNome());
+        pesquisa.adicionarFiltroNumerico("idProjeto", 
+                OperacaoFiltroNumerico.IGUAL, projetoSelecionado);
         
         Resposta<List<Pacote>> resposta;
         IDaoPacote daoPacote = new DaoPacote();
@@ -140,9 +126,26 @@ public class GestorDePacotes implements IGestorDePacotes {
             List<Pacote> pacotes = daoPacote.pesquisar(pesquisa);
             resposta = UtilsNegocio.criarRespostaValida(pacotes);
         } catch (SQLException ex) {
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
         }
         return resposta;
+    }
+
+    private List<String> validarEntradasCriacao(Pacote pacote, Usuario autor, 
+            Projeto projetoSelecionado){
+        List<String> inconsistencias = new ArrayList<>();
+        if (pacote == null) {
+            inconsistencias.add("Pacote não informado");
+        }
+        if (autor == null || autor.getId() < 1) {
+            inconsistencias.add("Usuário não informado");
+        }
+        if (projetoSelecionado == null
+                || projetoSelecionado.getId() < 1) {
+            inconsistencias.add("Projeto não informado");
+        }
+        return inconsistencias;
     }
 }

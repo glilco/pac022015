@@ -6,18 +6,18 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  *
  * @author Danillo
  */
-public class NaoContem extends OperacaoFiltroTexto{
-    private final String operador = "not like ";
-    private final String valor;
+public class NaoContem extends OperacaoFiltroTexto {
+
+    private static final String OPERADOR = "not like ";
 
     public NaoContem(String valor) {
-        this.valor = valor;
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '%").append(valor).append("%'");
+        sb.append(OPERADOR).append(" '%").append(getValor()).append("%'");
         return sb.toString();
     }
 }

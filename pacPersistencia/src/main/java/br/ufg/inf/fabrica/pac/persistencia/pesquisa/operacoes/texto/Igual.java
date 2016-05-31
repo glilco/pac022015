@@ -6,20 +6,19 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroText
  *
  * @author Danillo
  */
-public class Igual extends OperacaoFiltroTexto{
-    
-    private final String operador = "like";
-    private final String valor;
-    
-    public Igual(String valor){
-        this.valor = valor;
+public class Igual extends OperacaoFiltroTexto {
+
+    private static final String OPERADOR = "like";
+
+    public Igual(String valor) {
+        super(valor);
     }
 
     @Override
     public String getOperadorEValor() {
         StringBuilder sb = new StringBuilder();
-        sb.append(operador).append(" '").append(valor).append("'");
+        sb.append(OPERADOR).append(" '").append(getValor()).append("'");
         return sb.toString();
     }
-    
+
 }

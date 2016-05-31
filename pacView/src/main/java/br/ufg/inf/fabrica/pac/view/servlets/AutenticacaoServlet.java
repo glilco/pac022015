@@ -1,12 +1,10 @@
 package br.ufg.inf.fabrica.pac.view.servlets;
 
-import br.ufg.inf.fabrica.pac.negocio.AutenticacaoException;
+import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.negocio.IAutenticador;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.negocio.imp.Autenticador;
+import br.ufg.inf.fabrica.pac.negocio.imp.AutenticadorPac;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,23 +24,19 @@ public class AutenticacaoServlet extends HttpServlet {
         Usuario usuario = new Usuario();
         usuario.setLogin(request.getParameter("edtUsuario"));
         usuario.setSenha(request.getParameter("edtSenha"));
-        
-        IAutenticador autenticador = new Autenticador();
-        Usuario retornado = null;
-        try{
-            retornado = autenticador.solicitarAutenticacao(usuario);
-        }catch(AutenticacaoException e){
-            Logger.getLogger(AutenticacaoServlet.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        if(retornado!=null){
-            request.getSession().setAttribute("usuarioLogado", retornado);            
+
+        IAutenticador autenticador = new AutenticadorPac();
+        Resposta<Usuario> resposta = null;
+        resposta = autenticador.solicitarAutenticacao(usuario);
+
+        if (resposta.isSucesso()) {
+            request.getSession().setAttribute("usuarioLogado", resposta.getChave());
             response.sendRedirect("index.jsp");
         } else {
-            request.getSession().setAttribute("errorMessage", "Falha da autenticacao");
+            request.getSession().setAttribute("errorMessages", resposta.getLaudo());
             response.sendRedirect("erro.jsp");
         }
-                
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

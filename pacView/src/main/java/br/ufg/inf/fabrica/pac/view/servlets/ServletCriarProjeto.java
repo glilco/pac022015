@@ -8,7 +8,6 @@ import br.ufg.inf.fabrica.pac.negocio.imp.GestorDeProjetos;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosSessao;
 import br.ufg.inf.fabrica.pac.view.apoio.util.UtilVisao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;

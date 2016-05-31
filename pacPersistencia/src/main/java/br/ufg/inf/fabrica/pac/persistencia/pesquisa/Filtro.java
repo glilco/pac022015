@@ -4,11 +4,8 @@ package br.ufg.inf.fabrica.pac.persistencia.pesquisa;
  *
  * @author Danillo
  */
-public abstract class Filtro {
+@FunctionalInterface
+public interface Filtro {
     
-    private String nomeCampo;
-    
-    public String getConsultaFiltro(){
-        return null;
-    }
+    public String getConsultaFiltro();
 }

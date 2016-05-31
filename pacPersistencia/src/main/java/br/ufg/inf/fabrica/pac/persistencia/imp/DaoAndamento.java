@@ -5,6 +5,7 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,12 +38,12 @@ public class DaoAndamento implements IDaoAndamento {
             pst = transacao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(7, entity.getId());
         }
-        if (entity.getDataModificacao()!=null) {
+        if (entity.getDataModificacao() != null) {
             pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
         } else {
             pst.setDate(1, null);
         }
-        if (entity.getDataPrevistaConclusao()!=null) {
+        if (entity.getDataPrevistaConclusao() != null) {
             pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
         } else {
             pst.setDate(2, null);
@@ -51,7 +52,7 @@ public class DaoAndamento implements IDaoAndamento {
         pst.setString(4, entity.getNomeEstado());
         pst.setLong(5, entity.getIdPacote());
         pst.setLong(6, entity.getIdUsuarioRemetente());
-        if(entity.getIdUsuarioDestinatario()==0){
+        if (entity.getIdUsuarioDestinatario() == 0) {
             pst.setNull(7, Types.BIGINT);
         } else {
             pst.setLong(7, entity.getIdUsuarioDestinatario());
@@ -79,26 +80,26 @@ public class DaoAndamento implements IDaoAndamento {
     @Override
     public Andamento buscar(long id) throws SQLException {
         String sql = "select a.* from ANDAMENTO a where a.id=?";
-        PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
-        pst.setLong(1, id);
-        ResultSet rs = pst.executeQuery();
-        Andamento andamento = null;
-        if (rs.next()) {
-            andamento = new Andamento();
-            andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataModificacao")));
-            andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataPrevistaConclusao")));
-            andamento.setDescricao(rs.getString("descricao"));
-            andamento.setId(id);
-            andamento.setNomeEstado(rs.getString("nomeEstado"));
-            andamento.setIdPacote(rs.getLong("idPacote"));
-            andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
-            andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql);) {
+            pst.setLong(1, id);
+            try (ResultSet rs = pst.executeQuery();) {
+                Andamento andamento = null;
+                if (rs.next()) {
+                    andamento = new Andamento();
+                    andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataModificacao")));
+                    andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataPrevistaConclusao")));
+                    andamento.setDescricao(rs.getString("descricao"));
+                    andamento.setId(id);
+                    andamento.setNomeEstado(rs.getString("nomeEstado"));
+                    andamento.setIdPacote(rs.getLong("idPacote"));
+                    andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
+                    andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+                }
+                return andamento;
+            }
         }
-        pst.getConnection().close();
-        return andamento;
     }
-
 }

@@ -23,6 +23,11 @@ public class ServletContextListenerPropertiesLoader
     public void contextInitialized(ServletContextEvent sce) {
         String pathProperties = System.getenv(
                 AtributosConfiguracao.VARIAVEL_CAMINHO_PROPRIEDADES);
+        if(pathProperties==null){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, 
+                    "Variavel de ambiente das propriedades não informada");
+            return;
+        }
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(pathProperties);

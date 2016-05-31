@@ -12,34 +12,26 @@ import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.texto.TerminaCom;
  *
  * @author Danillo
  */
-public class FiltroTexto extends Filtro{
+public class FiltroTexto implements Filtro {
 
     private final OperacaoFiltroTexto operacao;
     private final String nomeCampo;
 
-    public String getNomeCampo(){
-        return nomeCampo;
-    }
-    
-    public OperacaoFiltroTexto getOperacao() {
-        return operacao;
-    }
-    
-    public FiltroTexto(String nomeCampo, int operacao, String valor){
-        if(nomeCampo==null || nomeCampo.trim().isEmpty()){
+    public FiltroTexto(String nomeCampo, int operacao, String valor) {
+        if (nomeCampo == null || nomeCampo.trim().isEmpty()) {
             throw new IllegalArgumentException("Valor vazio ou não informado");
         }
         this.nomeCampo = nomeCampo;
-        
-        if(operacao==OperacaoFiltroTexto.COMECA_COM){
+
+        if (operacao == OperacaoFiltroTexto.COMECA_COM) {
             this.operacao = new ComecaCom(valor);
-        } else if(operacao==OperacaoFiltroTexto.CONTEM){
+        } else if (operacao == OperacaoFiltroTexto.CONTEM) {
             this.operacao = new Contem(valor);
-        } else if(operacao==OperacaoFiltroTexto.IGUAL){
+        } else if (operacao == OperacaoFiltroTexto.IGUAL) {
             this.operacao = new Igual(valor);
-        } else if(operacao==OperacaoFiltroTexto.NAO_CONTEM){
+        } else if (operacao == OperacaoFiltroTexto.NAO_CONTEM) {
             this.operacao = new NaoContem(valor);
-        } else if(operacao==OperacaoFiltroTexto.TERMINA_COM){
+        } else if (operacao == OperacaoFiltroTexto.TERMINA_COM) {
             this.operacao = new TerminaCom(valor);
         } else {
             this.operacao = null;
@@ -47,7 +39,15 @@ public class FiltroTexto extends Filtro{
                     "Operação de filtro de texto inválido");
         }
     }
-    
+
+    public String getNomeCampo() {
+        return nomeCampo;
+    }
+
+    public OperacaoFiltroTexto getOperacao() {
+        return operacao;
+    }
+
     @Override
     public String getConsultaFiltro() {
         StringBuilder sb = new StringBuilder();
@@ -57,5 +57,5 @@ public class FiltroTexto extends Filtro{
                 append(operacao.getOperadorEValor());
         return sb.toString();
     }
-    
+
 }
