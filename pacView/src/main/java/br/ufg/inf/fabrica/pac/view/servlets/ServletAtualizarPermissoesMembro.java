@@ -89,7 +89,7 @@ public class ServletAtualizarPermissoesMembro extends HttpServlet {
                 Membro membro = new Membro();
                 membro.setIdProjeto(projetoSelecionado.getId());
                 membro.setIdUsuario(idUsuarioEmAlteracao);
-                membro.setPapel(novoPapel);
+//                membro.setPapel(novoPapel);
                 papeisAdicionados.add(membro);
             }
         }

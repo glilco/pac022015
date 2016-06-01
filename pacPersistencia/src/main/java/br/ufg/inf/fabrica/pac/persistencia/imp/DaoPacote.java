@@ -23,10 +23,10 @@ public class DaoPacote implements IDaoPacote {
     public Pacote salvar(Pacote entity, Transacao transacao) throws SQLException {
 
         String sqlUpdate = "update PACOTE set Abandonado=?, DataCriacao=?, DataPrevistaRealizacao=?"
-                + ", Descricao=?, Documento=?, nomeEstado=?, IdProjeto=?, IdUsuario=?"
+                + ", Descricao=?, Documento=?, idEstado=?, IdProjeto=?, IdUsuario=?"
                 + ", Nome=? where id = ?";
         String sqlInsert = "insert into PACOTE (Abandonado, DataCriacao, "
-                + "DataPrevistaRealizacao, Descricao, Documento, nomeEstado, "
+                + "DataPrevistaRealizacao, Descricao, Documento, idEstado, "
                 + "IdProjeto, IdUsuario, Nome) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         if (entity.getId() == 0) {
@@ -49,7 +49,7 @@ public class DaoPacote implements IDaoPacote {
         }
         pst.setString(4, entity.getDescricao());
         pst.setString(5, entity.getDocumento());
-        pst.setString(6, entity.getNomeEstado());
+        pst.setLong(6, entity.getIdEstado());
         pst.setLong(7, entity.getIdProjeto());
         pst.setLong(8, entity.getIdUsuario());
         pst.setString(9, entity.getNome());
@@ -118,7 +118,7 @@ public class DaoPacote implements IDaoPacote {
         pacote.setDescricao(rs.getString("descricao"));
         pacote.setDocumento(rs.getString("documento"));
         pacote.setId(rs.getLong("id"));
-        pacote.setNomeEstado(rs.getString("nomeEstado"));
+        pacote.setIdEstado(rs.getLong("idEstado"));
         pacote.setIdProjeto(rs.getLong("idProjeto"));
         pacote.setIdUsuario(rs.getLong("idUsuario"));
         pacote.setNome(rs.getString("nome"));

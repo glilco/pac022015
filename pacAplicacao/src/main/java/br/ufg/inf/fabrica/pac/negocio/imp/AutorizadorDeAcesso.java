@@ -82,7 +82,7 @@ public class AutorizadorDeAcesso {
             papeis = daoMembro.buscar(projeto, autor);
         }
         for (Membro papel : papeis) {
-            nomesPapeis.add(papel.getPapel());
+            nomesPapeis.add(papel.getPapel().getNome());
         }
         return nomesPapeis;
     }

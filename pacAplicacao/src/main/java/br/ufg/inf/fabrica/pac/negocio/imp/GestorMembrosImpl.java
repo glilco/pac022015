@@ -86,7 +86,7 @@ public class GestorMembrosImpl implements IGestorMembros {
             if (membro.getIdUsuario() <= 0) {
                 resposta.addItemLaudo("Informe o usuário do membro");
             }
-            if (membro.getPapel() == null || membro.getPapel().isEmpty()) {
+            if (membro.getIdPapel() <= 0) {
                 resposta.addItemLaudo("Informe o papel do membro");
             }
         }

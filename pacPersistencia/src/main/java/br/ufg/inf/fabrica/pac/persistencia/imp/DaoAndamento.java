@@ -27,10 +27,10 @@ public class DaoAndamento implements IDaoAndamento {
     @Override
     public Andamento salvar(Andamento entity, Transacao transacao) throws SQLException {
         String sqlUpdate = "update ANDAMENTO set DataModificacao=?, DataPrevistaConclusao=?,"
-                + " Descricao=?, nomeEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?"
+                + " Descricao=?, idEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?"
                 + " where id=?";
         String sqlInsert = "insert into ANDAMENTO (DataModificacao, DataPrevistaConclusao, Descricao,"
-                + "nomeEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
+                + "idEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         if (entity.getId() == 0) {
             pst = transacao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
@@ -49,7 +49,7 @@ public class DaoAndamento implements IDaoAndamento {
             pst.setDate(2, null);
         }
         pst.setString(3, entity.getDescricao());
-        pst.setString(4, entity.getNomeEstado());
+        pst.setLong(4, entity.getIdEstado());
         pst.setLong(5, entity.getIdPacote());
         pst.setLong(6, entity.getIdUsuarioRemetente());
         if (entity.getIdUsuarioDestinatario() == 0) {
@@ -93,7 +93,7 @@ public class DaoAndamento implements IDaoAndamento {
                             rs.getDate("dataPrevistaConclusao")));
                     andamento.setDescricao(rs.getString("descricao"));
                     andamento.setId(id);
-                    andamento.setNomeEstado(rs.getString("nomeEstado"));
+                    andamento.setIdEstado(rs.getLong("idEstado"));
                     andamento.setIdPacote(rs.getLong("idPacote"));
                     andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
                     andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
