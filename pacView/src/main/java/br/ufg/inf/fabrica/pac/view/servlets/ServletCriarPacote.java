@@ -4,7 +4,7 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
+import br.ufg.inf.fabrica.pac.dominio.Estado;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorDePacotes;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.view.apoio.AtributosConfiguracao;
@@ -68,7 +68,7 @@ public class ServletCriarPacote extends HttpServlet {
             pacote.setNome(request.getParameter("nomePacote"));
             pacote.setDescricao(request.getParameter("descricaoPacote"));
             String dataPrevista = request.getParameter("dataPrevistaRealizacao");
-            pacote.setEstado(Estado.NOVO);
+//            pacote.setEstado(Estado.NOVO);
             pacote.setDataCriacao(UtilsNegocio.buscarDataAtual());
             pacote.setIdProjeto(projeto.getId());
             pacote.setProjeto(projeto);

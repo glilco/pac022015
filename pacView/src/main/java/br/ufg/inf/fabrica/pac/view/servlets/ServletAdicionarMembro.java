@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufg.inf.fabrica.pac.view.servlets;
 
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
 import br.ufg.inf.fabrica.pac.dominio.Membro;
-import br.ufg.inf.fabrica.pac.dominio.enums.Papel;
+import br.ufg.inf.fabrica.pac.dominio.Papel;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
 import br.ufg.inf.fabrica.pac.negocio.imp.GestorMembrosImpl;
@@ -54,11 +49,10 @@ public class ServletAdicionarMembro extends HttpServlet {
                 Membro membro = new Membro();
                 membro.setIdProjeto(projetoSelecionado.getId());
                 membro.setIdUsuario(Integer.parseInt(usuario));
-                membro.setPapel(papel);
+//                membro.setPapel(papel);
                 //Somente adiciona se o papel informado estiver consistente
                 //com os papéis definidos no Enum Papel
                 try{
-                    Papel p = Papel.valueOf(papel);
                     membros.add(membro);
                 }catch(IllegalArgumentException ex){
                     

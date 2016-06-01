@@ -158,14 +158,14 @@ public class DaoMembro implements IDaoMembro {
             List<Membro> membros) throws SQLException {
         StringBuilder sql = new StringBuilder();
         sql.append("insert into MEMBRO ").
-                append("(IDUSUARIO, IDPROJETO, PAPEL) ").
+                append("(IDUSUARIO, IDPROJETO, IDPAPEL) ").
                 append("values (?, ?, ?)");
         try (Connection con = Conexao.getConnection();
                 PreparedStatement pst = con.prepareStatement(sql.toString());) {
             for (Membro membro : membros) {
                 pst.setLong(1, membro.getIdUsuario());
                 pst.setLong(2, membro.getIdProjeto());
-                pst.setString(3, membro.getPapel());
+                pst.setLong(3, membro.getIdPapel());
                 pst.execute();
             }
             con.commit();
@@ -178,7 +178,7 @@ public class DaoMembro implements IDaoMembro {
         StringBuilder sqlInsercao = new StringBuilder();
         StringBuilder sqlDelecao = new StringBuilder();
         sqlInsercao.append("insert into MEMBRO").
-                append(" (IDUSUARIO, IDPROJETO, PAPEL) ").
+                append(" (IDUSUARIO, IDPROJETO, IDPAPEL) ").
                 append(" VALUES (?,?,?)");
         sqlDelecao.append("delete from MEMBRO ").
                 append("where IDUSUARIO = ? and ").
@@ -191,7 +191,7 @@ public class DaoMembro implements IDaoMembro {
                         = con.prepareStatement(sqlInsercao.toString());) {
                     pstmt.setLong(1, papelAdicionado.getIdUsuario());
                     pstmt.setLong(2, papelAdicionado.getIdProjeto());
-                    pstmt.setString(3, papelAdicionado.getPapel());
+                    pstmt.setLong(3, papelAdicionado.getIdPapel());
                     pstmt.execute();
                 }
             }
@@ -200,11 +200,10 @@ public class DaoMembro implements IDaoMembro {
                         = con.prepareStatement(sqlDelecao.toString());) {
                     pstmt.setLong(1, papelRemovido.getIdUsuario());
                     pstmt.setLong(2, papelRemovido.getIdProjeto());
-                    pstmt.setString(3, papelRemovido.getPapel());
+                    pstmt.setLong(3, papelRemovido.getIdPapel());
                     pstmt.execute();
                 }
             }
-
             con.commit();
         }
     }
@@ -221,7 +220,7 @@ public class DaoMembro implements IDaoMembro {
                     Membro mP = new Membro();
                     mP.setIdProjeto(rs.getLong("idProjeto"));
                     mP.setIdUsuario(rs.getLong("idUsuario"));
-                    mP.setPapel(rs.getString("papel"));
+                    mP.setIdPapel(rs.getLong("idPapel"));
                     membro.add(mP);
                 }
                 pst.getConnection().close();
@@ -236,7 +235,7 @@ public class DaoMembro implements IDaoMembro {
             Membro membro = new Membro();
             membro.setIdProjeto(rs.getLong("idProjeto"));
             membro.setIdUsuario(rs.getLong("idUsuario"));
-            membro.setPapel(rs.getString("papel"));
+            membro.setIdPapel(rs.getLong("idPapel"));
             membros.add(membro);
         }
         return membros;

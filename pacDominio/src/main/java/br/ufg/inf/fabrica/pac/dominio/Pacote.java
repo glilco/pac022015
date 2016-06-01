@@ -8,7 +8,6 @@ package br.ufg.inf.fabrica.pac.dominio;
  * domínio que não devem ser persistidos, devem ser comentados acima com a palavra
  * "Transient"
  */
-import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import br.ufg.inf.fabrica.pac.dominio.utils.UtilsValidacao;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +26,7 @@ public class Pacote implements Validavel{
     private boolean abandonado;
     private String documento;
     private Date dataPrevistaRealizacao;
-    private String nomeEstado;
+    private long idEstado;
     private long idProjeto;
     private long idUsuario;
 
@@ -41,12 +40,12 @@ public class Pacote implements Validavel{
         andamentos = new ArrayList<>();
     }
 
-    public String getNomeEstado() {
-        return nomeEstado;
+    public long getIdEstado() {
+        return idEstado;
     }
 
-    public void setNomeEstado(String nomeEstado) {
-        this.nomeEstado = nomeEstado;
+    public void setIdEstado(long idEstado) {
+        this.idEstado = idEstado;
     }
 
     public long getId() {
@@ -136,7 +135,7 @@ public class Pacote implements Validavel{
     public void setEstado(Estado estado) {
         this.estado = estado;
         if(estado!=null)
-            this.nomeEstado = estado.getNome();
+            this.idEstado = estado.getId();
     }
 
     public Usuario getUsuario() {

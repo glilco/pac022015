@@ -6,7 +6,7 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
+import br.ufg.inf.fabrica.pac.dominio.Estado;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
@@ -58,7 +58,6 @@ public class GestorDePacotes implements IGestorDePacotes {
 
         pacote.setAbandonado(false);
         pacote.setDataCriacao(UtilsNegocio.buscarDataAtual());
-        pacote.setEstado(Estado.NOVO);
         pacote.setProjeto(projetoSelecionado);
         pacote.setIdProjeto(projetoSelecionado.getId());
 
@@ -115,8 +114,6 @@ public class GestorDePacotes implements IGestorDePacotes {
         }
         
         Pesquisa pesquisa = new Pesquisa(Pacote.class);
-        pesquisa.adicionarFiltroTexto("nomeEstado", OperacaoFiltroTexto.IGUAL, 
-                Estado.NOVO.getNome());
         pesquisa.adicionarFiltroNumerico("idProjeto", 
                 OperacaoFiltroNumerico.IGUAL, projetoSelecionado);
         
