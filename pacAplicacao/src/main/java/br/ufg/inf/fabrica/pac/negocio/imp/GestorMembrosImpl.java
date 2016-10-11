@@ -1,121 +1,174 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
- 
+
 import br.ufg.inf.fabrica.pac.negocio.IGestorMembros;
 import br.ufg.inf.fabrica.pac.dominio.Membro;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
+import br.ufg.inf.fabrica.pac.negocio.utils.Constantes;
+import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class GestorMembrosImpl implements IGestorMembros {
 
     @Override
-    public Resposta<Membro> adicionarMembroProjeto(Usuario autor, 
+    public Resposta<Membro> adicionarMembroProjeto(Usuario autor,
             Membro membro) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Resposta<Membro> removerMembroProjeto(Usuario autor, 
+    public Resposta<Membro> removerMembroProjeto(Usuario autor,
             Membro membro) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Resposta<List<Usuario>> buscarUsuariosNaoMembros(Usuario autor, 
-            Projeto projeto, String usuarioPesquisado){
+    public Resposta<List<Usuario>> buscarUsuariosNaoMembros(Usuario autor,
+            Projeto projeto, String usuarioPesquisado) {
         Resposta<List<Usuario>> resposta = new Resposta();
-        if(projeto==null)
-            resposta.addItemLaudo("Projeto não informado");
-        if(usuarioPesquisado==null)
-            usuarioPesquisado="";
+        if (projeto == null) {
+            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
+        } else if (usuarioPesquisado == null) {
+            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
+        }
         IDaoMembro dao = new DaoMembro();
-        List<Usuario> usuarios;
-        usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(), usuarioPesquisado).getChave();
+        List<Usuario> usuarios = null;
+        try {
+            usuarios = dao.buscarUsuariosNaoMembrosPorProjeto(projeto.getId(),
+                    usuarioPesquisado).getChave();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorMembrosImpl.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
         resposta.setChave(usuarios);
         return resposta;
     }
 
     @Override
-    public Resposta<List<Membro>> buscarMembros(Usuario autor, 
+    public Resposta<List<Membro>> buscarMembros(Usuario autor,
             Projeto projeto) {
         Resposta<List<Membro>> resposta = new Resposta();
-        if(projeto==null)
+        if (projeto == null) {
             resposta.addItemLaudo("Projeto não informado");
+            return resposta;
+        }
         IDaoMembro dao = new DaoMembro();
-        List<Membro> membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        List<Membro> membros = null;
+        try {
+            membros = dao.buscarMembrosPorProjeto(projeto.getId()).getChave();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorMembrosImpl.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            return UtilsNegocio.criarRespostaComErro(
+                    Constantes.FALHA_NO_SISTEMA);
+        }
         resposta.setChave(membros);
         return resposta;
     }
 
     @Override
-    public Resposta<List<Membro>> adicionarMembrosProjeto(
-            Usuario autor, List<Membro> membros){
-        Resposta<List<Membro>> resposta = new Resposta<>();
+    public Resposta<Boolean> adicionarMembrosProjeto(
+            Usuario autor, List<Membro> membros) {
+        Resposta<Boolean> resposta = new Resposta<>();
         for (Membro membro : membros) {
-            if(membro.getIdProjeto()<=0)
+            if (membro.getIdProjeto() <= 0) {
                 resposta.addItemLaudo("Informe o projeto do membro");
-            if(membro.getIdUsuario()<=0)
+            }
+            if (membro.getIdUsuario() <= 0) {
                 resposta.addItemLaudo("Informe o usuário do membro");
-            if(membro.getPapel()==null || membro.getPapel().isEmpty())
+            }
+            if (membro.getIdPapel() <= 0) {
                 resposta.addItemLaudo("Informe o papel do membro");
+            }
         }
         IDaoMembro dao = new DaoMembro();
         try {
-            resposta.setChave(dao.adicionarMembrosProjeto(membros));
+            dao.adicionarMembrosProjeto(membros);
+            resposta.setChave(Boolean.TRUE);
         } catch (SQLException ex) {
-            Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorMembrosImpl.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resposta = UtilsNegocio.
+                    criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
         }
         return resposta;
     }
 
     @Override
-    public Resposta<String> atualizarPapeisDeUsuarioEmUmProjeto(Usuario autor, 
-            List<Membro> papeisRemovidos, List<Membro> papeisAdicionados){
-        Resposta<String> resposta = new Resposta<>();
-        if( autor==null || autor.getId()==0)
-            resposta.addItemLaudo("Informe autor da solicitação"); 
-        
-        if((papeisRemovidos==null || papeisRemovidos.isEmpty())&&
-                ((papeisAdicionados==null)||papeisAdicionados.isEmpty())){
-            resposta.addItemLaudo("Nenhum papel foi informado para atualização");
-            return resposta;
+    public Resposta<String> atualizarPapeisDeUsuarioEmUmProjeto(Usuario autor,
+            int idUsuario, Projeto projetoSelecionado,
+            List<Membro> papeisRemovidos, List<Membro> papeisAdicionados) {
+        List<String> inconsistencias
+                = validarEntradasAtualizacaoPapeisUsuarioEmProjeto(autor,
+                        papeisRemovidos, papeisAdicionados);
+        if (!inconsistencias.isEmpty()) {
+            return UtilsNegocio.criarRespostaComErro(inconsistencias);
         }
-        long idUsuario = 0;
-        long idProjeto = 0;
-        for (Membro papelRemovido : papeisRemovidos) {
-            if(idUsuario==0)
-                idUsuario = papelRemovido.getIdUsuario();
-            if(idProjeto==0)
-                idProjeto = papelRemovido.getIdProjeto();
-            if(idUsuario!=papelRemovido.getIdUsuario())
-                resposta.addItemLaudo("A atualização deve conter papéis de somente um usuário em somente um projeto");
-        }
-        for (Membro papelAdicionado : papeisAdicionados) {
-            if(idUsuario==0)
-                idUsuario = papelAdicionado.getIdUsuario();
-            if(idProjeto==0)
-                idProjeto = papelAdicionado.getIdProjeto();
-            if(idUsuario!=papelAdicionado.getIdUsuario())
-                resposta.addItemLaudo("A atualização deve conter papéis de somente um usuário em somente um projeto");
-        }
-        if(resposta.isSucesso()){
+
+        long idProjeto = projetoSelecionado.getId();
+        boolean papeisRemovidosConsistentes
+                = verificarConsistenciaDasPermissoesComParametros(
+                        papeisRemovidos, idUsuario, idProjeto);
+        boolean papeisAdicionadosConsistentes
+                = verificarConsistenciaDasPermissoesComParametros(
+                        papeisAdicionados, idUsuario, idProjeto);
+
+        if (papeisRemovidosConsistentes && papeisAdicionadosConsistentes) {
             IDaoMembro dao = new DaoMembro();
             try {
-                dao.atualizarPapeisDeUsuarioEmUmProjeto(papeisRemovidos, papeisAdicionados);
+                dao.atualizarPapeisDeUsuarioEmUmProjeto(papeisRemovidos,
+                        papeisAdicionados);
+                return UtilsNegocio.criarRespostaValida("ok");
             } catch (SQLException ex) {
-                Logger.getLogger(GestorMembrosImpl.class.getName()).log(Level.SEVERE, null, ex);
-                resposta.addItemLaudo("Falha no sistema");
+                UtilsNegocio.registrarLog(getClass(), Level.SEVERE, ex);
+                return UtilsNegocio.
+                        criarRespostaComErro(Constantes.FALHA_NO_SISTEMA);
             }
-            return resposta;
         } else {
-            return resposta;
+            return UtilsNegocio.criarRespostaComErro("Permissões solicitadas "
+                    + "inconsistentes com o projeto e usuário informado");
         }
+
+    }
+
+    private boolean verificarConsistenciaDasPermissoesComParametros(
+            List<Membro> papeis, long idUsuario, long idProjeto) {
+        for (Membro papelRemovido : papeis) {
+            if (verificarConsistenciaDeUsuarioEProjetoEmPermissao(idUsuario,
+                    papelRemovido, idProjeto)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean verificarConsistenciaDeUsuarioEProjetoEmPermissao(
+            long idUsuario, Membro papelRemovido, long idProjeto) {
+        return idUsuario != papelRemovido.getIdUsuario()
+                || idProjeto != papelRemovido.getIdProjeto();
+    }
+
+    private List<String> validarEntradasAtualizacaoPapeisUsuarioEmProjeto(
+            Usuario autor, List<Membro> papeisRemovidos, 
+            List<Membro> papeisAdicionados) {
+        List<String> inconsistencias = new ArrayList<>();
+        if (autor == null || autor.getId() == 0) {
+            inconsistencias.add("Informe autor da solicitação");
+        }
+        if ((papeisRemovidos == null || papeisRemovidos.isEmpty())
+                && ((papeisAdicionados == null) || 
+                papeisAdicionados.isEmpty())) {
+            inconsistencias.add("Nenhum papel foi informado para atualização");
+        }
+        return inconsistencias;
     }
 }

@@ -1,23 +1,21 @@
 package br.ufg.inf.fabrica.pac.negocio.imp;
 
 import br.ufg.inf.fabrica.pac.dominio.Andamento;
-import br.ufg.inf.fabrica.pac.negocio.ICriarPacote;
-import br.ufg.inf.fabrica.pac.dominio.Membro;
+import br.ufg.inf.fabrica.pac.negocio.IGestorDePacotes;
 import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.Projeto;
 import br.ufg.inf.fabrica.pac.dominio.Resposta;
 import br.ufg.inf.fabrica.pac.dominio.Usuario;
-import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
+import br.ufg.inf.fabrica.pac.dominio.Estado;
 import br.ufg.inf.fabrica.pac.negocio.utils.UtilsNegocio;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
-import br.ufg.inf.fabrica.pac.persistencia.IDaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoPacote;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoAndamento;
-import br.ufg.inf.fabrica.pac.persistencia.imp.DaoMembro;
 import br.ufg.inf.fabrica.pac.persistencia.imp.DaoPacote;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.Pesquisa;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroNumerico;
+import br.ufg.inf.fabrica.pac.persistencia.pesquisa.operacoes.OperacaoFiltroTexto;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
-import br.ufg.inf.fabrica.pac.seguranca.Seguranca;
-import br.ufg.inf.fabrica.pac.seguranca.imp.SegurancaStub;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author auf
  */
-public class GestorDePacotes implements ICriarPacote {
+public class GestorDePacotes implements IGestorDePacotes {
 
     private static GestorDePacotes gestor;
 
@@ -44,52 +42,32 @@ public class GestorDePacotes implements ICriarPacote {
     }
 
     @Override
-    public Resposta<Pacote> criarPacote(Usuario autor, Pacote pacote, Projeto projetoSelecionado) {
-        if(pacote==null){
-            return UtilsNegocio.criarRespostaComErro("Pacote não informado");
+    public Resposta<Pacote> criar(Usuario autor, Pacote pacote, 
+            Projeto projetoSelecionado) {
+        List<String> inconsistencias = 
+                validarEntradasCriacao(pacote, autor, projetoSelecionado);
+        if(!inconsistencias.isEmpty()){
+            return UtilsNegocio.criarRespostaComErro(inconsistencias);
         }
-        if(autor==null || autor.getId()<1){
-            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
-        }
-        if(projetoSelecionado==null || 
-                projetoSelecionado.getId()<1){
-            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
-        }
-        IDaoMembro daoMembro = new DaoMembro();
-        List<Membro> papeis;
-        List<String> nomePapeis = new ArrayList<>();
-        String recursoId = null;
-        try {
-            papeis = daoMembro.buscarPapeis(autor.getId());
-            for (Membro membro : papeis) {
-                nomePapeis.add(membro.getPapel());
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
-            return resposta;
-        }
-        Seguranca seguranca = SegurancaStub.getInstance();
-        if (!seguranca.autorizar(recursoId, nomePapeis)) {
-            String menssagemErro = "Usuário não possui permissão para acessar recurso";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(menssagemErro);
-            return resposta;
+        String recursoId = "recursoId-criar";
+        AutorizadorDeAcesso autorizador = 
+                new AutorizadorDeAcesso(recursoId, autor, projetoSelecionado);
+        if(!autorizador.isAutorizado()){
+            return UtilsNegocio.criarRespostaComErro(autorizador.getDetalhes());
         }
 
         pacote.setAbandonado(false);
         pacote.setDataCriacao(UtilsNegocio.buscarDataAtual());
-        pacote.setEstado(Estado.NOVO);
         pacote.setProjeto(projetoSelecionado);
         pacote.setIdProjeto(projetoSelecionado.getId());
 
-        List<String> inconsistencias
-                = pacote.validar();
+        inconsistencias = pacote.validar();
         if (!inconsistencias.isEmpty()) {
             String menssagemErro = "Pacote inconsistente";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(inconsistencias);
-            return resposta;
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.
+                    criarRespostaComErro(inconsistencias);
         }
 
         Andamento andamento = new Andamento();
@@ -103,9 +81,10 @@ public class GestorDePacotes implements ICriarPacote {
         inconsistencias = andamento.validar();
         if (!inconsistencias.isEmpty()) {
             String menssagemErro = "Pacote inconsistente";
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, menssagemErro);
-            Resposta resposta = UtilsNegocio.criarRespostaComErro(inconsistencias);
-            return resposta;
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, menssagemErro);
+            return UtilsNegocio.
+                    criarRespostaComErro(inconsistencias);
         }
 
         IDaoAndamento daoAndamento = new DaoAndamento();
@@ -119,14 +98,51 @@ public class GestorDePacotes implements ICriarPacote {
             daoAndamento.salvar(andamento, transacao);
             transacao.confirmar();
         } catch (SQLException ex) {
-            try{
-                transacao.cancelar();
-            }catch(SQLException ex2){
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex2.getMessage());
-            }
-            Logger.getLogger(GestorDePacotes.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-            return UtilsNegocio.criarRespostaComErro("Falha de transação");
+            UtilsNegocio.fecharTransacao(getClass(), transacao, ex);
         }
         return UtilsNegocio.criarRespostaValida(pacote);
+    }
+
+    @Override
+    public Resposta<List<Pacote>> pesquisarPacotesNovos(Usuario autor, 
+            long projetoSelecionado) {
+        if (autor == null || autor.getId() < 1) {
+            return UtilsNegocio.criarRespostaComErro("Usuário não informado");
+        }
+        if (projetoSelecionado < 1) {
+            return UtilsNegocio.criarRespostaComErro("Projeto não informado");
+        }
+        
+        Pesquisa pesquisa = new Pesquisa(Pacote.class);
+        pesquisa.adicionarFiltroNumerico("idProjeto", 
+                OperacaoFiltroNumerico.IGUAL, projetoSelecionado);
+        
+        Resposta<List<Pacote>> resposta;
+        IDaoPacote daoPacote = new DaoPacote();
+        try {
+            List<Pacote> pacotes = daoPacote.pesquisar(pesquisa);
+            resposta = UtilsNegocio.criarRespostaValida(pacotes);
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorDePacotes.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resposta = UtilsNegocio.criarRespostaComErro("Falha no sistema");
+        }
+        return resposta;
+    }
+
+    private List<String> validarEntradasCriacao(Pacote pacote, Usuario autor, 
+            Projeto projetoSelecionado){
+        List<String> inconsistencias = new ArrayList<>();
+        if (pacote == null) {
+            inconsistencias.add("Pacote não informado");
+        }
+        if (autor == null || autor.getId() < 1) {
+            inconsistencias.add("Usuário não informado");
+        }
+        if (projetoSelecionado == null
+                || projetoSelecionado.getId() < 1) {
+            inconsistencias.add("Projeto não informado");
+        }
+        return inconsistencias;
     }
 }

@@ -9,11 +9,18 @@ import java.sql.SQLException;
  * @author Danillo
  */
 public class Transacao {
-
     private Connection connection;
-    
+
     private Transacao(){
         
+    }
+    
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
     
     public static Transacao getInstance() throws SQLException{
@@ -27,6 +34,7 @@ public class Transacao {
     }
     
     public void cancelar() throws SQLException{
+        connection.rollback();
         connection.close();
     }
 }

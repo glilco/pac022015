@@ -1,6 +1,5 @@
 package br.ufg.inf.fabrica.pac.dominio;
 
-import br.ufg.inf.fabrica.pac.dominio.enums.Estado;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +16,7 @@ public class Andamento implements Validavel {
     private String descricao;
 
     private long idPacote;
-    private String nomeEstado;
+    private long idEstado;
     private long idUsuarioRemetente;    // Usuario responsável pela ação que criou o andamento
     private long idUsuarioDestinatario; // Usuário que ficará responsável pelo pacote após a ação 
 
@@ -27,16 +26,12 @@ public class Andamento implements Validavel {
     private Usuario usuarioRemetente;
     private Usuario usuarioDestinatario;
 
-    public Andamento() {
-
+    public long getIdEstado() {
+        return idEstado;
     }
 
-    public String getNomeEstado() {
-        return nomeEstado;
-    }
-
-    public void setNomeEstado(String nomeEstado) {
-        this.nomeEstado = nomeEstado;
+    public void setIdEstado(long idEstado) {
+        this.idEstado = idEstado;
     }
 
     public Estado getEstado() {
@@ -45,8 +40,9 @@ public class Andamento implements Validavel {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
-        if(estado!=null)
-            this.nomeEstado = estado.getNome();
+        if (estado != null) {
+            this.idEstado = estado.getId();
+        }
     }
 
     public Pacote getPacote() {
@@ -119,6 +115,9 @@ public class Andamento implements Validavel {
 
     public void setUsuarioRemetente(Usuario usuarioRemetente) {
         this.usuarioRemetente = usuarioRemetente;
+        if (usuarioRemetente != null) {
+            this.idUsuarioRemetente = usuarioRemetente.getId();
+        }
     }
 
     public Usuario getUsuarioDestinatario() {
@@ -127,12 +126,15 @@ public class Andamento implements Validavel {
 
     public void setUsuarioDestinatario(Usuario usuarioDestinatario) {
         this.usuarioDestinatario = usuarioDestinatario;
+        if(usuarioDestinatario!=null){
+            this.idUsuarioDestinatario=usuarioDestinatario.getId();
+        }
     }
 
     @Override
     public List<String> validar() {
         List<String> inconsistencias = new ArrayList<>();
-        if (nomeEstado == null) {
+        if (estado==null) {
             inconsistencias.add("Estado não informado");
         }
         if (pacote == null) {

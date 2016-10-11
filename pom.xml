@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>pacPersistencia</module>
-        <module>pacSeguranca</module>
         <module>pacDominio</module>
         <module>pacView</module>
         <module>pacAplicacao</module>
@@ -15,4 +14,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>projetos</id>
+            <name>projetos-releases</name>
+            <url>http://200.137.197.238:8080/artifactory/ext-release-local</url>
+        </repository>
+    </distributionManagement>
 </project>

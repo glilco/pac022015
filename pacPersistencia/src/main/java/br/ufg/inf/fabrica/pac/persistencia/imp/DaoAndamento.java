@@ -5,13 +5,13 @@ import br.ufg.inf.fabrica.pac.dominio.Pacote;
 import br.ufg.inf.fabrica.pac.dominio.utils.Utils;
 import br.ufg.inf.fabrica.pac.persistencia.IDaoAndamento;
 import br.ufg.inf.fabrica.pac.persistencia.transacao.Transacao;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -27,25 +27,36 @@ public class DaoAndamento implements IDaoAndamento {
     @Override
     public Andamento salvar(Andamento entity, Transacao transacao) throws SQLException {
         String sqlUpdate = "update ANDAMENTO set DataModificacao=?, DataPrevistaConclusao=?,"
-                + " Descricao=?, nomeEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?"
+                + " Descricao=?, idEstado=?, IdPacote=?, idUsuarioRemetente=? , idUsuarioDestinatario=?"
                 + " where id=?";
         String sqlInsert = "insert into ANDAMENTO (DataModificacao, DataPrevistaConclusao, Descricao,"
-                + "nomeEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
+                + "idEstado, IdPacote, idUsuarioRemetente, idUsuarioDestinatario) values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst;
         if (entity.getId() == 0) {
-            pst = Conexao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            pst = transacao.getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
         } else {
-            pst = Conexao.getConnection().prepareStatement(sqlUpdate);
+            pst = transacao.getConnection().prepareStatement(sqlUpdate);
             pst.setLong(7, entity.getId());
         }
-
-        pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
-        pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
+        if (entity.getDataModificacao() != null) {
+            pst.setDate(1, Utils.convertUtilDateToSqlDate(entity.getDataModificacao()));
+        } else {
+            pst.setDate(1, null);
+        }
+        if (entity.getDataPrevistaConclusao() != null) {
+            pst.setDate(2, Utils.convertUtilDateToSqlDate(entity.getDataPrevistaConclusao()));
+        } else {
+            pst.setDate(2, null);
+        }
         pst.setString(3, entity.getDescricao());
-        pst.setString(4, entity.getNomeEstado());
+        pst.setLong(4, entity.getIdEstado());
         pst.setLong(5, entity.getIdPacote());
         pst.setLong(6, entity.getIdUsuarioRemetente());
-        pst.setLong(7, entity.getIdUsuarioDestinatario());
+        if (entity.getIdUsuarioDestinatario() == 0) {
+            pst.setNull(7, Types.BIGINT);
+        } else {
+            pst.setLong(7, entity.getIdUsuarioDestinatario());
+        }
         pst.execute();
         if (entity.getId() == 0) {
             ResultSet keys = pst.getGeneratedKeys();
@@ -60,7 +71,7 @@ public class DaoAndamento implements IDaoAndamento {
     public Andamento excluir(Andamento entity, Transacao transacao) throws SQLException {
         String sql = "delete from ANDAMENTO where id=?";
         PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
+        pst = transacao.getConnection().prepareStatement(sql);
         pst.setLong(1, entity.getId());
         pst.execute();
         return entity;
@@ -69,25 +80,26 @@ public class DaoAndamento implements IDaoAndamento {
     @Override
     public Andamento buscar(long id) throws SQLException {
         String sql = "select a.* from ANDAMENTO a where a.id=?";
-        PreparedStatement pst;
-        pst = Conexao.getConnection().prepareStatement(sql);
-        pst.setLong(1, id);
-        ResultSet rs = pst.executeQuery();
-        Andamento andamento = null;
-        if (rs.next()) {
-            andamento = new Andamento();
-            andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataModificacao")));
-            andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
-                    rs.getDate("dataPrevistaConclusao")));
-            andamento.setDescricao(rs.getString("descricao"));
-            andamento.setId(id);
-            andamento.setNomeEstado(rs.getString("nomeEstado"));
-            andamento.setIdPacote(rs.getLong("idPacote"));
-            andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
-            andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+        try (Connection con = Conexao.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql);) {
+            pst.setLong(1, id);
+            try (ResultSet rs = pst.executeQuery();) {
+                Andamento andamento = null;
+                if (rs.next()) {
+                    andamento = new Andamento();
+                    andamento.setDataModificacao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataModificacao")));
+                    andamento.setDataPrevistaConclusao(Utils.convertSqlDateToUtilDate(
+                            rs.getDate("dataPrevistaConclusao")));
+                    andamento.setDescricao(rs.getString("descricao"));
+                    andamento.setId(id);
+                    andamento.setIdEstado(rs.getLong("idEstado"));
+                    andamento.setIdPacote(rs.getLong("idPacote"));
+                    andamento.setIdUsuarioRemetente(rs.getLong("idUsuarioRemetente"));
+                    andamento.setIdUsuarioDestinatario(rs.getLong("idUsuarioDestinatario"));
+                }
+                return andamento;
+            }
         }
-        return andamento;
     }
-
 }
